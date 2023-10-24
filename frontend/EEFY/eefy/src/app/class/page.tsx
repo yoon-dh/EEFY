@@ -1,4 +1,8 @@
 function Class() {
-  return <div>클래스</div>;
+  return (
+    <div className='w-full h-full bg-warning rounded-lg' style={{ width: '98%' }}>
+      wefwefwefwef
+    </div>
+  );
 }
 export default Class;
