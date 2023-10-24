@@ -1,0 +1,6 @@
+.MuiInputBase-root.MuiInput-root::after {
+  content: none;
+}
+.css-v4u5dn-MuiInputBase-root-MuiInput-root{
+  content: none;
+}

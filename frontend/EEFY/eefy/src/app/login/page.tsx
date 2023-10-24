@@ -1,12 +1,12 @@
-import Link from 'next/link';
+"use client"; 
+import Login from "@/components/Login/Login";
 
-function Login() {
+function Home() {
   return (
     <div>
-      <div className='w-full h-full bg-red-200'>로그인</div>
-      <Link href='/main'>메인</Link>
+     <Login/>
     </div>
   );
 }
 
-export default Login;
+export default Home;
