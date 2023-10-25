@@ -1,6 +1,6 @@
-import TopNav from '@/components/ClassLayout/TopNav';
-import SideNav from '@/components/ClassLayout/SideNav';
-import Footer from '@/components/ClassLayout/Footer';
+import TopNav from '@/components/MainLayout/TopNav';
+import SideNav from '@/components/MainLayout/SideNav';
+import Footer from '@/components/MainLayout/Footer';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
