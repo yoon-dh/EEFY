@@ -11,12 +11,14 @@ spring:
       password: ${REDIS_PASSWORD}
 
   jpa:
-    open-in-view: false
-    show-sql: true
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
     properties:
       hibernate:
-        ddl-auto: update
         format_sql: true
+        show_sql: true
+    open-in-view: false
 
 springdoc:
   swagger-ui:
