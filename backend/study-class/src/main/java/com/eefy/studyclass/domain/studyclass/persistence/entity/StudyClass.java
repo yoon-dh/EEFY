@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 public class StudyClass extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer classId;
+    @Column(name = "class_id")
+    private Integer id;
 
     @Column(nullable = false)
     private Integer memberId;

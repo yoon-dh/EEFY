@@ -6,7 +6,8 @@ import javax.persistence.*;
 public class EnrollLecture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer enrollLectureId;
+    @Column(name = "enroll_lecture_id")
+    private Integer id;
 
     private Integer lectureId;
 

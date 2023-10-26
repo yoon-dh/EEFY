@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 public class Participate {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer participateId;
+    @Column(name = "participate_id")
+    private Integer id;
 
     @Column(nullable = false)
     private Integer memberId;

@@ -6,7 +6,8 @@ import javax.persistence.*;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer tagId;
+    @Column(name = "tag_id")
+    private Integer id;
 
     @Column(nullable = false)
     private String name;

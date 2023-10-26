@@ -6,7 +6,8 @@ import javax.persistence.*;
 public class PostTag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer postTagId;
+    @Column(name = "post_tag_id")
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "class_id")

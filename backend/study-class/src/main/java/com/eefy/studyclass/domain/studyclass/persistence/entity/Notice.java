@@ -8,7 +8,8 @@ import javax.persistence.*;
 public class Notice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer noticeId;
+    @Column(name = "notice_id")
+    private Integer id;
 
     @Column(nullable = false)
     private Integer memberId;
