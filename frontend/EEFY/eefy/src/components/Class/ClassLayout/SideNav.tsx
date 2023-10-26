@@ -5,8 +5,14 @@ export default function SideNav() {
     <div className='w-full h-full'>
       <div className='h-full' style={{ display: 'flex', justifyContent: 'center' }}>
         <ul
-          className='menu bg-base-200 rounded-box w-4/6'
-          style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)', border: '1px solid rgba(131, 129, 129, 0.2)', background: 'rgba(255, 255, 255, 0.5)' }}
+          className='menu bg-base-200 rounded-box w-3/6'
+          style={{
+            boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
+            border: '1px solid rgba(131, 129, 129, 0.2)',
+            background: 'rgba(255, 255, 255, 0.5)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
         >
           {/* toggle(hamburger) */}
           <br />
@@ -30,7 +36,7 @@ export default function SideNav() {
           <br style={{ height: '10px' }} />
 
           {/* 대시보드 */}
-          <li className='w-3/4'>
+          <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <a>
               <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
@@ -45,7 +51,7 @@ export default function SideNav() {
           <br />
 
           {/* 공지사항 */}
-          <li className='w-3/4'>
+          <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <a>
               <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
@@ -61,7 +67,7 @@ export default function SideNav() {
           <br />
 
           {/* 문제 * 3 */}
-          <li className='w-3/4'>
+          <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <a>
               <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
@@ -77,7 +83,7 @@ export default function SideNav() {
           <br />
 
           {/* 강의자료(자료실) */}
-          <li className='w-3/4'>
+          <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <a>
               <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
@@ -93,7 +99,7 @@ export default function SideNav() {
           <br />
 
           {/* Q&A */}
-          <li className='w-3/4'>
+          <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <a>
               <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
@@ -109,7 +115,7 @@ export default function SideNav() {
           <br />
 
           {/* 마이페이지 - 학생 OR 학생관리 - 강사  */}
-          <li className='w-3/4'>
+          <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <a>
               <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path

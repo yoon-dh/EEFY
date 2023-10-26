@@ -12,13 +12,15 @@ export default function NormalTag() {
         height: '80%',
       }}
     >
-      <div className='flex justify-between'>
+      <div className='flex justify-between items-center h-full'>
         <div className='ml-5 flex flex-col'>
           <div>
-            <p className='text-xl font-bold'>TOEIC 함수 Grammer - part1</p>
+            <p className='text-3xl font-bold text-white'>TOEIC 900 완성반</p>
           </div>
           <div>
-            <p className='text-base text-blue-600/50'>완료일 : 2023. 10. 23.</p>
+            <p className='text-lg' style={{ color: 'rgba(255, 255, 255, 0.75)' }}>
+              Always stay updated in your student portal
+            </p>
           </div>
         </div>
         <div className='mr-5 flex justify-center items-center'>
