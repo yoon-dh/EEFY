@@ -2,9 +2,11 @@ package com.eefy.member.domain.member.persistence.entity;
 
 import com.eefy.member.global.entity.BaseEntity;
 import com.eefy.member.domain.member.persistence.entity.enums.UserRole;
+import lombok.Getter;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 public class Member extends BaseEntity {
     @Id
