@@ -9,6 +9,7 @@ public class EnrollLecture {
     @Column(name = "enroll_lecture_id")
     private Integer id;
 
+    @Column(nullable = false)
     private Integer lectureId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

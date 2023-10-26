@@ -24,5 +24,6 @@ public class Notice extends BaseEntity {
     @Column(nullable = false, length = 2000)
     private String content;
 
+    @Column(nullable = false)
     private Integer hit;
 }
