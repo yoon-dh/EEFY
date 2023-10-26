@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Participate {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer participateId;
 
     @Column(nullable = false)

@@ -5,6 +5,7 @@ import javax.persistence.*;
 @Entity
 public class PostTag {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer postTagId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
