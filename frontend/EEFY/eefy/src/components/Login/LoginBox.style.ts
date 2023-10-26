@@ -19,7 +19,7 @@ flex-direction: row;
 justify-content: center;
 align-items: center;
 gap: 10px;
-width: 400px;
+width: 360px;
 height: 48px;
 background: #191A3E;
 border-radius: 12px;

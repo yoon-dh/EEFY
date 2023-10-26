@@ -143,26 +143,30 @@ function SignUp() {
             </>
         {/* )} */}
 
-        {teacher || student ? (
-            <div>
-            <BackIcon 
-                onClick={() => {
-                    setStudent(false)
-                    setTeacher(false)
-                    setLogin(true)
-                }}
-            >
-                <KeyboardBackspaceIcon
-                style={{
-                    fontSize: '40px',
-                    color: student ? '3B3B84' : 'BBBBE5',
-                    cursor: 'pointer',
-                }}
-                />
-            </BackIcon>
-            </div>
-        ) : (
-            <></>
+        {login && (
+            <>
+            {teacher || student ? (
+                <div>
+                <BackIcon 
+                    onClick={() => {
+                        setStudent(false)
+                        setTeacher(false)
+                        setLogin(true)
+                    }}
+                >
+                    <KeyboardBackspaceIcon
+                    style={{
+                        fontSize: '40px',
+                        color: student ? '3B3B84' : 'BBBBE5',
+                        cursor: 'pointer',
+                    }}
+                    />
+                </BackIcon>
+                </div>
+            ) : (
+                <></>
+            )}
+            </>
         )}
         {student || teacher || login && (
             <>

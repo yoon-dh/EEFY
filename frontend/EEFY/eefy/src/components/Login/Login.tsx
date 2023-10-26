@@ -187,7 +187,7 @@ export default function Login(){
               }, 1000);
               setTimeout(function() {
                 router.push('/');
-              }, 3000);
+              }, 2000);
             }}>Sign up</SignUpBtn>
       </Box>
     </div>

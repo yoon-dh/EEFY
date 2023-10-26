@@ -31,6 +31,3 @@ export default function ClassLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
-// export default function ClassLayout({ children }: { children: React.ReactNode }) {
-//   return <div className='w-full h-full'>{children}</div>;
-// }
