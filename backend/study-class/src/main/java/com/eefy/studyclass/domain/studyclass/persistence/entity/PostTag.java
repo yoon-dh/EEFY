@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class PostTag {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_tag_id")
     private Integer id;
 

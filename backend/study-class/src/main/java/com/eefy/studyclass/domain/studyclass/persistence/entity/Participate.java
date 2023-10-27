@@ -6,14 +6,14 @@ import java.time.LocalDateTime;
 @Entity
 public class Participate {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "participate_id")
     private Integer id;
 
     @Column(nullable = false)
     private Integer memberId;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "class_id")
     private StudyClass studyClass;
 
