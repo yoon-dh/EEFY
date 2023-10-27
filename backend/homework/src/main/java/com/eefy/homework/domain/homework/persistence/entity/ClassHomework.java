@@ -20,12 +20,12 @@ public class ClassHomework {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "class_homework_id")
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "homework_id")
     private Homework homework;
 
     @Column(nullable = false)
-    private Long classId;
+    private Integer classId;
 }
