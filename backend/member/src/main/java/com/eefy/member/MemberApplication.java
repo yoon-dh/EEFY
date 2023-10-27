@@ -10,12 +10,12 @@ import java.util.TimeZone;
 @EnableJpaAuditing
 public class MemberApplication {
 
-	public void setTimeZone(){
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-	}
+    public void setTimeZone() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(MemberApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MemberApplication.class, args);
+    }
 
 }
