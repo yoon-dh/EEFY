@@ -22,9 +22,7 @@ export default function ClassLayout({ children }: { children: React.ReactNode })
       <div style={{ gridArea: 'c' }}>
         <SideNav />
       </div>
-      <div className='bg-warning' style={{ gridArea: 'd', width: '98%' }}>
-        {children}
-      </div>
+      <div style={{ gridArea: 'd', width: '98%' }}>{children}</div>
       <div style={{ gridArea: 'e' }}>
         <Footer />
       </div>
