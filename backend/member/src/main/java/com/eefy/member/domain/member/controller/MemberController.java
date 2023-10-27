@@ -6,10 +6,10 @@ import com.eefy.member.domain.member.dto.response.EmailSendResponse;
 import com.eefy.member.domain.member.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,12 +19,12 @@ public class MemberController {
     private final EmailService emailService;
 
     @PostMapping("/auth/email")
-    public ResponseEntity<EmailSendResponse> getAuthCode(@RequestBody EmailSendRequest emailSendRequest) {
+    public ResponseEntity<EmailSendResponse> sendEmail(@RequestBody EmailSendRequest emailSendRequest) {
         return emailService.sendEmail(emailSendRequest.getEmail());
     }
 
-    @DeleteMapping("/auth/email")
-    public ResponseEntity<String> confirmCode(@RequestBody EmailConfirmRequest emailConfirmRequest) {
-        return emailService.confirmEmail(emailConfirmRequest);
+    @PostMapping("/auth/email/confirm")
+    public ResponseEntity<String> confirmCode(@RequestParam EmailConfirmRequest emailConfirmRequest) {
+        return emailService.confirmCode(emailConfirmRequest);
     }
 }

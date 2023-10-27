@@ -9,9 +9,9 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash(value = "email", timeToLive = 300)
-public class Email {
+@RedisHash(value = "emailconfirm", timeToLive = 600)
+public class EmailConfirm {
     @Id
     private String email;
-    private String code;
+    private boolean confirmStatus;
 }
