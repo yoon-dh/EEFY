@@ -21,10 +21,10 @@ public class Homework extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "homework_id")
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false)
-    private Long memberId;
+    private Integer memberId;
 
     @Column(nullable = false, length = 200)
     private String title;

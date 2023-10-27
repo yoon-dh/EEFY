@@ -20,7 +20,7 @@ public class HomeworkQuestionAnswer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "homework_question_answer_id")
-    private Long id;
+    private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "homework_question_id")
