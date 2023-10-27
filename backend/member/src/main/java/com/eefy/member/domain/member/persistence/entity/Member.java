@@ -1,12 +1,17 @@
 package com.eefy.member.domain.member.persistence.entity;
 
 import com.eefy.member.global.entity.BaseEntity;
-import com.eefy.member.domain.member.persistence.entity.enums.UserRole;
+import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member extends BaseEntity {
     @Id
@@ -34,5 +39,20 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private MemberRole role;
+
+    @Builder
+    public Member(String email, String password, String nickname,
+                  String name, String phoneNumber, MemberRole role) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(password);
+    }
 }
