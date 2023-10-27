@@ -20,14 +20,14 @@ public class HomeworkSubmit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "homework_submit_id")
-    private Long id;
+    private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "homework_question_id")
     private HomeworkQuestion homeworkQuestion;
 
     @Column(nullable = false)
-    private Long memberId;
+    private Integer memberId;
 
     @Column
     private Integer score;
