@@ -48,7 +48,7 @@ public class EmailService {
 
     @Transactional
     public ResponseEntity<String> confirmEmail(EmailConfirmRequest emailConfirmRequest) {
-        Member member = memberRepository.findById(emailConfirmRequest.getId())
+        Member member = memberRepository.findMemberByEmail(emailConfirmRequest.getEmail())
                 .orElseThrow(() -> {
                     log.error("사용자 조회 오류");
                     return new IllegalArgumentException("사용자 조회 오류");

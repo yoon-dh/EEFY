@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailConfirmRequest {
-    private Long id;
+    private String email;
     private String code;
 }
