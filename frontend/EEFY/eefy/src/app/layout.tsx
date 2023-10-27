@@ -11,7 +11,7 @@ import { RecoilRoot } from 'recoil';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en' className='w-full h-full' data-theme='dracula'>
+    <html lang='en' className='w-full h-full' data-theme='light'>
       <head>
         <link rel='manifest' href='/manifest.json' />
       </head>

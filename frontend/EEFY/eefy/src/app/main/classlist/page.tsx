@@ -5,7 +5,10 @@ import * as S from '@/components/Main/MainClass/MainClassBox.style';
 import { HiPlus } from 'react-icons/hi';
 
 function ClassList() {
-  const dummyClass = [];
+  const dummyClass = [
+    { id: 1, class: 'TOEIC 900 완성', cnt: 9 },
+    { id: 2, class: 'TOEIC 800 완성', cnt: 12 },
+  ];
 
   return (
     <div className=' w-full h-full' style={{ display: 'flex', flexDirection: 'column' }}>
@@ -22,6 +25,11 @@ function ClassList() {
             클래스 개설
           </div>
         </S.ClassBox>
+
+        {/* 클래스 리스트 */}
+        {dummyClass?.map(item => (
+          <MainClassBox key={item.id} title={item.class} cnt={item.cnt} />
+        ))}
       </div>
     </div>
   );
