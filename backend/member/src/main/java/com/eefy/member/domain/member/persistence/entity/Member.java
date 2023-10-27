@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Entity
 public class Member extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Integer id;
 
@@ -34,7 +34,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String phoneNumber;
 
-    @Column(nullable = false, length = 400)
+    @Column(length = 400)
     private String profileImagePath;
 
     @Column(nullable = false, length = 20)

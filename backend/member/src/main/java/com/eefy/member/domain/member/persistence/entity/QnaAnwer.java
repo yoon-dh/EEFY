@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 public class QnaAnwer extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "qna_answer_Id")
     private Integer id;
 
