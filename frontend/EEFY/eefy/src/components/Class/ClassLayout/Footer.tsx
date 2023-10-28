@@ -1,11 +1,19 @@
 'use client';
 import { useState } from 'react';
+import { Thema } from '@/recoil/Thema';
+import { useRecoilState } from 'recoil';
 
 export default function Footer() {
   const [darkModeIsAcitive, setdarkModeIsAcitive] = useState(false);
-
+  const [thema, setThema] = useRecoilState(Thema);
   const checkHandler = () => {
-    setdarkModeIsAcitive(!darkModeIsAcitive);
+    const isActiv = !darkModeIsAcitive;
+    setdarkModeIsAcitive(isActiv);
+    if (!isActiv) {
+      setThema('winter');
+    } else {
+      setThema('dark');
+    }
   };
 
   return (

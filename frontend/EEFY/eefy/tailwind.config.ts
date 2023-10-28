@@ -12,7 +12,24 @@ const config: Config = {
   },
   plugins: [require('daisyui')],
   daisyui: {
-    themes: ['light', 'dark', 'cupcake', 'dracula'],
+    themes: [
+      {
+        winter: {
+          ...require('daisyui/src/theming/themes')['[data-theme=winter]'],
+          info: '#057AFF',
+          '.boxShadow': { 'box-shadow': '0px 2px 4px 0px rgba(0, 0, 0, 0.25)' },
+        },
+      },
+      {
+        dark: {
+          ...require('daisyui/src/theming/themes')['[data-theme=dark]'],
+          '.boxShadow': { 'box-shadow': '0px 4px 4px 0px rgba(200, 200, 200, 0.25)' },
+        },
+      },
+      'cupcake',
+      'retro',
+      'valentine',
+    ],
   },
 };
 export default config;

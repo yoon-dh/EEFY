@@ -17,12 +17,17 @@ function RightBoard({ contentType }: BoardProps) {
   return (
     <div
       className='h-full flex flex-col rounded-xl min-w-[370px] min-h-[230px] bg-base-200'
-      style={{ padding: '5% 3%', boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)' }}
+      style={{
+        padding: '5% 3%',
+        boxShadow: '0px 4px 4px 0px rgba(200, 200, 200, 0.25)',
+        border: '1px solid rgba(131, 129, 129, 0.2)',
+        //  boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)'
+      }}
     >
       {/* 제목 */}
       <div className='flex justify-between text-xl font-bold 2xl:text-2xl' style={{ flex: 2 }}>
         <div>{title[contentType]}</div>
-        <Link href={'/'} style={{ fontSize: '20px', color: '#3C80F7' }}>
+        <Link href={'/'} className='text-info' style={{ fontSize: '20px' }}>
           View all
         </Link>
       </div>

@@ -8,7 +8,7 @@ function RadialProgress({ percent }: RadialProgressProps) {
     '--size': '4rem',
   };
   return (
-    <div className='radial-progress bg-primary text-primary-content border-4 border-primary flex-2' style={style}>
+    <div className='radial-progress bg-neutral text-primary-content border-4 border-primary flex-2' style={style}>
       {percent}%
     </div>
   );

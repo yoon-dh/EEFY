@@ -44,7 +44,7 @@ function StudyBoard() {
       <div className='w-full flex items-end justify-between' style={{ flex: 4 }}>
         {data.map((item, idx) => (
           <StudyCardBox key={idx} $isNotActive={false}>
-            <div className='w-full h-full p-2 flex flex-col justify-around bg-base-200'>
+            <div className='w-full h-full p-2 flex flex-col justify-around bg-base-200 boxShadow rounded-lg'>
               <RadialProgress percent={item.progress} />
               <div>
                 <div className='whitespace-nowrap text-ellipsis overflow-hidden font-bold'>{item.title}</div>

@@ -1,8 +1,14 @@
+'use client';
 import TopNav from '@/components/Class/ClassLayout/TopNav';
 import SideNav from '@/components/Class/ClassLayout/SideNav';
 import Footer from '@/components/Class/ClassLayout/Footer';
 
+import { useRecoilValue } from 'recoil';
+import { Thema } from '@/recoil/Thema';
+
 export default function ClassLayout({ children }: { children: React.ReactNode }) {
+  const thema = useRecoilValue(Thema);
+
   const mainStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(15, 1fr)',
@@ -12,7 +18,7 @@ export default function ClassLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className='w-full h-full' style={mainStyle}>
+    <div className='w-full h-full' style={mainStyle} data-theme={thema}>
       <div style={{ gridArea: 'a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <img style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} />
       </div>

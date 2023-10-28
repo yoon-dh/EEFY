@@ -9,7 +9,7 @@ export default function SideNav() {
           style={{
             boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
             border: '1px solid rgba(131, 129, 129, 0.2)',
-            background: 'rgba(255, 255, 255, 0.5)',
+            // background: 'rgba(255, 255, 255, 0.5)',
             display: 'flex',
             flexDirection: 'column',
           }}

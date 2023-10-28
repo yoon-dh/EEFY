@@ -10,20 +10,21 @@ function Class() {
     gridTemplateAreas:
       "'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-bottom right-bottom' 'left-bottom left-bottom left-bottom right-bottom right-bottom' 'left-bottom left-bottom left-bottom right-bottom right-bottom' 'left-bottom left-bottom left-bottom right-bottom right-bottom' 'left-bottom left-bottom left-bottom right-bottom right-bottom'",
   };
-  // const mainStyle = {
-  //   display: 'grid',
-  //   gap: '2rem',
-  //   gridTemplateColumns: 'repeat(3, 1fr)',
-  //   gridTemplateRows: 'repeat(10, 1fr)',
-  //   gridTemplateAreas:
-  //     "'left-top left-top right-top' 'left-top left-top right-top' 'left-top left-top right-top' 'left-top left-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top right-bottom' 'left-bottom left-bottom right-bottom' 'left-bottom left-bottom right-bottom' 'left-bottom left-bottom right-bottom' 'left-bottom left-bottom right-bottom'",
-  // };
+
   return (
-    // padding 이야기해봐야될듯
     <div className='flex w-full h-full rounded-lg'>
       <div className='w-full h-full' style={mainStyle}>
         <div style={{ gridArea: 'left-top' }}>
-          <div className='bg-primary'>안녕</div>
+          <div className='bg-primary'>primary</div>
+          <div className='bg-secondary'>secondary</div>
+          <div className='bg-accent'>accent</div>
+          <div className='bg-neutral'>neutral</div>
+          <div className='bg-base-100'>base-100 / 배경</div>
+          <div className='bg-base-200'>base-200 / 박스 배경</div>
+          <div className='bg-info'>info / 링크 텍스트 색상</div>
+          <div className='bg-success'>success</div>
+          <div className='bg-warning'>warning</div>
+          <div className='bg-error'>error</div>
         </div>
         <div style={{ gridArea: 'left-bottom' }}>
           <StudyBoard />
@@ -39,44 +40,3 @@ function Class() {
   );
 }
 export default Class;
-
-// function Class() {
-//   return (
-//     // padding 이야기해봐야될듯
-//     <div className='flex w-full h-full rounded-lg bg-warning' style={{ width: '98%', padding: '1%' }}>
-//       {/* left side */}
-//       <div className='flex flex-col bg-primary' style={{ flex: 14 }}>
-//         {/* tab bar */}
-//         <div className='bg-neutral' style={{ flex: 1 }}>
-//           aa
-//         </div>
-//         {/* visual graph */}
-//         <div className='bg-accent' style={{ flex: 6 }}>
-//           aa
-//         </div>
-//         {/* study board */}
-//         <div className='bg-neutral' style={{ flex: 5 }}>
-//           <StudyBoard />
-//         </div>
-//       </div>
-
-//       {/* middle col div */}
-//       <div style={{ flex: 1 }}></div>
-
-//       {/* right side */}
-//       <div className='flex flex-col' style={{ flex: 9 }}>
-//         {/* notice board */}
-//         <div style={{ flex: 7 }}>
-//           <RightBoard contentType={0} />
-//         </div>
-//         {/* middle raw div */}
-//         <div style={{ flex: 1 }}></div>
-//         {/* data board */}
-//         <div style={{ flex: 7 }}>
-//           <RightBoard contentType={1} />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-// export default Class;
