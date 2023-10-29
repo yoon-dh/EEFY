@@ -15,13 +15,13 @@ function NoticeListBoard() {
       style={{
         flex: 2,
         width: '100%',
-        height: '92%',
+        height: '89%',
       }}
     >
       <Wrappe
         style={{
           margin: '20px 0px 20px 0px',
-          height: '92%',
+          height: '100%',
         }}
       >
         {noticeList.map((item, index) => (
@@ -29,7 +29,7 @@ function NoticeListBoard() {
             className='bg-default'
             key={index}
             style={{
-              margin: index == 0 ? '0px auto 15px auto' : '',
+              margin: index == noticeList.length-1 ? '15px auto 4px auto' :(index == 0 ? '0px auto 15px auto' : ''),
             }}
             onClick={() => {
               console.log(item);
