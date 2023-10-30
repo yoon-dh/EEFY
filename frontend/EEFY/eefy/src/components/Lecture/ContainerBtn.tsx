@@ -9,13 +9,11 @@ function ContainerBtn() {
         }}>
           <Tab className="tab tab-bordered tab-active">
             <NoticeTitle>
-              공지사항
+              학습자료
             </NoticeTitle>
           </Tab> 
         </div>
       </div>
-
-      <CreateBtn>글 작성</CreateBtn>
     </div>
   );
 }
