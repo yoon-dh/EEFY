@@ -39,6 +39,12 @@ spring:
             trust: smtp.naver.com
             enable: true
 
+jwt:
+  secet: ${SECRET_KEY}
+  token:
+    access-expiration: 43200000
+    refresh-expiration: 604800000
+
 eureka:
   client:
     register-with-eureka: true
