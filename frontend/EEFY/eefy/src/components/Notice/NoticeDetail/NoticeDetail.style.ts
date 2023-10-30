@@ -2,35 +2,64 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
-  height: 92%;
+  height: 100%;
+  /* border-left: 1px solid #7b88e0; */
+  border-left: 7px solid white;
 `;
 export const Header = styled.div``;
 export const Wrappe = styled.div`
-  width: 98%;
+  width: 100%;
   height: 90%;
-  /* background: url(image.png); */
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   margin: 2% 0px 0px 0px;
-  padding: 3% 4%;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 export const Title = styled.div`
   font-size: 30px;
+  /* width: 90%; */
 `;
 export const UseName = styled.div`
-  margin: 2px 0px 0px 1%;
+  margin: 2px 0px 0px 3%;
+  font-size: 17px;
 `;
 export const Img = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
+  border: 2px solid #7b88e0;
 `;
 export const Line = styled.div`
   width: 100%;
   height: 1px;
-  background-color: black;
+  background-color: #7b88e0;
   margin: 2% 0px 3% 0px;
 `;
-export const Time = styled.div``;
-export const ContentBox = styled.div``;
-export const Content = styled.div``;
+export const Time = styled.div`
+  font-size: 12px;
+  margin: 5px 0px 0px auto;
+`;
+export const ContentBox = styled.div`
+white-space: pre-line;
+word-wrap: break-word;
+`;
+export const Content = styled.div`
+`;
+export const UpdataBtn = styled.div`
+font-size: 12px;
+padding: 5px 20px;
+border-radius: 8px;
+background-color: #5AACF8;
+color: white;
+margin: 0px 20px 0px 0px;
+`;
+export const DeleteBtn = styled.div`
+font-size: 12px;
+padding: 5px 20px;
+border-radius: 8px;
+background-color: #F85A5A;
+color: white;
+`;
