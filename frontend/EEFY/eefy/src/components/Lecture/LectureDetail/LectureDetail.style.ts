@@ -65,3 +65,30 @@ background-color: #F85A5A;
 color: white;
 cursor: pointer;
 `;
+export const BtnBox = styled.div`
+width: 100%;
+flex: 1;
+`
+export const ViewerBtn = styled.div`
+width: 80%;
+padding: 10px 10px;
+background: #999BD5;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 8px;
+color: white;
+text-align: center;
+margin: 50px auto 20px auto;
+cursor: pointer;
+`
+export const DownloadBtn = styled.div`
+width: 80%;
+padding: 10px 10px;
+background: #999BD5;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 8px;
+color: white;
+text-align: center;
+margin: 0px auto 30px auto;
+cursor: pointer;
+`
+

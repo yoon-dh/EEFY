@@ -4,7 +4,6 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   /* border-left: 1px solid #7b88e0; */
-  border-left: 7px solid white;
 `;
 export const Header = styled.div``;
 export const Wrappe = styled.div`
