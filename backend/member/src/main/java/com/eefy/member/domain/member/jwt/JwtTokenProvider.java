@@ -1,7 +1,6 @@
 package com.eefy.member.domain.member.jwt;
 
 import com.eefy.member.domain.member.persistence.MemberRepository;
-import com.eefy.member.domain.member.persistence.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -45,10 +44,10 @@ public class JwtTokenProvider {
 
     public String createAccessToken(String email, int userId) {
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("userId", userId);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
+                .setId(Integer.toString(userId))
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + accessExpiration))
                 .signWith(SignatureAlgorithm.HS256, secret)
@@ -71,22 +70,20 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String getUserId(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getId();
+    public int getUserId(String token) {
+        return Integer.parseInt(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getId());
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader("Authorization"));
-
     }
 
-    public Optional<String> extractRefreshToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader("Authorization-Refresh"));
-
+    public Optional<String> extractRefreshToken(String accessToken) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get(accessToken));
     }
 
     private void storeRefreshToken(int id, String refreshToken) {
-        Member member = memberRepository.findById(id)
+        memberRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("refresh token 발급 오류: 요청 사용자 없음");
                     return new IllegalArgumentException("refresh token 발급 오류: 요청 사용자 없음");
@@ -97,7 +94,6 @@ public class JwtTokenProvider {
                 refreshToken,
                 refreshExpiration,
                 TimeUnit.MILLISECONDS
-
         );
     }
 

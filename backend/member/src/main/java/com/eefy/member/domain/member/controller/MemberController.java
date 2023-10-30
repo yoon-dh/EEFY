@@ -5,6 +5,7 @@ import com.eefy.member.domain.member.dto.request.EmailSendRequest;
 import com.eefy.member.domain.member.dto.request.JoinRequest;
 import com.eefy.member.domain.member.dto.request.LoginRequest;
 import com.eefy.member.domain.member.dto.response.EmailSendResponse;
+import com.eefy.member.domain.member.dto.response.JwtTokenResponse;
 import com.eefy.member.domain.member.service.EmailService;
 import com.eefy.member.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/member")
@@ -33,9 +35,13 @@ public class MemberController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        memberService.login(loginRequest);
-        return ResponseEntity.ok("SUCCESS");
+    public ResponseEntity<JwtTokenResponse> login(@RequestBody LoginRequest loginRequest) {
+        return memberService.login(loginRequest);
+    }
+
+    @PutMapping("/auth/refresh")
+    public ResponseEntity<JwtTokenResponse> refreshReissue(HttpServletRequest httpServletRequest) {
+        return memberService.refreshReissue(httpServletRequest.getHeader("Authorization"));
     }
 
     @DeleteMapping("/auth")
@@ -45,7 +51,6 @@ public class MemberController {
     }
 
     @PostMapping("/auth/email")
-
     public ResponseEntity<EmailSendResponse> sendEmail(@RequestBody EmailSendRequest emailSendRequest) {
         return emailService.sendEmail(emailSendRequest.getEmail());
     }
