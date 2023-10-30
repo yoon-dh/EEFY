@@ -1,6 +1,3 @@
-import StudyBoard from '@/components/Class/StudyBoard';
-import RightBoard from '@/components/Class/RightBoard';
-
 function Class() {
   const mainStyle = {
     display: 'grid',
@@ -26,15 +23,9 @@ function Class() {
           <div className='bg-warning'>warning</div>
           <div className='bg-error'>error</div>
         </div>
-        <div style={{ gridArea: 'left-bottom' }}>
-          <StudyBoard />
-        </div>
-        <div style={{ gridArea: 'right-top' }}>
-          <RightBoard contentType={0} />
-        </div>
-        <div style={{ gridArea: 'right-bottom' }}>
-          <RightBoard contentType={1} />
-        </div>
+        <div style={{ gridArea: 'left-bottom' }}>{/* <StudyBoard /> */}</div>
+        <div style={{ gridArea: 'right-top' }}>{/* <RightBoard contentType={0} /> */}</div>
+        <div style={{ gridArea: 'right-bottom' }}>{/* <RightBoard contentType={1} /> */}</div>
       </div>
     </div>
   );
