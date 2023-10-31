@@ -35,21 +35,21 @@ function StudyBoard() {
   ];
   return (
     <div className='w-full h-full flex flex-col'>
-      <div className='flex justify-between text-xl font-bold 2xl:text-2xl ' style={{ flex: 1 }}>
+      <div className='flex justify-between text-xl font-bold 2xl:text-2xl' style={{ flex: 1, padding: '0 1%' }}>
         <div>과제</div>
         <Link href={'/'} style={{ fontSize: '20px', color: '#3C80F7' }}>
           View all
         </Link>
       </div>
-      <div className='w-full flex items-end justify-between' style={{ flex: 4 }}>
+      <div className='w-full h-full flex items-end justify-between' style={{ flex: 4 }}>
         {data.map((item, idx) => (
-          <StudyCardBox key={idx} $isNotActive={false}>
-            <div className='w-full h-full p-2 flex flex-col justify-around bg-base-200 boxShadow rounded-lg'>
-              {/* <RadialProgress percent={item.progress} /> */}
-              <div>
-                <div className='whitespace-nowrap text-ellipsis overflow-hidden font-bold'>{item.title}</div>
-                <div className='text-base text-opacity-70'>{item.content}</div>
-              </div>
+          <StudyCardBox key={idx} $isNotActive={false} className='bg-base-200 rounded-lg boxShadow'>
+            <div className='absolute' style={{ top: '15%', left: '10%' }}>
+              <RadialProgress percent={item.progress} />
+            </div>
+            <div className='absolute' style={{ top: '60%', left: '10%', right: '10%', bottom: '10%' }}>
+              <div className='whitespace-nowrap text-ellipsis overflow-hidden font-bold'>{item.title}</div>
+              <div className='text-base text-opacity-70'>{item.content}</div>
             </div>
           </StudyCardBox>
         ))}

@@ -20,7 +20,7 @@ function Dashboard() {
 
   const mainStyle = {
     display: 'grid',
-    gap: '1.5rem',
+    gap: '3rem',
     gridTemplateColumns: 'repeat(5, 1fr)',
     gridTemplateRows: 'repeat(10, 1fr)',
     gridTemplateAreas: gridTemplateAreas,
@@ -37,7 +37,7 @@ function Dashboard() {
           </>
         ) : (
           <>
-            <div style={{ gridArea: 'left-top' }}>
+            <div className='w-full h-full' style={{ gridArea: 'left-top' }}>
               <TabsComponents />
             </div>
             <div style={{ gridArea: 'left-bottom' }}>

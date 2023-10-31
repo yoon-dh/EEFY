@@ -57,7 +57,7 @@ function BarChart({ activeData }: BarChartProps) {
     },
   };
 
-  return <Chart options={options} series={series} type='bar' height={300} />;
+  return <Chart options={options} series={series} type='bar' height={320} />;
 }
 
 export default BarChart;
