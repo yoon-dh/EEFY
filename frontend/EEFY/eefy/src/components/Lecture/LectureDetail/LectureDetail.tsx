@@ -24,13 +24,13 @@ type Notice = {
   id: string;
   title: string;
   createTime: Date;
-  imgUrl: string; 
-  useName: string; 
+  imgUrl: string;
+  useName: string;
   content: string;
 };
 
 function LectureDetail() {
-  const [notice, setNotice] = useRecoilState<Notice>(NoticeNum);
+  const [notice, setNotice] = useRecoilState<Notice | null>(NoticeNum);
 
   return (
     <>
@@ -39,15 +39,12 @@ function LectureDetail() {
           flex: 8,
         }}
       >
-        {notice.title && (
+        {notice?.title && (
           <>
             <Wrappe style={{ boxShadow: 'none', padding: '0px 3%' }} className='flex flex-col'>
-              <div
-              style={{flex:9}}
-              >
-
+              <div style={{ flex: 9 }}>
                 <Header>
-                  <div className="flex">
+                  <div className='flex'>
                     <Title>{notice.title}</Title>
                     <Time>{dayjs(notice.createTime).format('YYYY.MM.DD')}</Time>
                   </div>
@@ -68,7 +65,7 @@ function LectureDetail() {
                       <Img src={notice.imgUrl} />
                       <UseName>{notice.useName}</UseName>
                     </div>
-                    <div className="flex" style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
+                    <div className='flex' style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
                       <UpdataBtn>수정</UpdataBtn>
                       <DeleteBtn>삭제</DeleteBtn>
                     </div>
@@ -87,7 +84,6 @@ function LectureDetail() {
                 <ViewerBtn>Viewer 열기</ViewerBtn>
                 <DownloadBtn>자료 다운 받기</DownloadBtn>
               </BtnBox>
-
             </Wrappe>
           </>
         )}

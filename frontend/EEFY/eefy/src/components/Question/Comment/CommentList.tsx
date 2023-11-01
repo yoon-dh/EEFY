@@ -1,50 +1,44 @@
-import React, {useState, useEffect} from 'react';
-import {
-  Container,
-  Wrappe,
-  CreateInput,
-  IconBox,
-  Box
-} from './CommentList.style'
+import React, { useState, useEffect } from 'react';
+import { Container, Wrappe, CreateInput, IconBox, Box } from './CommentList.style';
 import SendIcon from '@mui/icons-material/Send';
 
-function CommentList(){
+function CommentList() {
+  const [check, setCheck] = useState(true);
+  const [comment, setComment] = useState('');
+  const [commentList, setCommentList] = useState([]);
 
-  const [check, setCheck] = useState(true)
-  const [comment, setComment] = useState('')
-  const [commentList, setCommentList] = useState([])
+  // useEffect(() => {
+  //   var checkbox = document.getElementById("myCheckbox");
+  //   if (checkbox) {
+  //     checkbox.checked = true;
+  //   }
+  // }, []);
 
-  
-  useEffect(() => {
-    var checkbox = document.getElementById("myCheckbox");
-    if (checkbox) {
-      checkbox.checked = true;
-    }
-  }, []);
+  // const handleClick = () => {
+  //   setCheck(!check);
+  //   checkbox.checked = check;
+  // }
 
-  const handleClick = () => {
-    setCheck(!check);
-    checkbox.checked = check;  
-  }
+  // const handleSend = (e) => {
+  //   e.preventDefault();
+  //   console.log(commentList,'commentList')
+  //   const teacherList = {
+  //     comment:comment,
+  //     check:check
+  //   }
+  //   setCommentList([...commentList, teacherList]);
+  //   setComment('')
+  // }
 
-  const handleSend = (e) => { 
-    e.preventDefault();
-    console.log(commentList,'commentList')
-    const teacherList = {
-      comment:comment,
-      check:check
-    }
-    setCommentList([...commentList, teacherList]);
-    setComment('')
-  }
-
-  return(
-    <div className='w-full h-full' >
-      <Container style={{
-        height:'83%',
-        overflow:'auto',
-      }}>
-        {commentList.map((item,index)=>(
+  return (
+    <div className='w-full h-full'>
+      <Container
+        style={{
+          height: '83%',
+          overflow: 'auto',
+        }}
+      >
+        {/* {commentList.map((item,index)=>(
           <div key={index}>
             {!item.check ? (
               <>
@@ -84,10 +78,10 @@ function CommentList(){
               </>
             )}
           </div>
-        ))}
-        </Container>
-    
-      <div className="flex flex-col">
+        ))} */}
+      </Container>
+
+      {/* <div className="flex flex-col">
         <div className="form-control w-52">
           <label className="cursor-pointer label">
             <span className="label-text">Remember me</span> 
@@ -98,30 +92,37 @@ function CommentList(){
             onClick={handleClick}/>
           </label>
         </div>
-      </div>
+      </div> */}
 
-      <Wrappe onSubmit={handleSend}>
-        <CreateInput 
-        id='commemt'
-        name='comment' 
-        value={comment}
-        placeholder='댓글을 입력하세요.'
-        onChange={(e)=>{
-          setComment(e.target.value)
-        }}/>
-        <IconBox style={{
-          backgroundColor:'white'
-        }}>
-            <Box onClick={handleSend}>
-              <SendIcon style={{
-                margin:'0px 0px 0px 2px'
+      <Wrappe
+      // onSubmit={handleSend}
+      >
+        <CreateInput
+          id='commemt'
+          name='comment'
+          value={comment}
+          placeholder='댓글을 입력하세요.'
+          onChange={e => {
+            setComment(e.target.value);
+          }}
+        />
+        <IconBox
+          style={{
+            backgroundColor: 'white',
+          }}
+        >
+          <Box
+          // onClick={handleSend}
+          >
+            <SendIcon
+              style={{
+                margin: '0px 0px 0px 2px',
               }}
-              />
-            </Box>
+            />
+          </Box>
         </IconBox>
       </Wrappe>
-
     </div>
-  )
+  );
 }
-export default CommentList
+export default CommentList;

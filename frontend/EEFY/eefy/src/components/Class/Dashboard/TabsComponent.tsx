@@ -18,7 +18,7 @@ function TabsComponents() {
           Listening
         </div>
       </div>
-      <BarChart activeData={activeTab} />
+      {/* <BarChart activeData={activeTab} /> */}
     </div>
   );
 }

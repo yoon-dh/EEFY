@@ -126,7 +126,13 @@ function StudyList() {
         </div>
         <div className='flex flex-col overflow-auto no-scrollbar gap-2'>
           {SpeakingDummyData.map((item, idx) => (
-            <SpeakingStudyItem key={idx} props={item} />
+            <SpeakingStudyItem
+              key={idx}
+              title={item.title}
+              finishDate={item.finishDate}
+              pronunciationScore={item.pronunciationScore}
+              accuracyScore={item.accuracyScore}
+            />
           ))}
         </div>
       </div>

@@ -9,13 +9,13 @@ function SemiCircleGauge({ gauge }: SemiCircleGaugeProps) {
   const series = [gauge];
 
   const options = {
-    chart: {
-      type: 'radialBar',
-      offsetY: -20,
-      sparkline: {
-        enabled: true,
-      },
-    },
+    // chart: {
+    //   type: 'radialBar',
+    //   offsetY: -20,
+    //   sparkline: {
+    //     enabled: true,
+    //   },
+    // },
     colors: ['#7977BC'],
     plotOptions: {
       radialBar: {
@@ -27,7 +27,7 @@ function SemiCircleGauge({ gauge }: SemiCircleGaugeProps) {
           image: undefined,
           imageOffsetX: 0,
           imageOffsetY: 0,
-          position: 'front',
+          // position: 'front',
         },
         track: {
           background: '#fff', // 게이지바 바탕색
@@ -76,13 +76,13 @@ function SemiCircleGauge({ gauge }: SemiCircleGaugeProps) {
         stops: [0, 100],
       },
     },
-    stroke: {
-      lineCap: 'round', // 끝에 둥글게
-    },
+    // stroke: {
+    //   lineCap: 'round', // 끝에 둥글게
+    // },
     labels: ['단어 유사도'],
   };
 
-  return <Chart options={options} series={series} type='radialBar' width={130} height={200} />;
+  return <Chart options={options} series={series} type='radialBar' offsetY={-20} width={130} height={200} />;
 }
 
 export default SemiCircleGauge;
