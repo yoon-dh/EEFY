@@ -18,10 +18,6 @@ function BarChart({ activeData }: BarChartProps) {
   ];
 
   const options = {
-    chart: {
-      type: 'bar',
-      height: 350,
-    },
     plotOptions: {
       bar: {
         horizontal: false,
@@ -47,13 +43,6 @@ function BarChart({ activeData }: BarChartProps) {
     },
     fill: {
       opacity: 1,
-    },
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return '$ ' + val + ' thousands';
-        },
-      },
     },
   };
 

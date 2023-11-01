@@ -15,22 +15,22 @@ function StudyBoard() {
     {
       title: 'TOEIC 필수 20제',
       content: '20 questions',
-      progress: '95',
+      progress: 95,
     },
     {
       title: 'TEPS 대비 기출',
       content: '30 questions',
-      progress: '100',
+      progress: 100,
     },
     {
       title: 'TEPS 완성 기출 100선 (상) ',
       content: '30 questions',
-      progress: '55',
+      progress: 55,
     },
     {
       title: 'TOEIC 빈출문제',
       content: '10 questions',
-      progress: '5',
+      progress: 5,
     },
   ];
   return (

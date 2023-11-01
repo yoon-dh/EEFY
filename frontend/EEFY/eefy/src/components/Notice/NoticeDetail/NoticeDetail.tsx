@@ -2,32 +2,19 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { NoticeNum } from '@/recoil/Notice';
 import dayjs from 'dayjs';
-import {
-  Container,
-  Header,
-  Wrappe,
-  Title,
-  Time,
-  Img,
-  UseName,
-  Line,
-  ContentBox,
-  Content,
-  UpdataBtn,
-  DeleteBtn,
-} from './NoticeDetail.style';
+import { Container, Header, Wrappe, Title, Time, Img, UseName, Line, ContentBox, Content, UpdataBtn, DeleteBtn } from './NoticeDetail.style';
 
 type Notice = {
   id: string;
   title: string;
   createTime: Date;
-  imgUrl: string; 
-  useName: string; 
+  imgUrl: string;
+  useName: string;
   content: string;
 };
 
 function NoticeDetail() {
-  const [notice, setNotice] = useRecoilState<Notice>(NoticeNum);
+  const [notice, setNotice] = useRecoilState<Notice | null>(NoticeNum);
 
   return (
     <>
@@ -36,11 +23,11 @@ function NoticeDetail() {
           flex: 8,
         }}
       >
-        {notice.title && (
+        {notice?.title && (
           <>
             <Wrappe style={{ boxShadow: 'none', padding: '0px 3%' }}>
               <Header>
-                <div className="flex">
+                <div className='flex'>
                   <Title>{notice.title}</Title>
                   <Time>{dayjs(notice.createTime).format('YYYY.MM.DD')}</Time>
                 </div>
@@ -61,7 +48,7 @@ function NoticeDetail() {
                     <Img src={notice.imgUrl} />
                     <UseName>{notice.useName}</UseName>
                   </div>
-                  <div className="flex" style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
+                  <div className='flex' style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
                     <UpdataBtn>수정</UpdataBtn>
                     <DeleteBtn>삭제</DeleteBtn>
                   </div>
