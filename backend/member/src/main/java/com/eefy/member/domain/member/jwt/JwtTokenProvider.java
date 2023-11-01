@@ -1,6 +1,5 @@
 package com.eefy.member.domain.member.jwt;
 
-import com.eefy.member.domain.member.persistence.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
