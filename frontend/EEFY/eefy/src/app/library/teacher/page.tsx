@@ -1,4 +1,4 @@
-import MainList from "@/components/Library/teacher/MainList";
+import MainList from "@/components/Library/Teacher/MainList";
 
 function Library() {
   return (
