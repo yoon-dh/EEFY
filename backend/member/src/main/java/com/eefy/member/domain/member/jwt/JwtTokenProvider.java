@@ -34,7 +34,6 @@ public class JwtTokenProvider {
     @Value("${jwt.token.refresh-expiration}")
     private long refreshExpiration;
 
-    private final MemberRepository memberRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
     @PostConstruct
@@ -78,16 +77,11 @@ public class JwtTokenProvider {
         return Optional.ofNullable(request.getHeader("Authorization"));
     }
 
-    public Optional<String> extractRefreshToken(String accessToken) {
-        return Optional.ofNullable(redisTemplate.opsForValue().get(accessToken));
+    public Optional<String> extractRefreshToken(int userId) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get(Integer.toString(userId)));
     }
 
     private void storeRefreshToken(int id, String refreshToken) {
-        memberRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("refresh token 발급 오류: 요청 사용자 없음");
-                    return new IllegalArgumentException("refresh token 발급 오류: 요청 사용자 없음");
-                });
 
         redisTemplate.opsForValue().set(
                 Integer.toString(id),

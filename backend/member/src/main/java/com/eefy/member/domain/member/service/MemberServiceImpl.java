@@ -56,14 +56,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ResponseEntity<JwtTokenResponse> refreshReissue(String accessToken) {
+        accessToken = accessToken.split(" ")[1];
         if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
-
-            String refreshToken = jwtTokenProvider.extractRefreshToken(accessToken)
+            Member member = memberRepository.findById(jwtTokenProvider.getUserId(accessToken))
+                    .orElseThrow(() -> new IllegalArgumentException("사용자 조회 오류: 없는 사용자"));
+            String refreshToken = jwtTokenProvider.extractRefreshToken(member.getId())
                     .orElseThrow(() -> new IllegalArgumentException("refresh token 조회 오류"));
             if (refreshToken != null) {
-                Member member = memberRepository.findById(jwtTokenProvider.getUserId(refreshToken))
-                        .orElseThrow(() -> new IllegalArgumentException("사용자 조회 오류: 없는 사용자"));
-
                 return makeJwtToken(member);
             }
         }
