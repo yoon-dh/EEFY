@@ -1,5 +1,7 @@
 import Image from 'next/image';
+import RecordingComponent from './RecordingComponent';
 import AudioPlayer from './AudioPlayer';
+import * as I from './ImageComponents';
 
 const dummyData = {
   script:
@@ -22,28 +24,19 @@ function SpeakingComponent() {
     >
       <div className='w-full h-full' style={mainStyle}>
         <div className='relative bg-base-200 rounded-2xl boxShadow' style={{ gridArea: 'a', padding: '2%' }}>
-          <div className='w-full h-full bg-warning overflow-auto text-lg'>{dummyData.script}</div>
-          <div className='absolute' style={{ bottom: '5%', right: '5%' }}>
+          <div className='w-full h-full overflow-auto text-xl'>{dummyData.script}</div>
+          <div className='absolute' style={{ bottom: '5%', right: '2%' }}>
             <AudioPlayer />
           </div>
         </div>
-        <div className='bg-base-200 rounded-2xl boxShadow' style={{ gridArea: 'b' }}>
-          스피킹 컴포넌트
+        <div className='relative bg-base-200 rounded-2xl boxShadow' style={{ gridArea: 'b', padding: '2%' }}>
+          <RecordingComponent />
         </div>
+        {/* 문제 이동 버튼 */}
         <div className='relative' style={{ gridArea: 'c' }}>
           <div className=' absolute bottom-0 right-0 w-32 h-auto flex justify-between items-center'>
-            <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none'>
-              <path
-                d='M20 17.8665L20 6.13189C20 3.72857 17.2988 2.22037 15.1429 3.42203L9.8799 6.35261L4.61693 9.29545C2.46102 10.4971 2.46102 13.5013 4.61693 14.7029L9.8799 17.6458L15.1429 20.5763C17.2988 21.778 20 20.2821 20 17.8665Z'
-                fill='white'
-              />
-            </svg>
-            <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none'>
-              <path
-                d='M4 6.13352V17.8681C4 20.2714 6.70123 21.7796 8.85714 20.578L14.1201 17.6474L19.3831 14.7045C21.539 13.5029 21.539 10.4987 19.3831 9.29708L14.1201 6.35424L8.85714 3.42366C6.70123 2.222 4 3.71794 4 6.13352Z'
-                fill='white'
-              />
-            </svg>
+            <I.LeftBtn btnSize={40} btnColor={'white'} />
+            <I.RightBtn btnSize={40} btnColor={'white'} />
           </div>
         </div>
       </div>
