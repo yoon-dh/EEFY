@@ -9,16 +9,28 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
+@Component
 public class JwtTokenParser {
     @Value("${jwt.secret}")
-    private static String secret;
+    private String secret;
 
-    public static boolean validateToken(String jwtToken) {
-        System.out.println(secret);
+    @PostConstruct
+    protected void init() {
+        secret = Base64.getEncoder().encodeToString(secret.getBytes());
+    }
+
+    public int getUserId(String token) {
+        return Integer.parseInt(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getId());
+    }
+
+    public boolean validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
