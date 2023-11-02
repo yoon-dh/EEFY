@@ -50,37 +50,43 @@ width: 550px;
 left: 10%;
 @media(max-width:1340px){
   width: 90%;
+  left: 0%;
 }
 `
 export const HeaderTitle = styled.div`
 position: relative;
-top: -50px;
-font-size: 120px;
+top: 10px;
+font-size: 90px;
 font-weight: bold;
 height: 90px;
+color: black;
 @media(max-width:1340px){
-  font-size: 80px;
+  font-size: 60px;
   height: 70px;
-  top: -40px;
+  top: -30px;
+  left: 2.4%;
 }
 `
 export const HeaderTitleServe = styled.div`
 position: relative;
-top: -40px;
-font-size: 120px;
+top: 20px;
+font-size: 90px;
+color: black;
 @media(max-width:1340px){
-  font-size: 80px;
+  font-size: 60px;
   top: -40px;
+  left: 2.4%;
 }
 `
 export const HeaderEtc = styled.div`
 position: relative;
-top: -40px;
+top: 20px;
 font-size: 22px;
 font-weight: bold;
 @media(max-width:1340px){
   font-size: 15px;
   top: -40px;
+  left: 3%;
 }
 `
 export const LoginBoxBox = styled.div`
@@ -89,7 +95,7 @@ top:20%;
 left: 68%;
 transition:opacity 1.1s, visibility 1.1s;
 @media(max-width:1340px){
-  top:21%;
+  top:17%;
 left: 65%;
 }
 `
