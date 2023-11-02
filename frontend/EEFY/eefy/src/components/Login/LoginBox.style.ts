@@ -43,6 +43,7 @@ margin: 68% 0px 0px 0px;
 `
 export const Etc = styled.div`
 color: #AFAFAF;
+width: 200px;
 margin: 8px 30% 0px 1%;
 @media(max-width:1340px){
   margin: 8px 23% 0px 1%;

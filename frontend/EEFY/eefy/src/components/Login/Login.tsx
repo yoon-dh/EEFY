@@ -74,8 +74,8 @@ export default function Login(){
           opacity:anim ? '1':'0',
           visibility:anim ? 'visible':'hidden',
         }}/>
-        <HeaderTitle>Welcome to</HeaderTitle>
-        <HeaderTitleServe>project name </HeaderTitleServe>
+        <HeaderTitle>English</HeaderTitle>
+        <HeaderTitleServe>Education For You</HeaderTitleServe>
         <HeaderEtc>Login to access your account</HeaderEtc>
       </Header>
 
