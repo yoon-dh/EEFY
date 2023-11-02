@@ -7,16 +7,16 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 function ProblemBox(){
   const [problem, setProblem] = useRecoilState(HomeworkProblem);
 
-  const handleTitle = (e)=>{
+  const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setProblem({ ...problem, title: newTitle });
   }
-  const handleContent = (e)=>{
+  const handleContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
     setProblem({ ...problem, content: newContent });
   }
 
-  const handleNumTitle = (e, id) => {
+  const handleNumTitle = (e: React.ChangeEvent<HTMLInputElement>, id:string) => {
     const newTitle = e.target.value;
     console.log(id,newTitle)
     // 새로운 NumList를 생성하고 해당 id의 title을 변경
@@ -44,7 +44,7 @@ function ProblemBox(){
         </div>
         <div style={{flex:4, width:'100%'}}>
           <S.ContentBox>
-            <S.Content onChange={handleContent} name='content' value={problem.content}/>
+            <S.Content onChange={handleContent} name="content" value={problem.content} />
           </S.ContentBox>
         </div>
         <div style={{flex:4, width:'100%'}}>

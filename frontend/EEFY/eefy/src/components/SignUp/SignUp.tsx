@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Image from "next/image";
 // 뒤로가기
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import {
@@ -82,8 +83,29 @@ function SignUp() {
         {/* // )} */}
         {/* {login && ( */}
             <>
-            <Img 
+            {/* <Img 
             src='/public/Img/회원가입.png'
+            style={{
+                position: 'absolute',
+                top: !login ? '50%' :(student ? '35%' : (teacher ? '65%' : '50%')),
+                left: !login ? '50%' :(student ? '80%' : (teacher ? '20%':'50%')),
+                width:teacher || student ? '35%':'',
+                opacity:login ? '1':'0',
+                visibility:login ? 'visible':'hidden',
+                transition: `
+                    top 1.5s,
+                    left 1.5s,
+                    width 1s,
+                    opacity 2.5s,
+                    visibility 2.5s`
+            }}
+            /> */}
+            <Image
+            className='img'
+            src="/Img/회원가입.png"
+            alt=''
+            width={500}
+            height={50}
             style={{
                 position: 'absolute',
                 top: !login ? '50%' :(student ? '35%' : (teacher ? '65%' : '50%')),

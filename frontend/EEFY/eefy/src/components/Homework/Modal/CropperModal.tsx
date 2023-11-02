@@ -6,7 +6,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import { Container, Wrappe, BtnBox, ImgBox, PdfBtn } from './CropperModal.style';
-function CropperModal(props) {
+
+function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | null, onCloseModal: () => void }) {
   const { imgUrl, pdfFile, onCloseModal } = props;
   const cropperRef = createRef<ReactCropperElement>();
   const [isPdf, setIsPdf] = useState<boolean>(false);
@@ -26,25 +27,27 @@ function CropperModal(props) {
     // 파일 정보
     if (typeof cropperRef.current?.cropper !== 'undefined') {
       console.log(cropperRef.current?.cropper, 'cropperRef.current?.cropper');
-      cropperRef.current?.cropper.getCroppedCanvas().toBlob(blob => {
-        // blob을 이미지 url로 전환
-        const imageUrl1 = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = imageUrl1;
-        link.download = 'image.jpg';
-        link.click();
-        console.log(blob, 'blob');
+      cropperRef.current?.cropper.getCroppedCanvas().toBlob((blob) => {
+        if (blob) {
+          const imageUrl1 = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = imageUrl1;
+          link.download = 'image.jpg';
+          link.click();
+        } else {
+          console.error("Failed to create Blob.");
+        }
       });
     }
   };
 
-  const [numPages, setNumPages] = useState(null);
+  const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [select, setSelect] = useState<boolean>(false);
   const [pageImage, setPageImage] = useState<string>('');
   
 
-  function onDocumentLoadSuccess({ numPages }) {
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
   }
 
