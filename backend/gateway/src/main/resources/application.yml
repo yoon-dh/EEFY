@@ -11,6 +11,13 @@ eureka:
 spring:
   application:
     name: gateway-service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/eefy_member?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: ${MYSQL_NAME}
+    password: ${MYSQL_PASSWORD}
+
   cloud:
     gateway:
       routes:
@@ -26,3 +33,6 @@ spring:
           uri: lb://STUDY-CLASS-SERTICE
           predicates:
             - Path=/api/study-class/**
+
+jwt:
+  secret: ${SECRET_KEY}
