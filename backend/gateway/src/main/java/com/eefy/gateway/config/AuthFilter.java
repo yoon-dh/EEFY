@@ -1,6 +1,8 @@
 package com.eefy.gateway.config;
 
 import com.eefy.gateway.persistence.MemberRepository;
+import com.eefy.gateway.persistence.entity.Member;
+import com.eefy.gateway.persistence.entity.enums.MemberRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -11,6 +13,8 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -29,8 +33,10 @@ public class AuthFilter {
             if (!isWhitePath(path, method)) {
                 log.info("인증 작업이 필요한 요청. path: {}, method: {}", path, method);
                 String jwtToken = request.getHeaders().getFirst("Authorization").split(" ")[1];
-                if (memberRepository.findById(jwtTokenParser.getUserId(jwtToken)).isEmpty()
-                        || !isValidAccessToken(jwtToken)) {
+                Optional<Member> member = memberRepository.findById(jwtTokenParser.getUserId(jwtToken));
+                if (member.isEmpty()
+                        || !isValidAccessToken(jwtToken)
+                        || !validAccessRole(path, member.get().getRole())) {
                     return handleUnAuthorized(exchange);
                 }
                 log.info("인증 완료. path: {}, method: {}", path, method);
@@ -38,6 +44,11 @@ public class AuthFilter {
 
             return chain.filter(exchange);
         });
+    }
+
+    private boolean validAccessRole(String path, MemberRole role) {
+        return (!path.contains("tutor") || role == MemberRole.TEACHER)
+                && (!path.contains("student") || role == MemberRole.STUDENT);
     }
 
     private Mono<Void> handleUnAuthorized(ServerWebExchange exchange) {
