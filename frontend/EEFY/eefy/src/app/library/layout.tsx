@@ -3,7 +3,7 @@
 import TopNav from '@/components/Library/TopNav';
 import SideNav from '@/components/Main/MainLayout/SideNav';
 import Footer from '@/components/Class/ClassLayout/Footer';
-
+import Image from "next/image";
 import { useRecoilValue } from 'recoil';
 import { Thema } from '@/recoil/Thema';
 
@@ -21,7 +21,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className='w-full h-full' style={mainStyle} data-theme={thema}>
       <div style={{ gridArea: 'a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <img style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} />
+        <Image style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} alt={''}/>
       </div>
       <div style={{ gridArea: 'b' }}>
         <TopNav/>
