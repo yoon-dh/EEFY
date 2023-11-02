@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Image from "next/image";
+import SignUpImg from "public/Img/회원가입.png";
+
 // 뒤로가기
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import {
@@ -102,7 +104,7 @@ function SignUp() {
             /> */}
             <Image
             className='img'
-            src="/Img/회원가입.png"
+            src={SignUpImg}
             alt=''
             width={500}
             height={50}
