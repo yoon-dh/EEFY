@@ -9,10 +9,10 @@ import {
 } from './CategoryModal.style'
 import CropperModal from './CropperModal';
 
-function CategoryModal(props){
+function CategoryModal(props: { onClose: () => void }){
   const { onClose } = props;
   const [targetFile, setTargetFile] = useState<FileList | null>(null);
-  const [imgUrl, setImgUrl] = useState<string>("");
+  const [imgUrl, setImgUrl] = useState<string | undefined>("");
   const [pdfFile, setPdfFile] = useState<string>("");
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   
@@ -48,7 +48,7 @@ function CategoryModal(props){
         reader.onload = (e) => {
           if (typeof e.target?.result === "string") {
             setIsSuccess(true)
-            setImgUrl(e.target.result);
+            setImgUrl(e.target.result as string);
           }
         };
       } else if(fileExtension === 'pdf'){
