@@ -1,6 +1,7 @@
 'use client';
 
 import type { Metadata } from 'next';
+import StyledComponentsRegistry from "@/styles/registry";
 import './globals.css';
 import { RecoilRoot } from 'recoil';
 
@@ -16,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel='/manifest' href='/manifest.json' />
       </head>
       <body className='w-full h-full'>
-        <RecoilRoot>{children}</RecoilRoot>
+        <RecoilRoot><StyledComponentsRegistry>{children}</StyledComponentsRegistry></RecoilRoot>
       </body>
     </html>
   );
