@@ -83,7 +83,7 @@ function SignUp() {
         {/* {login && ( */}
             <>
             <Img 
-            src='@public/Img/회원가입.png'
+            src='/public/Img/회원가입.png'
             style={{
                 position: 'absolute',
                 top: !login ? '50%' :(student ? '35%' : (teacher ? '65%' : '50%')),

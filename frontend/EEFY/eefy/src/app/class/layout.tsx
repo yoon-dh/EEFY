@@ -21,7 +21,7 @@ export default function ClassLayout({ children }: { children: React.ReactNode })
   return (
     <div className='w-full h-full' style={mainStyle} data-theme={thema}>
       <div style={{ gridArea: 'a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Image style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} alt = {''}/>
+        <Image style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/public/logo.png`} alt = {''} width = {130} height={130}/>
       </div>
       <div style={{ gridArea: 'b' }}>
         <TopNav />
