@@ -56,7 +56,7 @@ public class MemberController {
     }
 
     @PostMapping("/auth/email/confirm")
-    public ResponseEntity<String> confirmCode(@RequestParam EmailConfirmRequest emailConfirmRequest) {
+    public ResponseEntity<String> confirmCode(@RequestBody EmailConfirmRequest emailConfirmRequest) {
         return emailService.confirmCode(emailConfirmRequest);
     }
 }
