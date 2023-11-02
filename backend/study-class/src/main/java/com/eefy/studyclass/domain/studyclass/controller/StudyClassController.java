@@ -15,13 +15,13 @@ public class StudyClassController {
     private final StudyClassService studyClassService;
 
     @GetMapping("")
-    public ResponseEntity<StudyClassListResponse> getStudyClassList(@RequestHeader("Member-id") Integer memberId) {
+    public ResponseEntity<StudyClassListResponse> getStudyClassList(@RequestHeader("Member-Id") Integer memberId) {
 
         return ResponseEntity.ok(studyClassService.getStudyClassList(memberId));
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> createStudyClass(@RequestHeader("Member-id") Integer memberId,
+    public ResponseEntity<Void> createStudyClass(@RequestHeader("Member-Id") Integer memberId,
                                                  @RequestBody StudyClassCreateRequest studyClassCreateRequest) {
 
         return ResponseEntity.ok().build();
