@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang='en' className='w-full h-full'>
       <head>
-        <link rel='manifest' href='/manifest.json' />
+        <link rel='/manifest' href='/manifest.json' />
       </head>
       <body className='w-full h-full'>
         <RecoilRoot>{children}</RecoilRoot>
