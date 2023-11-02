@@ -36,7 +36,7 @@ function NoticeListBoard() {
               setNum(item);
             }}
           >
-            <Title>{item.title}</Title>
+            <Title>{item.title.slice(0,15) + '...'}</Title>
             <Time>{dayjs(item.createTime).format('YYYY.MM.DD')}</Time>
           </Card>
         ))}

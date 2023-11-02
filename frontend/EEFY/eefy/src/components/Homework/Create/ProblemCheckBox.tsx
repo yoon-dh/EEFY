@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {
   Container,
   Box,
@@ -8,9 +9,15 @@ import {
 } from './ProblemCheckBox.style'
 import { useRecoilState } from 'recoil';
 import { HomeworkCount } from '@/recoil/Homework';
+import CategoryModal from '../Modal/CategoryModal';
 
 function ProblemCheckBox(){
   const [numData, setNumData] = useRecoilState(HomeworkCount);
+  const [isCategoryModal, setIsCategoryModal] = useState(false)
+
+  const onClose = () =>[
+    setIsCategoryModal(!isCategoryModal)
+  ]
 
   return(
     <div className='w-full h-full'>
@@ -29,10 +36,16 @@ function ProblemCheckBox(){
           ))}
         </Wrappe>
         <BtnBox>
-            <div style={{flex:5}}><Btn1 className='boxShadow'>유형 선택</Btn1></div>
+            <div style={{flex:5}}>
+              <Btn1 
+              onClick={onClose}
+              className='boxShadow'>
+                유형 선택</Btn1></div>
             <div style={{flex:5}}><Btn2 className='boxShadow'>저장</Btn2></div>
         </BtnBox>
       </Container>
+
+      {isCategoryModal && (<CategoryModal onClose={onClose}/>)}
     </div>
   )
 }

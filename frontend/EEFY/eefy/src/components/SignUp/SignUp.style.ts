@@ -177,7 +177,7 @@ cursor: pointer;
     top:12px;
 }
 `
-export const SignUpBtn = styled.div`
+export const SignUpBtn = styled.button`
 display: flex;
 flex-direction: row;
 justify-content: center;

@@ -23,13 +23,13 @@ function Home() {
             // borderLeft: '2px solid black'
           }}>
             <div style={{
-              flex:5,
+              flex:6,
               backgroundColor:'white'
             }}>
               <QuestionDetail/>
             </div>
             <div style={{
-              flex:5,
+              flex:4,
               padding:'15px 20px'
             }}>
               <CommentList/>
