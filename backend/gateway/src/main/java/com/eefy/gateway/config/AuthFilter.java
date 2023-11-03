@@ -75,9 +75,12 @@ public class AuthFilter {
 
     private boolean isWhitePath(String path, String method) {
         if (path.contains("/api/auth")) {
-            if (path.equals("/api/auth") && (method.equals("DELETE") || method.equals("PUT"))) return false;
-            else return !path.equals("/api/member") || !method.equals("PUT");
+            return !path.equals("/api/auth") || (!method.equals("DELETE") && !method.equals("PUT"));
         }
+        if (path.contains("/api/member")) {
+            return !path.equals("/api/member") || !method.equals("PUT");
+        }
+        if (path.contains("/api/swagger-ui") || path.contains("/v3/api-docs")) return true;
         return false;
     }
 }
