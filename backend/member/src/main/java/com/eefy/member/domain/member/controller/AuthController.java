@@ -6,7 +6,7 @@ import com.eefy.member.domain.member.dto.request.LoginRequest;
 import com.eefy.member.domain.member.dto.response.EmailSendResponse;
 import com.eefy.member.domain.member.dto.response.JwtTokenResponse;
 import com.eefy.member.domain.member.service.EmailService;
-import com.eefy.member.domain.member.service.MemberService;
+import com.eefy.member.domain.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,22 +24,22 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class AuthController {
     private final EmailService emailService;
-    private final MemberService memberService;
+    private final AuthService authService;
 
     @PostMapping
     public ResponseEntity<JwtTokenResponse> login(@RequestBody LoginRequest loginRequest) {
-        return memberService.login(loginRequest);
+        return authService.login(loginRequest);
     }
 
     @DeleteMapping
     public ResponseEntity<String> logout(@RequestHeader("Member-Id") int memberId) {
-        memberService.logout(memberId);
+        authService.logout(memberId);
         return ResponseEntity.ok("SUCCESS");
     }
 
     @PutMapping("/refresh")
     public ResponseEntity<JwtTokenResponse> refreshReissue(HttpServletRequest httpServletRequest) {
-        return memberService.refreshReissue(httpServletRequest.getHeader("Authorization"));
+        return authService.refreshReissue(httpServletRequest.getHeader("Authorization"));
     }
 
     @PostMapping("/email")

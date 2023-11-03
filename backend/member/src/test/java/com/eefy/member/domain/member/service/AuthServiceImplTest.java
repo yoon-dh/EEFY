@@ -1,27 +1,20 @@
 package com.eefy.member.domain.member.service;
 
-import com.eefy.member.domain.member.dto.request.JoinRequest;
-import com.eefy.member.domain.member.dto.request.LoginRequest;
-import com.eefy.member.domain.member.dto.response.JwtTokenResponse;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
 import com.eefy.member.domain.member.persistence.MemberRepository;
-import com.eefy.member.domain.member.persistence.entity.Member;
-import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
-import com.eefy.member.domain.member.persistence.entity.redis.EmailConfirm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-class MemberServiceImplTest {
+class AuthServiceImplTest {
     @Autowired
-    private MemberService memberService;
+    private AuthService authService;
     @Autowired
     private EmailConfirmRedisRepository emailConfirmRedisRepository;
     @Autowired
