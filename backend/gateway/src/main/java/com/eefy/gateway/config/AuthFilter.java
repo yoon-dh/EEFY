@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -32,11 +33,9 @@ public class AuthFilter {
 
             if (!isWhitePath(path, method)) {
                 log.info("인증 작업이 필요한 요청. path: {}, method: {}", path, method);
-                String jwtToken = request.getHeaders().getFirst("Authorization").split(" ")[1];
+                String jwtToken = getJwtToken(request);
                 Optional<Member> member = memberRepository.findById(jwtTokenParser.getUserId(jwtToken));
-                if (member.isEmpty()
-                        || !isValidAccessToken(jwtToken)
-                        || !validAccessRole(path, member.get().getRole())) {
+                if (!canPass(member, jwtToken, path)) {
                     return handleUnAuthorized(exchange);
                 }
                 log.info("인증 완료. path: {}, method: {}", path, method);
@@ -44,6 +43,17 @@ public class AuthFilter {
 
             return chain.filter(exchange);
         });
+    }
+
+    private String getJwtToken(ServerHttpRequest request) {
+        return Objects.requireNonNull(
+                request.getHeaders().getFirst("Authorization")).split(" ")[1];
+    }
+
+    private boolean canPass(Optional<Member> member, String jwtToken, String path) {
+        return member.isEmpty()
+                || !isValidAccessToken(jwtToken)
+                || !validAccessRole(path, member.get().getRole());
     }
 
     private boolean validAccessRole(String path, MemberRole role) {
