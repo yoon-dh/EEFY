@@ -76,7 +76,6 @@ export default function Login(){
         }}/>
         <HeaderTitle>English</HeaderTitle>
         <HeaderTitleServe>Education For You</HeaderTitleServe>
-        <HeaderEtc>Login to access your account</HeaderEtc>
       </Header>
 
       <LoginBoxBox

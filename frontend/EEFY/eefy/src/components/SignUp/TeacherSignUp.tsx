@@ -11,59 +11,74 @@ import {
   PasswordBox,
 } from './SignUp.style'
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation';
+import {postmail, checkmail, postJoin} from '../../api/Auth/join'
 
 export default function TeacherSignUp(){
-    // const router = useRouter();
+  const router = useRouter();
 
-    // watch 함수를 사용을 위한 useForm 훅을 초기화
-    const {
-        watch,
-        register,
-        handleSubmit,
-        setValue,
-        clearErrors,
-        formState: { errors },
-    } = useForm({ mode: "onBlur" });
-    const name: string = watch("name");
-    const password: string = watch("password");
-    const nickname: string = watch("nickname");
-    const email: string = watch("email");
-    const code: string = watch("code");
-    const phoneNumber: Number = watch("phoneNumber");
+  // watch 함수를 사용을 위한 useForm 훅을 초기화
+  const {
+      watch,
+      register,
+      handleSubmit,
+      setValue,
+      clearErrors,
+      formState: { errors },
+  } = useForm({ mode: "onBlur" });
 
-    const [showPassword, setShowPassword] = useState('password')
-    const [showCode, setShowCode] = useState(false)
+  const name: string = watch("name");
+  const password: string = watch("password");
+  const nickname: string = watch("nickname");
+  const email: string = watch("email");
+  const code: string = watch("code");
+  const phoneNumber: Number = watch("phoneNumber");
 
-    const userData = {
-        email: email,
-        password: password,
-        nickname: nickname,
-        phoneNumber: phoneNumber,
-        name: name,
+  const [showPassword, setShowPassword] = useState<string>('password')
+  const [showCode, setShowCode] = useState<boolean>(false)
+  const [checkCode, setCheckCode] = useState<boolean>(false)
+
+  const userData = {
+      email: email,
+      password: password,
+      nickname: nickname,
+      phoneNumber: phoneNumber,
+      name: name,
+  };
+
+  const authMail = {
+      email: email,
+      code: code,
+  };
+  const enterEmail = {
+      email: email,   
+  };
+
+  // 회원가입
+  const onSubmit = async () => {
+    // router.push('/login');
+    // console.log(userData)
+    // const res = await postJoin(userData)
+    // if (res.stauts === 200){
+    //   router.push('/login');
+    // }
+  };
+
+  // 이메일 인증
+  const handleMailSend = async () => {
+      // setShowCode(true)
+      // console.log(enterEmail)
+      // const res = await postmail(enterEmail)
+      // if (res.stauts === 200){
+      //   setShowCode(true)
+      // }
+  };
+
+  // 인증 확인
+  const handleAuthMail = async () => {
+    console.log("코드다", authMail);
+    // const res = await checkmail(authMail)
     };
-
-    const authMail = {
-        email: email,
-        code: code,
-    };
-    const enterEmail = {
-        email: email,   
-    };
-
-    const onSubmit = async () => {
-        console.log(userData)
-    };
-
-    const handleMailSend = async () => {
-        setShowCode(true)
-        console.log(enterEmail);
-        console.log(userData);
-    };
-
-    const handleAuthMail = async () => {
-        console.log("코드다", code);
-      };
 
   return(
     <>
@@ -326,7 +341,9 @@ export default function TeacherSignUp(){
             onClick={handleAuthMail}>Auth</CodeCheckBtn>
         </CodeCheckBox>
       </div>
-      <SignUpBtn type="submit" onClick={onSubmit}>Submit</SignUpBtn>
+      <SignUpBtn type="submit" 
+      onClick={onSubmit}
+      >Submit</SignUpBtn>
     </form>
     </>
   )
