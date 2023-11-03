@@ -38,4 +38,7 @@ public class HomeworkQuestion {
 
     @Column(nullable = false, length = 200)
     private HomeworkQuestionType field;
+
+    @Column(nullable = true, length = 500)
+    private String answer;
 }

@@ -28,4 +28,7 @@ public class Choice {
 
     @Column(nullable = false, length = 4000)
     private String content;
+
+    @Column(nullable = false, length = 10)
+    private String number;
 }
