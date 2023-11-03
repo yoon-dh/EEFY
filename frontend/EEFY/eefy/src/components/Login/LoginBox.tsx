@@ -10,6 +10,9 @@ export default function LoginBox() {
   const [showPassword, setShowPassword] = useState('password');
   const router = useRouter();
 
+  const [ email, setEmail] = useState<string>('')
+  const [ password, setPassword] = useState<string>('')
+
   return (
     <div>
       <Title>Login</Title>
@@ -18,6 +21,7 @@ export default function LoginBox() {
           id='standard-basic'
           label='UserName'
           variant='standard'
+          onChange={(e)=>{setEmail(e.target.value)}}
           style={{
             //   margin: window.innerWidth <= 1340 ? '30px 0px 0px 0px' : '50px 0px 0px 0px'
             margin: '30px 0px 0px 0px',
@@ -44,6 +48,7 @@ export default function LoginBox() {
             label='Password'
             variant='standard'
             type={showPassword}
+            onChange={(e)=>{setPassword(e.target.value)}}
             style={{
               margin: '10px 0px 0px 0px',
             }}
@@ -108,10 +113,14 @@ export default function LoginBox() {
         <PasswordBtn>Forgot Password?</PasswordBtn>
         <LoginBtn
           onClick={() => {
-            console.log('hi');
-            router.push('/class');
+            const data = {
+              email:email,
+              password:password
+            }
+            console.log(data);
+            // router.push('/class');
           }}
-        >
+        >c
           login
         </LoginBtn>
       </InputBox>
