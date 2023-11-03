@@ -30,7 +30,7 @@ public class AuthFilter {
             ServerHttpRequest request = exchange.getRequest();
             String path = request.getPath().toString();
             String method = request.getMethodValue();
-
+            System.out.println(path + " " + method);
             if (!isWhitePath(path, method)) {
                 log.info("인증 작업이 필요한 요청. path: {}, method: {}", path, method);
                 String jwtToken = getJwtToken(request);
@@ -74,9 +74,9 @@ public class AuthFilter {
     }
 
     private boolean isWhitePath(String path, String method) {
-        if (path.contains("/api/member")) {
-            if (path.equals("/api/member") && (method.equals("GET") || method.equals("PUT"))) return false;
-            else return !path.contains("auth") || (!method.equals("PUT") && !method.equals("DELETE"));
+        if (path.contains("/api/auth")) {
+            if (path.equals("/api/auth") && (method.equals("DELETE") || method.equals("PUT"))) return false;
+            else return !path.equals("/api/member") || !method.equals("PUT");
         }
         return false;
     }
