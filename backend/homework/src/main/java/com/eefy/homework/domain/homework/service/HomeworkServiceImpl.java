@@ -48,15 +48,21 @@ public class HomeworkServiceImpl implements HomeworkService {
         // todo: 강사가 유효한 사용자인지 검증
 
         Homework homework = validateHomework(makeHomeworkQuestionRequest.getHomeworkId());
+        HomeworkQuestion homeworkQuestion = saveHomeworkQuestion(makeHomeworkQuestionRequest, homework);
+        saveChoice(makeHomeworkQuestionRequest, homeworkQuestion);
+
+        return new MakeHomeworkQuestionResponse(homework.getId());
+    }
+
+    private HomeworkQuestion saveHomeworkQuestion(
+        MakeHomeworkQuestionRequest makeHomeworkQuestionRequest, Homework homework) {
         HomeworkQuestion homeworkQuestion = HomeworkQuestion.of(homework,
             makeHomeworkQuestionRequest.getTitle(),
             makeHomeworkQuestionRequest.getContent(), makeHomeworkQuestionRequest.getFilePath(),
             makeHomeworkQuestionRequest.getField(), makeHomeworkQuestionRequest.getAnswer());
 
         homeworkQuestionRepository.save(homeworkQuestion);
-        saveChoice(makeHomeworkQuestionRequest, homeworkQuestion);
-
-        return new MakeHomeworkQuestionResponse(homework.getId());
+        return homeworkQuestion;
     }
 
     private void saveChoice(MakeHomeworkQuestionRequest makeHomeworkQuestionRequest,
