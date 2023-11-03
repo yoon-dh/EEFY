@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+    private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
@@ -28,6 +30,9 @@ public class AuthServiceImpl implements AuthService {
                     return new IllegalArgumentException("로그인 실패: 요청 유저 없음");
                 });
 
+        if (!passwordEncoder.encode(loginRequest.getPassword()).equals(member.getPassword())) {
+            throw new IllegalStateException("로그인 실패: 비밀번호 불일치");
+        }
         return makeJwtToken(member);
     }
 
