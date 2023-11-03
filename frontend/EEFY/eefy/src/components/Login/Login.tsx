@@ -11,7 +11,6 @@ import {
   Img,
   LoginBoxBox
 } from './Login.style'
-import LoginBox from './LoginBox'
 
 import TextField from '@mui/material/TextField';
 // 아이콘 보이기
@@ -27,11 +26,18 @@ import {
   SignUpBtn
 } from './LoginBox.style'
 import { useRouter } from 'next/navigation';
+import ForgotPassword from './ForgotPassword';
+import { useRecoilState  } from 'recoil';
+import { ForgetPasswordBox } from '@/recoil/Auth';
 
 export default function Login(){
   const [anim, setAnim] = useState(false)
   const [anim1, setAnim1] = useState(false)
   const [showPassword, setShowPassword] = useState('password')
+  const [passwordModal, setPasswordModal] = useRecoilState(ForgetPasswordBox)
+  const [ email, setEmail] = useState<string>('')
+  const [ password, setPassword] = useState<string>('')
+
   const router = useRouter();
   useEffect(()=>{
     setAnim(true)
@@ -89,8 +95,9 @@ export default function Login(){
       <InputBox>
       <TextField 
       id="standard-basic" 
-      label="UserName" 
+      label="E-mail" 
       variant="standard"
+      onChange={(e)=>{setEmail(e.target.value)}}
       style={{
         //   margin: window.innerWidth <= 1340 ? '30px 0px 0px 0px' : '50px 0px 0px 0px'
           margin:'30px 0px 0px 0px'
@@ -117,6 +124,7 @@ export default function Login(){
           label="Password" 
           variant="standard"
           type={showPassword}
+          onChange={(e)=>{setPassword(e.target.value)}}
           style={{
               margin:'10px 0px 0px 0px'
           }}
@@ -173,8 +181,16 @@ export default function Login(){
               </>
           )}
       </div>  
-      <PasswordBtn>Forgot Password?</PasswordBtn>
-      <LoginBtn>login</LoginBtn>
+      <PasswordBtn onClick={()=>{setPasswordModal(true)}}>Forgot Password?</PasswordBtn>
+      <LoginBtn
+      onClick={()=>{
+        const data={
+          email:email,
+          password:password
+        }
+        console.log(data)
+      }}
+      >login</LoginBtn>
       </InputBox>
 
       <Box>
@@ -191,6 +207,9 @@ export default function Login(){
       </Box>
     </div>
       </LoginBoxBox>
+      <div>
+        {passwordModal && <ForgotPassword/>}
+      </div>
     </div>
   )
 }

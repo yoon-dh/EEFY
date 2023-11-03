@@ -7,7 +7,9 @@ font-weight: bold;
   font-size: 60px;
 }
 `
-export const InputBox = styled.div``
+export const InputBox = styled.div`
+margin: 30px 0px 0px 0px;
+`
 export const PasswordBtn = styled.div`
 color: #AFAFAF;
 cursor: pointer;
@@ -19,7 +21,7 @@ flex-direction: row;
 justify-content: center;
 align-items: center;
 gap: 10px;
-width: 360px;
+width: 350px;
 height: 48px;
 background: #191A3E;
 border-radius: 12px;
@@ -30,8 +32,9 @@ font-size: 16px;
 line-height: 24px;
 color: #FFFFFF;
 margin: 40px 0px 0px 0px;
+cursor: pointer;
 @media(max-width:1340px){
-  width: 360px;
+  width: 350px;
 }
 `
 export const Box = styled.div`
@@ -44,9 +47,9 @@ margin: 68% 0px 0px 0px;
 export const Etc = styled.div`
 color: #AFAFAF;
 width: 250px;
-margin: 8px 2% 0px 1%;
+margin: 8px 0% 0px 1%;
 @media(max-width:1340px){
-  margin: 8px 2% 0px 1%;
+  margin: 8px 0% 0px 1%;
 }
 `
 export const SignUpBtn = styled.div`
@@ -60,4 +63,5 @@ border-radius: 8px;
 font-size: 16px;
 line-height: 24px;
 color: #FFFFFF;
+cursor: pointer;
 `
