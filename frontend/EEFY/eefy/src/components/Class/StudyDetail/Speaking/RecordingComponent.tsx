@@ -10,6 +10,7 @@ function RecordingComponent() {
 
   return (
     <>
+      <AudioRecord />
       {recordActive ? (
         <>
           <div className='w-full h-full flex flex-col items-center justify-around' style={{ letterSpacing: '1px' }}>

@@ -9,7 +9,7 @@ interface MainClassBoxProps {
 
 function MainClassBox({ title, cnt }: MainClassBoxProps) {
   return (
-    <Link href='/class'>
+    <Link href='/class/dashboard'>
       <S.ClassBox>
         {/* 타입에 따라서 이모지 바꿔주기 */}
         <div
