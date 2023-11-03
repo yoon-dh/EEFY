@@ -5,6 +5,6 @@ import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 
 public interface HomeworkService {
 
-    MakeHomeworkResponse makeHomework(MakeHomeworkRequest makeHomeworkRequest);
+    MakeHomeworkResponse makeHomework(MakeHomeworkRequest makeHomeworkRequest, Integer memberId);
 
 }

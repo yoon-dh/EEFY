@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,17 +23,12 @@ public class HomeworkController {
 
     @PostMapping("/make")
     public ResponseEntity<MakeHomeworkResponse> makeHomework(
-        @RequestBody MakeHomeworkRequest makeHomeworkRequest) {
+        @RequestBody MakeHomeworkRequest makeHomeworkRequest,
+        @RequestHeader("Member-Id") Integer memberId) {
 
         log.info("homework/make/ api 호출 : {}", makeHomeworkRequest);
-
-        MakeHomeworkResponse makeHomeworkResponse = homeworkService.makeHomework(
-            makeHomeworkRequest);
-
-        log.info("homework/make/ api 결과 : {}", makeHomeworkResponse);
-
         return new ResponseEntity<>(
-            makeHomeworkResponse,
+            homeworkService.makeHomework(makeHomeworkRequest, memberId),
             HttpStatus.OK);
     }
 }
