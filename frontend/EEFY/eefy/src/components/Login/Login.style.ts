@@ -46,8 +46,8 @@ left: 10.5%;
 export const Img = styled.img`
 z-index: 3;
 position: relative;
-width: 550px;
-left: 10%;
+width: 650px;
+left: 5%;
 @media(max-width:1340px){
   width: 90%;
   left: 0%;
@@ -55,7 +55,7 @@ left: 10%;
 `
 export const HeaderTitle = styled.div`
 position: relative;
-top: 10px;
+top: -35px;
 font-size: 90px;
 font-weight: bold;
 height: 90px;
@@ -63,18 +63,18 @@ color: black;
 @media(max-width:1340px){
   font-size: 60px;
   height: 70px;
-  top: -30px;
+  top: -20px;
   left: 2.4%;
 }
 `
 export const HeaderTitleServe = styled.div`
 position: relative;
-top: 20px;
+top: -35px;
 font-size: 90px;
 color: black;
 @media(max-width:1340px){
   font-size: 60px;
-  top: -40px;
+  top: -30px;
   left: 2.4%;
 }
 `
