@@ -6,7 +6,7 @@ spring:
     name: study-class-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${EEFY_STUDY_CLASS_MYSQL_URL}
+    url: ${MYSQL_STUDY_CLASS_URL}
     username: ${MYSQL_NAME}
     password: ${MYSQL_PASSWORD}
 
