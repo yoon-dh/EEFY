@@ -39,7 +39,7 @@ public class AuthFilter {
                 if (!canPass(member, jwtToken, path)) {
                     return handleUnAuthorized(exchange);
                 }
-                request.getHeaders().add("Member-Id", String.valueOf(memberId));
+                request.mutate().header("Member-Id", String.valueOf(memberId)).build();
                 log.info("인증 완료. path: {}, method: {}", path, method);
             }
 
@@ -53,9 +53,9 @@ public class AuthFilter {
     }
 
     private boolean canPass(Optional<Member> member, String jwtToken, String path) {
-        return member.isEmpty()
-                || !isValidAccessToken(jwtToken)
-                || !validAccessRole(path, member.get().getRole());
+        return member.isPresent()
+                && isValidAccessToken(jwtToken)
+                && validAccessRole(path, member.get().getRole());
     }
 
     private boolean validAccessRole(String path, MemberRole role) {
