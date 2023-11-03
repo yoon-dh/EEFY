@@ -12,7 +12,7 @@ import {
 } from './SignUp.style'
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
-import {postmail, checkmail, postJoin} from '../../api/Auth/join'
+import {postEmail, postCheckEmail, postJoin} from '../../api/Auth/join'
 
 export default function TeacherSignUp(){
   const router = useRouter();
@@ -68,7 +68,7 @@ export default function TeacherSignUp(){
   const handleMailSend = async () => {
       // setShowCode(true)
       // console.log(enterEmail)
-      // const res = await postmail(enterEmail)
+      // const res = await postEmail(enterEmail)
       // if (res.stauts === 200){
       //   setShowCode(true)
       // }
@@ -77,7 +77,7 @@ export default function TeacherSignUp(){
   // 인증 확인
   const handleAuthMail = async () => {
     console.log("코드다", authMail);
-    // const res = await checkmail(authMail)
+    // const res = await postCheckEmail(authMail)
     };
 
   return(
