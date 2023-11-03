@@ -5,6 +5,6 @@ import lombok.Builder;
 
 @Builder
 @AllArgsConstructor
-public class HomeworkInsertResponse {
+public class MakeHomeworkResponse {
 
 }
