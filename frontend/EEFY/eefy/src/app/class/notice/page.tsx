@@ -1,23 +1,19 @@
 'use client';
 import ContainerBtn from '@/components/Notice/ContainerBtn';
-import NoticeListBoard from '@/components/Notice/NoticeList/NoticeListBoard';
-import NoticeDetail from '@/components/Notice/NoticeDetail/NoticeDetail';
-
+import Note from '@/components/Notice/Note/Note';
 function Home() {
   return (
     <div className='w-full h-full'>
       <div>
         <ContainerBtn />
       </div>
-      <div className='flex  rounded-lg bg-base-200' 
-      style={{ 
-        height: '90%',  
-        width: '100%', 
-        boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
-        margin:'10px 0px 0px 0px'
+      <div className='w-full' 
+      style={{
+        position:'relative',
+        top:'10px',
+        height:'89%', 
         }}>
-        <NoticeListBoard />
-        <NoticeDetail />
+        <Note/>
       </div>
     </div>
   );

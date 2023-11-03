@@ -1,19 +1,17 @@
-import { CreateBtn, NoticeTitle, Tab } from './ContainerBtn.style';
+import { CreateBtn, NoticeTitle, Tab, TabBox } from './ContainerBtn.style';
 function ContainerBtn() {
   
   return (
     <div className='flex mt-1'>
-      <div>
-        <div className="tabs" style={{
-          margin:'0px 0px 0px 10px'
-        }}>
+      <TabBox>
+        <div className="tabs">
           <Tab className="tab tab-bordered tab-active">
             <NoticeTitle>
               공지사항
             </NoticeTitle>
           </Tab> 
         </div>
-      </div>
+      </TabBox>
 
       <CreateBtn>글 작성</CreateBtn>
     </div>

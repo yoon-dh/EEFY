@@ -13,14 +13,12 @@ function NoticeListBoard() {
   return (
     <Container
       style={{
-        flex: 2,
         width: '100%',
-        height: '89%',
+        height: '100%',
       }}
     >
       <Wrappe
         style={{
-          margin: '20px 0px 20px 0px',
           height: '100%',
         }}
       >

@@ -18,11 +18,7 @@ function NoticeDetail() {
 
   return (
     <>
-      <Container
-        style={{
-          flex: 8,
-        }}
-      >
+      <Container>
         {notice?.title && (
           <>
             <Wrappe style={{ boxShadow: 'none', padding: '0px 3%' }}>
@@ -57,10 +53,6 @@ function NoticeDetail() {
               <Line />
               <ContentBox>
                 <Content>
-                  {notice.content}
-                  {notice.content}
-                  {notice.content}
-                  {notice.content}
                   {notice.content}
                 </Content>
               </ContentBox>

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const CreateBtn = styled.div`
   padding: 5px 20px;
+  height: 50px;
   background: #999bd5;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
@@ -9,11 +10,16 @@ export const CreateBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0px 20px 0px 0px;
+  margin: 1% 20px 0px 0px;
   margin-left: auto;
+  @media(max-width:1334px){
+    height: 40px;
+    margin: 0.5% 20px 0px 0px;
+    margin-left: auto;
+  }
 `;
 export const NoticeTitle = styled.div`
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
   @media (max-width: 1340px) {
     font-size: 20px;
@@ -28,4 +34,7 @@ font-size: 25px;
 height: 40px;
 font-size: 20px;
 }
+`
+export const TabBox = styled.div`
+  margin:'0px 0px 0px 10px'
 `
