@@ -1,18 +1,20 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 100%;
+  width: 97%;
   height: 100%;
-  /* border-left: 1px solid #7b88e0; */
-  border-left: 7px solid white;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.25);
 `;
-export const Header = styled.div``;
+export const Header = styled.div`
+margin: 5% 0px 0px 0px;
+`;
 export const Wrappe = styled.div`
   width: 100%;
   height: 90%;
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  margin: 2% 0px 0px 0px;
   overflow: auto;
   &::-webkit-scrollbar {
     display: none;
