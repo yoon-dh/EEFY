@@ -1,9 +1,10 @@
 'use client';
 
 import type { Metadata } from 'next';
-import StyledComponentsRegistry from "@/styles/registry";
+import StyledComponentsRegistry from '@/styles/registry';
 import './globals.css';
 import { RecoilRoot } from 'recoil';
+import { useEffect } from 'react';
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -11,13 +12,30 @@ import { RecoilRoot } from 'recoil';
 // };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then(function (registration) {
+          // Service Worker 등록이 성공한 경우
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(function (error) {
+          // Service Worker 등록이 실패한 경우
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  }, []);
   return (
     <html lang='en' className='w-full h-full'>
       <head>
-        <link rel='/manifest' href='/manifest.json' />
+        {/* <link rel='/manifest' href='/manifest.json' /> */}
+        <link rel='manifest' href='/manifest.json' />
       </head>
       <body className='w-full h-full'>
-        <RecoilRoot><StyledComponentsRegistry>{children}</StyledComponentsRegistry></RecoilRoot>
+        <RecoilRoot>
+          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        </RecoilRoot>
       </body>
     </html>
   );
