@@ -1,11 +1,12 @@
 package com.eefy.homework.domain.homework.dto.response;
 
-import lombok.Builder;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Builder
 @Data
-public class MakeHomeworkResponse {
+@AllArgsConstructor
+public class MakeHomeworkQuestionResponse {
 
     private Integer homeworkId;
 }

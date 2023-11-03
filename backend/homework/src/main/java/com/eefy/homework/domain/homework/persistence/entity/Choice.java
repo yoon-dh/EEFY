@@ -1,9 +1,5 @@
 package com.eefy.homework.domain.homework.persistence.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,11 +8,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Builder
+@AllArgsConstructor
 public class Choice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "choice_id")
@@ -31,4 +35,12 @@ public class Choice {
 
     @Column(nullable = false, length = 10)
     private String number;
+
+    public static Choice of(HomeworkQuestion homeworkQuestion, String content, String number) {
+        return Choice.builder()
+            .homeworkQuestion(homeworkQuestion)
+            .content(content)
+            .number(number)
+            .build();
+    }
 }

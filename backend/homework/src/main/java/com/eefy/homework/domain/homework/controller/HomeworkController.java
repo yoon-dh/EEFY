@@ -1,6 +1,8 @@
 package com.eefy.homework.domain.homework.controller;
 
+import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.service.HomeworkService;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +32,20 @@ public class HomeworkController {
         return new ResponseEntity<>(
             homeworkService.makeHomework(makeHomeworkRequest, memberId),
             HttpStatus.OK);
+    }
+
+    @PostMapping("/make/question")
+    public ResponseEntity<MakeHomeworkQuestionResponse> makeQuestion(
+        @RequestBody MakeHomeworkQuestionRequest makeHomeworkQuestionRequest,
+        @RequestHeader("Member-Id") Integer memberId) {
+
+        log.info("homework/make/question api 호출 : {}", makeHomeworkQuestionRequest);
+
+        homeworkService.makeQuestion(makeHomeworkQuestionRequest, memberId);
+
+        return new ResponseEntity<>(
+            null,
+            HttpStatus.OK
+        );
     }
 }
