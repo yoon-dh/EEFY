@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { IoHome } from 'react-icons/io5';
+import { FaBookBookmark } from 'react-icons/fa6';
+import Link from 'next/link';
+
 export default function SideNav() {
   return (
     <div className='w-full h-full'>
@@ -37,31 +41,35 @@ export default function SideNav() {
 
           {/* 메인 홈(클래스 생성 부분) */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <a>
-              <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+            <Link href={'/main/classlist'}>
+              <div className=" text-3xl' tooltip tooltip-right tooltip-base-300" data-tip='이전'>
+                <IoHome className='text-3xl' />
+              </div>
+              {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   strokeWidth='2'
                   d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'
                 />
-              </svg>
-            </a>
+              </svg> */}
+            </Link>
           </li>
           <br />
 
           {/* 마이페이지 - 학생 OR 클래스관리 - 강사  */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <a>
-              <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+            <Link href={'/library/teacher'}>
+              <FaBookBookmark className='text-2xl' />
+              {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   strokeWidth='2'
                   d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'
                 />
-              </svg>
-            </a>
+              </svg> */}
+            </Link>
           </li>
 
           <br />

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import SpeakingStudyItem from '@/components/Class/StudyList/SpeakingStudyItem';
+import Link from 'next/link';
 
 interface DummyDataType {
   title: string;
@@ -126,13 +127,14 @@ function StudyList() {
         </div>
         <div className='flex flex-col overflow-auto no-scrollbar gap-2'>
           {SpeakingDummyData.map((item, idx) => (
-            <SpeakingStudyItem
-              key={idx}
-              title={item.title}
-              finishDate={item.finishDate}
-              pronunciationScore={item.pronunciationScore}
-              accuracyScore={item.accuracyScore}
-            />
+            <Link key={idx} href={'/class/studydetail'}>
+              <SpeakingStudyItem
+                title={item.title}
+                finishDate={item.finishDate}
+                pronunciationScore={item.pronunciationScore}
+                accuracyScore={item.accuracyScore}
+              />
+            </Link>
           ))}
         </div>
       </div>
