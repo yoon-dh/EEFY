@@ -34,10 +34,12 @@ public class AuthFilter {
             if (!isWhitePath(path, method)) {
                 log.info("인증 작업이 필요한 요청. path: {}, method: {}", path, method);
                 String jwtToken = getJwtToken(request);
-                Optional<Member> member = memberRepository.findById(jwtTokenParser.getUserId(jwtToken));
+                int memberId = jwtTokenParser.getUserId(jwtToken);
+                Optional<Member> member = memberRepository.findById(memberId);
                 if (!canPass(member, jwtToken, path)) {
                     return handleUnAuthorized(exchange);
                 }
+                request.getHeaders().add("Member-Id", String.valueOf(memberId));
                 log.info("인증 완료. path: {}, method: {}", path, method);
             }
 
