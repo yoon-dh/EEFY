@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -29,21 +30,32 @@ public class AuthFilter {
             ServerHttpRequest request = exchange.getRequest();
             String path = request.getPath().toString();
             String method = request.getMethodValue();
-
+            System.out.println(path + " " + method);
             if (!isWhitePath(path, method)) {
                 log.info("인증 작업이 필요한 요청. path: {}, method: {}", path, method);
-                String jwtToken = request.getHeaders().getFirst("Authorization").split(" ")[1];
-                Optional<Member> member = memberRepository.findById(jwtTokenParser.getUserId(jwtToken));
-                if (member.isEmpty()
-                        || !isValidAccessToken(jwtToken)
-                        || !validAccessRole(path, member.get().getRole())) {
+                String jwtToken = getJwtToken(request);
+                int memberId = jwtTokenParser.getUserId(jwtToken);
+                Optional<Member> member = memberRepository.findById(memberId);
+                if (!canPass(member, jwtToken, path)) {
                     return handleUnAuthorized(exchange);
                 }
+                request.mutate().header("Member-Id", String.valueOf(memberId)).build();
                 log.info("인증 완료. path: {}, method: {}", path, method);
             }
 
             return chain.filter(exchange);
         });
+    }
+
+    private String getJwtToken(ServerHttpRequest request) {
+        return Objects.requireNonNull(
+                request.getHeaders().getFirst("Authorization")).split(" ")[1];
+    }
+
+    private boolean canPass(Optional<Member> member, String jwtToken, String path) {
+        return member.isPresent()
+                && isValidAccessToken(jwtToken)
+                && validAccessRole(path, member.get().getRole());
     }
 
     private boolean validAccessRole(String path, MemberRole role) {
@@ -62,9 +74,9 @@ public class AuthFilter {
     }
 
     private boolean isWhitePath(String path, String method) {
-        if (path.contains("/api/member")) {
-            if (path.equals("/api/member") && (method.equals("GET") || method.equals("PUT"))) return false;
-            else return !path.contains("auth") || (!method.equals("PUT") && !method.equals("DELETE"));
+        if (path.contains("/api/auth")) {
+            if (path.equals("/api/auth") && (method.equals("DELETE") || method.equals("PUT"))) return false;
+            else return !path.equals("/api/member") || !method.equals("PUT");
         }
         return false;
     }

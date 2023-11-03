@@ -14,7 +14,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/eefy_member?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: ${MYSQL_MEMBER_URL}
     username: ${MYSQL_NAME}
     password: ${MYSQL_PASSWORD}
 
@@ -24,7 +24,7 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/api/member/**
+            - Path=/api/member/**, /api/auth/**
         - id: homework-service
           uri: lb://HOMEWORK-SERVICE
           predicates:
