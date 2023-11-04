@@ -16,6 +16,8 @@ import java.util.UUID;
 public class AwsS3ServiceImpl implements AwsS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+    @Value("${cloud.aws.s3.dir}")
+    private String dir;
 
     private final AmazonS3 amazonS3;
 
@@ -26,7 +28,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentLength(profileImage.getInputStream().available());
 
-        amazonS3.putObject(bucket, s3FileName, profileImage.getInputStream(), objMeta);
+        amazonS3.putObject(bucket, dir + "/" + s3FileName, profileImage.getInputStream(), objMeta);
 
         member.updateProfileImageUrl(amazonS3.getUrl(bucket, s3FileName).toString());
     }

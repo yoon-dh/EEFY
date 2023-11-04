@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 public class MemberUpdateRequest {
     private String nickname;
     private String phoneNumber;
-    private String profileImagePath;
 }
