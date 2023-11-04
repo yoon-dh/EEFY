@@ -41,7 +41,7 @@ public class MemberController {
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String MemberInfoUpdate(@RequestHeader("Member-Id") int memberId,
                                    @RequestPart(name = "request") MemberUpdateRequest request,
-                                   @RequestPart(name = "files", required = false) MultipartFile profileImage) {
+                                   @RequestPart(name = "profileImage", required = false) MultipartFile profileImage) {
         memberService.updateMember(memberId, request, profileImage);
         return "SUCCESS";
     }
