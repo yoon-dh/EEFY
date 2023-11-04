@@ -3,9 +3,11 @@ package com.eefy.homework.domain.homework.controller;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.service.HomeworkService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,5 +61,14 @@ public class HomeworkController {
             homeworkService.assignHomeworkToClass(assignHomeworkToClassRequest, memberId),
             HttpStatus.OK);
     }
+
+    @GetMapping("/view")
+    public ResponseEntity<ViewHomeworkResponse> viewHomework(
+        @RequestParam ViewHomeworkRequest viewHomeworkRequest,
+        @RequestHeader("Member-Id") Integer memberId) {
+
+        return null;
+    }
+
 
 }
