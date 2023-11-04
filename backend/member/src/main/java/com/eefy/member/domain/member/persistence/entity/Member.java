@@ -60,6 +60,9 @@ public class Member extends BaseEntity {
     public void updateMemberInfo(MemberUpdateRequest request) {
         nickname = request.getNickname();
         phoneNumber = request.getPhoneNumber();
-        profileImagePath = request.getProfileImagePath();
+    }
+
+    public void updateProfileImageUrl(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 }
