@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -39,9 +42,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public StudentResponse getStudent(String email) {
-
-        return null;
+    public List<StudentResponse> getStudent(String key, String value) {
+        List<Member> members = selectMembers(key, value);
+        return members.stream().map(StudentResponse::new).collect(Collectors.toList());
     }
 
     private void checkEmailConfirmStatus(String email) {
@@ -54,5 +57,11 @@ public class MemberServiceImpl implements MemberService {
             log.error("인증 오류 발생");
             throw new IllegalArgumentException("인증 오류 발생");
         }
+    }
+
+    private List<Member> selectMembers(String key, String value) {
+        if (key.equals("email")) return memberRepository.findByEmailContainingOrderByEmail(value);
+        else if (key.equals("name")) return memberRepository.findByNameContainingOrderByName(value);
+        else throw new IllegalArgumentException("수강생 정보 조회 오류: 지원하지 않는 key");
     }
 }

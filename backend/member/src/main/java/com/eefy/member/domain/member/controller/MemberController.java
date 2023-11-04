@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
@@ -26,7 +28,8 @@ public class MemberController {
     }
 
     @GetMapping("/tutor")
-    public ResponseEntity<StudentResponse> getStudent(@RequestParam String email) {
-        return ResponseEntity.ok().body(memberService.getStudent(email));
+    public ResponseEntity<List<StudentResponse>> getStudent(@RequestParam(required = true) String key,
+                                           @RequestParam String value) {
+        return ResponseEntity.ok().body(memberService.getStudent(key, value));
     }
 }

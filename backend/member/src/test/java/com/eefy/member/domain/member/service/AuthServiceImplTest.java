@@ -23,22 +23,6 @@ class AuthServiceImplTest {
     private RedisTemplate<String, String> redisTemplate;
 
     @Test
-    void join() {
-//        emailConfirmRedisRepository.save(new EmailConfirm("test@test.com", true));
-//
-//        JoinRequest joinRequest = JoinRequest.builder()
-//                .email("test@test.com")
-//                .password("1234^a")
-//                .checkedPassword("1234^a")
-//                .name("test")
-//                .nickname("test")
-//                .phoneNumber("010-1234-1234")
-//                .role(MemberRole.STUDENT)
-//                .build();
-//        memberService.join(joinRequest);
-    }
-
-    @Test
     void login() {
 //        LoginRequest loginRequest = new LoginRequest("test@test.com", "1234^a");
 //        ResponseEntity<JwtTokenResponse> response = memberService.login(loginRequest);
