@@ -1,5 +1,6 @@
 package com.eefy.member.domain.member.persistence.entity;
 
+import com.eefy.member.domain.member.dto.request.MemberUpdateRequest;
 import com.eefy.member.global.entity.BaseEntity;
 import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
 import lombok.AccessLevel;
@@ -54,5 +55,11 @@ public class Member extends BaseEntity {
 
     public void encodePassword(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(password);
+    }
+
+    public void updateMemberInfo(MemberUpdateRequest request) {
+        nickname = request.getNickname();
+        phoneNumber = request.getPhoneNumber();
+        profileImagePath = request.getProfileImagePath();
     }
 }
