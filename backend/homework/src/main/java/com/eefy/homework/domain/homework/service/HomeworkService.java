@@ -5,6 +5,7 @@ import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
+import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
@@ -21,4 +22,6 @@ public interface HomeworkService {
 
     ViewHomeworkResponse viewHomeworkByStudentId(ViewHomeworkRequest viewHomeworkRequest,
         Integer memberId);
+
+    GetProblemResponse getProblem(Integer classHomeworkId);
 }
