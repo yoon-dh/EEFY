@@ -1,15 +1,21 @@
 'use client';
 import ContainerBtn from '@/components/Lecture/ContainerBtn';
-import NoticeListBoard from "@/components/Notice/NoticeList/NoticeListBoard";
-import CommentList from "@/components/Question/Comment/CommentList";
-import LectureDetail from "@/components/Lecture/LectureDetail/LectureDetail";
+import Note from "@/components/Notice/Note/Note";
+
 function Home() {
   return (
     <div className='w-full h-full'>
       <div>
         <ContainerBtn />
       </div>
-      <div className='flex  rounded-lg bg-base-200' 
+      <div style={{
+        position:'relative',
+        top:'10px',
+        height:'89%', 
+      }}>
+        <Note/>
+      </div>
+      {/* <div className='flex  rounded-lg bg-base-200' 
       style={{ 
         height: '90%',  
         width: '100%', 
@@ -34,7 +40,7 @@ function Home() {
               <CommentList/>
             </div>
           </div>
-      </div>
+      </div> */}
     </div>
   );
 }

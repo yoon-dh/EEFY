@@ -19,7 +19,9 @@ import {
   ViewerBtn,
   DownloadBtn,
 } from './LectureDetail.style';
-
+import Image from 'next/image';
+import down from 'public/Img/다운로드.png'
+import open from 'public/Img/열기.png'
 type Notice = {
   id: string;
   title: string;
@@ -41,7 +43,7 @@ function LectureDetail() {
       >
         {notice?.title && (
           <>
-            <Wrappe style={{ boxShadow: 'none', padding: '0px 3%' }} className='flex flex-col'>
+            <Wrappe style={{ boxShadow: 'none', padding: '2% 5%' }} className='flex flex-col'>
               <div style={{ flex: 9 }}>
                 <Header>
                   <div className='flex'>
@@ -75,16 +77,29 @@ function LectureDetail() {
                 <ContentBox>
                   <Content>
                     {notice.content}
-                    {notice.content}
                   </Content>
                 </ContentBox>
               </div>
 
-              <BtnBox>
-                <ViewerBtn>Viewer 열기</ViewerBtn>
-                <DownloadBtn>자료 다운 받기</DownloadBtn>
-              </BtnBox>
             </Wrappe>
+              <BtnBox>
+                <ViewerBtn>
+                  Viewer 열기
+                  <Image 
+                  style={{
+                    margin:'0px 0px 0px 5px'
+                  }}
+                  src={open} width={14} height={14} alt=''/>
+                </ViewerBtn>
+                <DownloadBtn>
+                  자료 다운 받기
+                  <Image 
+                  style={{
+                    margin:'0px 0px 0px 5px'
+                  }}
+                  src={down} width={14} height={14} alt=''/>
+                </DownloadBtn>
+              </BtnBox>
           </>
         )}
       </Container>

@@ -4,12 +4,11 @@ export const Container = styled.div`
   width: 100%;
   height: 100%;
   /* border-left: 1px solid #7b88e0; */
-  border-left: 7px solid white;
 `;
 export const Header = styled.div``;
 export const Wrappe = styled.div`
   width: 100%;
-  height: 90%;
+  height: 80%;
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   margin: 2% 0px 0px 0px;
@@ -19,8 +18,11 @@ export const Wrappe = styled.div`
   }
 `;
 export const Title = styled.div`
-  font-size: 30px;
+  font-size: 25px;
   /* width: 90%; */
+  @media(max-width:1334px){
+    font-size: 20px;
+  }
 `;
 export const UseName = styled.div`
   margin: 2px 0px 0px 3%;
@@ -51,6 +53,7 @@ export const Content = styled.div`
 export const UpdataBtn = styled.div`
 font-size: 12px;
 padding: 5px 20px;
+width: 65px;
 border-radius: 8px;
 background-color: #5AACF8;
 color: white;
@@ -60,6 +63,7 @@ cursor: pointer;
 export const DeleteBtn = styled.div`
 font-size: 12px;
 padding: 5px 20px;
+width: 65px;
 border-radius: 8px;
 background-color: #F85A5A;
 color: white;
@@ -67,28 +71,35 @@ cursor: pointer;
 `;
 export const BtnBox = styled.div`
 width: 100%;
-flex: 1;
+flex: 0.5;
+display: flex;
 `
 export const ViewerBtn = styled.div`
-width: 80%;
+width: 40%;
+height: 40px;
 padding: 10px 10px;
 background: #999BD5;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 border-radius: 8px;
 color: white;
-text-align: center;
-margin: 50px auto 20px auto;
+margin: 20px auto 20px auto;
 cursor: pointer;
+display: flex;
+justify-content: center;
+align-items: center;
 `
 export const DownloadBtn = styled.div`
-width: 80%;
+width: 40%;
+height: 40px;
 padding: 10px 10px;
 background: #999BD5;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 border-radius: 8px;
 color: white;
-text-align: center;
-margin: 0px auto 30px auto;
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 20px auto 20px auto;
 cursor: pointer;
 `
 

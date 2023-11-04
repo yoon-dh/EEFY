@@ -14,7 +14,7 @@ function NoteLeft() {
           padding: '27px 0px 22px 30px',
         }}
       >
-        <NoticeListBoard />
+        <NoticeListBoard/>
       </div>
     </Container>
   );
