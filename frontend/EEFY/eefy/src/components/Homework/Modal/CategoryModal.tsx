@@ -10,8 +10,7 @@ import {
 
 import CropperModal from './CropperModal';
 
-function CategoryModal(props: { onClose: () => void }){
-  const { onClose } = props;
+function CategoryModal(){
   const [targetFile, setTargetFile] = useState<FileList | null>(null);
   const [imgUrl, setImgUrl] = useState<string | undefined>("");
   const [pdfFile, setPdfFile] = useState<string>("");
