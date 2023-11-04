@@ -64,11 +64,12 @@ public class HomeworkController {
 
     @GetMapping("/view")
     public ResponseEntity<ViewHomeworkResponse> viewHomework(
-        @RequestParam ViewHomeworkRequest viewHomeworkRequest,
+        ViewHomeworkRequest viewHomeworkRequest,
         @RequestHeader("Member-Id") Integer memberId) {
 
-        return null;
+        return new ResponseEntity<>(
+            homeworkService.viewHomeworkByStudentId(viewHomeworkRequest, memberId),
+            HttpStatus.OK);
     }
-
 
 }

@@ -1,11 +1,14 @@
 package com.eefy.homework.domain.homework.service;
 
+import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.exception.HomeworkNotFoundException;
 import com.eefy.homework.domain.homework.persistence.entity.Choice;
 import com.eefy.homework.domain.homework.persistence.entity.ClassHomework;
@@ -14,6 +17,7 @@ import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudent;
 import com.eefy.homework.domain.homework.repository.ChoiceRepository;
 import com.eefy.homework.domain.homework.repository.ClassHomeworkRepository;
+import com.eefy.homework.domain.homework.repository.CustomRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentRepository;
@@ -34,6 +38,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     private final ChoiceRepository choiceRepository;
     private final ClassHomeworkRepository classHomeworkRepository;
     private final HomeworkStudentRepository homeworkStudentRepository;
+    private final CustomRepository customRepository;
 
     private static final List<Integer> dummyStudentId = List.of(1, 2, 3, 4, 5, 6, 7);
 
@@ -85,6 +90,19 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
 
         return new AssignHomeworkToClassResponse(classHomework.getId());
+    }
+
+    @Override
+    public ViewHomeworkResponse viewHomeworkByStudentId(ViewHomeworkRequest viewHomeworkRequest,
+        Integer memberId) {
+
+//        List<HomeworkStudent> homeworkStudents = customRepository.viewHomeworkByStudentId(
+//            viewHomeworkRequest.getClassId(), memberId);
+
+        List<HomeworkStudentDto> homeworkStudentDtos = customRepository.viewHomeworkByStudentId(
+            viewHomeworkRequest.getClassId(), memberId);
+
+        return new ViewHomeworkResponse(homeworkStudentDtos);
     }
 
     private HomeworkQuestion saveHomeworkQuestion(

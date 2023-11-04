@@ -9,8 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class HomeworkStudent {
 
     @Id
@@ -29,14 +34,15 @@ public class HomeworkStudent {
     private LocalDateTime doneDate;
 
     @Column(nullable = false)
-    private Integer progressRate;
+    private Integer progressRate = 0;
 
-    public HomeworkStudent(Integer memberId, ClassHomework classHomework) {
+    public HomeworkStudent(Integer memberId, ClassHomework classHomework, Integer progressRate) {
         this.memberId = memberId;
         this.classHomework = classHomework;
+        this.progressRate = progressRate;
     }
 
     public static HomeworkStudent from(Integer memberId, ClassHomework classHomework) {
-        return new HomeworkStudent(memberId, classHomework);
+        return new HomeworkStudent(memberId, classHomework, 0);
     }
 }
