@@ -102,4 +102,3 @@ function NoteRigth() {
 }
 
 export default NoteRigth;
-
