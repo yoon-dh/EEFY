@@ -1,0 +1,17 @@
+# 파이참 IDE 설정 파일
+.idea/
+
+# 파이참 프로젝트 파일
+*.iml
+*.iws
+
+# 로컬 환경 파일
+.env
+
+# 컴파일된 Python 파일
+__pycache__/
+*.pyc
+*.pyo
+
+# api key 파일
+*.json
