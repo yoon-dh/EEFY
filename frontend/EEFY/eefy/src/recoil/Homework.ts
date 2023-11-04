@@ -16,6 +16,8 @@ export const HomeworkCount = atom({
 export const HomeworkProblem = atom({
   key: 'HomeworkProblem',
   default: {
+    Title:'',
+    ProblemList:[{
     title:'26. The Nuer에 관한 다음 글의 내용과 일치하지 않는 것은?',
     content:`The Nuer are one of the largest ethnic groups in South Sudan, primarily residing in the Nile River Valley. The Nuer 
     are a cattle-raising people, whose everyday lives revolve 
@@ -52,5 +54,10 @@ export const HomeworkProblem = atom({
         title:'어린 자녀의 수를 세는 것이 행운을 가져온다고 믿는다.'
       },
     ]
-  }
+  }]}
+})
+
+export const Category = atom({
+  key: 'Category',
+  default: ''
 })

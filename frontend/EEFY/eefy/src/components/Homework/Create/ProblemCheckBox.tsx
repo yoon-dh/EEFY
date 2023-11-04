@@ -36,11 +36,11 @@ function ProblemCheckBox(){
           ))}
         </Wrappe>
         <BtnBox>
-            <div style={{flex:5}}>
+            {/* <div style={{flex:5}}>
               <Btn1 
               onClick={onClose}
               className='boxShadow'>
-                유형 선택</Btn1></div>
+                유형 선택</Btn1></div> */}
             <div style={{flex:5}}><Btn2 className='boxShadow'>저장</Btn2></div>
         </BtnBox>
       </Container>

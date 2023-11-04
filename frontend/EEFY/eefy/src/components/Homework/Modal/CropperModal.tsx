@@ -6,12 +6,16 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import { Container, Wrappe, BtnBox, ImgBox, PdfBtn } from './CropperModal.style';
+import { useRecoilState } from 'recoil';
+import { Category } from '@/recoil/Homework';
 
 function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | null, onCloseModal: () => void }) {
   const { imgUrl, pdfFile, onCloseModal } = props;
   const cropperRef = createRef<ReactCropperElement>();
   const [isPdf, setIsPdf] = useState<boolean>(false);
   const [ocrImg, setOcrImg] = useState<string>("");
+  const [category, setCategory] = useRecoilState(Category);
+
 
   useEffect(() => {
     console.log(props)
@@ -39,6 +43,32 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
         }
       });
     }
+    setCategory('multiple')
+  };
+
+  const getPdfUrl = () => {
+    setSelect(!select);
+    pdfjs.getDocument(pdfFile).promise.then(pdfToImage);
+    console.log(pdfjs,'pdfjs')
+    console.log(pdfFile,'pdfFile')
+  };
+
+   // 캔버스를 이미지 URL로 변경
+   const pdfToImage = async (pdf: any) => {
+    const canvas = document.createElement("canvas");
+    const page = await pdf.getPage(pageNumber);
+    const viewport = page.getViewport({ scale: 3 });
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext("2d");
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport,
+    };
+    await page.render(renderContext).promise;
+    const imageData = canvas.toDataURL("image/jpeg");
+    console.log(imageData,'imageData')
+    setPageImage(imageData);
   };
 
   const [numPages, setNumPages] = useState<number>(0);
@@ -56,35 +86,59 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
       <Wrappe>
         {isPdf ? (
           <>
+          {!pageImage ? (
+            <>
+              <ImgBox>
+                <Document
+                file={pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
+                  <Page 
+                  width={1200} height={720} 
+                  pageNumber={pageNumber} />
+                </Document>
+              </ImgBox>
+            </>
+          ) : (
+            <>
             <ImgBox>
-              <Document
-              file={pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
-                <Page 
-                width={1200} height={720} 
-                pageNumber={pageNumber} />
-              </Document>
-            </ImgBox>
+              <Cropper 
+              ref={cropperRef}
+              src={pageImage}
+              zoomTo={0.5}
+              initialAspectRatio={1}
+              viewMode={1}
+              minCropBoxHeight={10}
+              minCropBoxWidth={10}
+              background={false}
+              responsive={true}
+              autoCropArea={1}
+              checkOrientation={false}
+              guides={true}
+              style={{ height: '100%', width: "100%" }}
+              />
+          </ImgBox>
+            </>
+          )}
           </>
         ):(
           <>
-            <ImgBox>
-              <Cropper
-                ref={cropperRef}
-                src={imgUrl}
-                zoomTo={0.5}
-                initialAspectRatio={1}
-                viewMode={1}
-                minCropBoxHeight={10}
-                minCropBoxWidth={10}
-                background={false}
-                responsive={true}
-                autoCropArea={1}
-                checkOrientation={false}
-                guides={true}
-                style={{ height: '100%', width: '100%' }}
-              />
-            </ImgBox>
-          </>
+              <ImgBox>
+                <Cropper
+                  ref={cropperRef}
+                  src={imgUrl}
+                  zoomTo={0.5}
+                  initialAspectRatio={1}
+                  viewMode={1}
+                  minCropBoxHeight={10}
+                  minCropBoxWidth={10}
+                  background={false}
+                  responsive={true}
+                  autoCropArea={1}
+                  checkOrientation={false}
+                  guides={true}
+                  style={{ height: '100%', width: '100%' }}
+                />
+              </ImgBox>
+            </>
         )}
       </Wrappe>
 
@@ -123,6 +177,15 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
               backgroundColor:'#AC98FF',
               borderRadius:'8px'
             }}
+            onClick={getPdfUrl}>pdf영역선택</button>
+          <button 
+            style={{
+              padding:'5px 12px',
+              color:'white',
+              backgroundColor:'#AC98FF',
+              borderRadius:'8px',
+              margin:'0px 0px 0px 20px'
+            }}
             onClick={getCropData}>영역선택</button>
           <button 
             style={{
@@ -132,7 +195,9 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
               borderRadius:'8px',
               margin:'0px 0px 0px 20px'
             }}
-            onClick={()=>{onCloseModal()}}>나가기</button>
+            onClick={()=>{
+              setPageImage('')
+              onCloseModal()}}>나가기</button>
         </div>
       </BtnBox>
     </Container>

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Title, Tab, SearchInput, CreateBtn } from './ContainerBtn.style';
 import SearchIcon from '@mui/icons-material/Search';
+import { useRouter } from 'next/navigation'; 
 function ContainerBtn() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<Number>(1);
   const [search, setSearch] = useState<string>('');
 
@@ -80,7 +82,11 @@ function ContainerBtn() {
             )}
           </div>
 
-          <CreateBtn className='boxShadow' style={{flex:2}}>
+          <CreateBtn 
+          className='boxShadow' 
+          style={{flex:2}}
+          onClick={()=>{router.push('/library/teacher/homework/create')}}
+          >
            문제생성
           </CreateBtn>
         </div>
