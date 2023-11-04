@@ -45,7 +45,7 @@ function ProblemCheckBox(){
         </BtnBox>
       </Container>
 
-      {isCategoryModal && (<CategoryModal onClose={onClose}/>)}
+      {isCategoryModal && (<CategoryModal/>)}
     </div>
   )
 }

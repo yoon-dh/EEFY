@@ -47,10 +47,14 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
   };
 
   const getPdfUrl = () => {
-    setSelect(!select);
-    pdfjs.getDocument(pdfFile).promise.then(pdfToImage);
-    console.log(pdfjs,'pdfjs')
-    console.log(pdfFile,'pdfFile')
+    if (pdfFile) {
+      setSelect(!select);
+      pdfjs.getDocument(pdfFile).promise.then(pdfToImage);
+      console.log(pdfjs, 'pdfjs');
+      console.log(pdfFile, 'pdfFile');
+    } else {
+      console.error('pdfFile is null or invalid.');
+    }
   };
 
    // 캔버스를 이미지 URL로 변경

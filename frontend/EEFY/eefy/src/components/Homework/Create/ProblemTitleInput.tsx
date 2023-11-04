@@ -43,9 +43,9 @@ const Btn = styled.div`
 function ProblemTitleInput(){
   const [problem, setProblem] = useRecoilState(HomeworkProblem);
   const [title, setTitle] = useState('')
-  const handleTitle = (e)=>{
-    const NewTitle = e.target.value
-    setProblem({...problem,Title:NewTitle})
+  const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setProblem({ ...problem, Title: newTitle });
   }
   return(
       <Container className="w-full h-full">
