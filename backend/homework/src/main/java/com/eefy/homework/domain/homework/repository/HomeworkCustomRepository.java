@@ -5,7 +5,6 @@ import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkStud
 
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.QHomeworkStudentDto;
-import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudent;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomRepository {
+public class HomeworkCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 

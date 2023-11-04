@@ -1,6 +1,5 @@
 package com.eefy.homework.domain.homework.service;
 
-import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
@@ -17,7 +16,7 @@ import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudent;
 import com.eefy.homework.domain.homework.repository.ChoiceRepository;
 import com.eefy.homework.domain.homework.repository.ClassHomeworkRepository;
-import com.eefy.homework.domain.homework.repository.CustomRepository;
+import com.eefy.homework.domain.homework.repository.HomeworkCustomRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentRepository;
@@ -38,7 +37,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     private final ChoiceRepository choiceRepository;
     private final ClassHomeworkRepository classHomeworkRepository;
     private final HomeworkStudentRepository homeworkStudentRepository;
-    private final CustomRepository customRepository;
+    private final HomeworkCustomRepository homeworkCustomRepository;
 
     private static final List<Integer> dummyStudentId = List.of(1, 2, 3, 4, 5, 6, 7);
 
@@ -64,7 +63,8 @@ public class HomeworkServiceImpl implements HomeworkService {
         // todo: 강사가 유효한 사용자인지 검증
 
         Homework homework = validateHomework(makeHomeworkQuestionRequest.getHomeworkId());
-        HomeworkQuestion homeworkQuestion = saveHomeworkQuestion(makeHomeworkQuestionRequest, homework);
+        HomeworkQuestion homeworkQuestion = saveHomeworkQuestion(makeHomeworkQuestionRequest,
+            homework);
         saveChoice(makeHomeworkQuestionRequest, homeworkQuestion);
 
         return new MakeHomeworkQuestionResponse(homework.getId());
@@ -79,7 +79,8 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         Homework homework = validateHomework(assignHomeworkToClassRequest.getHomeworkId());
 
-        ClassHomework classHomework = ClassHomework.of(homework, assignHomeworkToClassRequest.getClassId(),
+        ClassHomework classHomework = ClassHomework.of(homework,
+            assignHomeworkToClassRequest.getClassId(),
             assignHomeworkToClassRequest.getDueDate());
 
         classHomeworkRepository.save(classHomework);
@@ -96,13 +97,9 @@ public class HomeworkServiceImpl implements HomeworkService {
     public ViewHomeworkResponse viewHomeworkByStudentId(ViewHomeworkRequest viewHomeworkRequest,
         Integer memberId) {
 
-//        List<HomeworkStudent> homeworkStudents = customRepository.viewHomeworkByStudentId(
-//            viewHomeworkRequest.getClassId(), memberId);
-
-        List<HomeworkStudentDto> homeworkStudentDtos = customRepository.viewHomeworkByStudentId(
-            viewHomeworkRequest.getClassId(), memberId);
-
-        return new ViewHomeworkResponse(homeworkStudentDtos);
+        return new ViewHomeworkResponse(
+            homeworkCustomRepository.viewHomeworkByStudentId(
+                viewHomeworkRequest.getClassId(), memberId));
     }
 
     private HomeworkQuestion saveHomeworkQuestion(
