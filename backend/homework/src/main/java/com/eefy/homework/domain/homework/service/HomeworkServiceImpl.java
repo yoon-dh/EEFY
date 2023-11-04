@@ -81,7 +81,7 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         // todo: 실제 클래스의 사용자 받아오는 restApi 작성
         for (Integer studentId : dummyStudentId) {
-            homeworkStudentRepository.save(HomeworkStudent.from(studentId, classHomework);)
+            homeworkStudentRepository.save(HomeworkStudent.from(studentId, classHomework));
         }
 
         return new AssignHomeworkToClassResponse(classHomework.getId());
