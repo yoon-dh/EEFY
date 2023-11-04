@@ -7,6 +7,7 @@ import {
   Img,
   Box
 } from './CategoryModal.style'
+
 import CropperModal from './CropperModal';
 
 function CategoryModal(props: { onClose: () => void }){
@@ -14,8 +15,7 @@ function CategoryModal(props: { onClose: () => void }){
   const [targetFile, setTargetFile] = useState<FileList | null>(null);
   const [imgUrl, setImgUrl] = useState<string | undefined>("");
   const [pdfFile, setPdfFile] = useState<string>("");
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);  
 
   const fileType = ["application/pdf"];
 
@@ -65,10 +65,10 @@ function CategoryModal(props: { onClose: () => void }){
   }
   return(
     <Container>
-      <Wrappe>
-        <Img 
+      {/* <Wrappe> */}
+        {/* <Img 
         onClick={onClose}
-        src='/Img/취소.png'/>
+        src='/Img/취소.png'/> */}
         <Box>
           <div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -90,7 +90,7 @@ function CategoryModal(props: { onClose: () => void }){
             </TitleBox>
           </div>
         </Box>
-      </Wrappe>
+      {/* </Wrappe> */}
       {isSuccess && <CropperModal imgUrl={imgUrl} pdfFile={pdfFile} onCloseModal={onCloseModal}/>}
     </Container>
   )
