@@ -1,14 +1,3 @@
-// function QuestionDetail(){
-//   return(
-//     <div style={{
-//       backgroundColor:'white'
-//     }}
-//     className='w-full h-full'>
-//       <div>상세페이지</div>
-//     </div>
-//   )
-// }
-// export default QuestionDetail
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import { NoticeNum } from '@/recoil/Notice';
@@ -36,7 +25,7 @@ function QuestionDetail() {
       >
         {notice?.title && (
           <>
-            <Wrappe style={{ boxShadow: 'none', padding: '0px 3%' }}>
+            <Wrappe style={{ boxShadow: 'none', padding: '2% 5%' }}>
               <Header>
                 <div className='flex'>
                   <Title>{notice.title}</Title>

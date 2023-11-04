@@ -18,8 +18,11 @@ export const Wrappe = styled.div`
   }
 `;
 export const Title = styled.div`
-  font-size: 30px;
+  font-size: 25px;
   /* width: 90%; */
+  @media(max-width:1334px){
+    font-size: 20px;
+  }
 `;
 export const UseName = styled.div`
   margin: 2px 0px 0px 3%;
@@ -51,6 +54,7 @@ export const UpdataBtn = styled.div`
 font-size: 12px;
 padding: 5px 20px;
 border-radius: 8px;
+width: 65px;
 background-color: #5AACF8;
 color: white;
 margin: 0px 20px 0px 0px;
@@ -58,6 +62,7 @@ cursor: pointer;
 `;
 export const DeleteBtn = styled.div`
 font-size: 12px;
+width: 65px;
 padding: 5px 20px;
 border-radius: 8px;
 background-color: #F85A5A;

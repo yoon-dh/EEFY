@@ -6,8 +6,10 @@ import { ImPencil } from 'react-icons/im'; // 과제
 import { PiNotepadFill } from 'react-icons/pi'; // 학습자료
 import { RiQuestionnaireFill } from 'react-icons/ri'; // 질문사항
 import Link from 'next/link';
-
+import { useRecoilState } from 'recoil';
+import { Name } from '@/recoil/Notice';
 export default function SideNav() {
+  const [name, setName] = useRecoilState<string>(Name)
   return (
     <div className='w-full h-full'>
       <div className='h-full' style={{ display: 'flex', justifyContent: 'center' }}>
@@ -62,7 +64,7 @@ export default function SideNav() {
 
           {/* 공지사항 */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/notice'}>
+            <Link href={'/class/notice'} onClick={()=>setName('notice')}>
               <AiTwotoneNotification className='text-3xl' />
 
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
@@ -81,7 +83,7 @@ export default function SideNav() {
 
           {/* 과제 * 3 */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/studylist'}>
+            <Link href={'/class/studylist'} onClick={()=>setName('studylist')}>
               <ImPencil className='text-3xl' />
 
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
@@ -118,7 +120,7 @@ export default function SideNav() {
 
           {/* Q&A */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/question'}>
+            <Link href={'/class/question'} onClick={()=>setName('question')}>
               <RiQuestionnaireFill className='text-3xl' />
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
