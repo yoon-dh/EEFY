@@ -1,14 +1,18 @@
 package com.eefy.homework.domain.homework.service;
 
+import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.exception.HomeworkNotFoundException;
 import com.eefy.homework.domain.homework.persistence.entity.Choice;
+import com.eefy.homework.domain.homework.persistence.entity.ClassHomework;
 import com.eefy.homework.domain.homework.persistence.entity.Homework;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.eefy.homework.domain.homework.repository.ChoiceRepository;
+import com.eefy.homework.domain.homework.repository.ClassHomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +29,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     private final HomeworkRepository homeworkRepository;
     private final HomeworkQuestionRepository homeworkQuestionRepository;
     private final ChoiceRepository choiceRepository;
+    private final ClassHomeworkRepository classHomeworkRepository;
 
     @Override
     public MakeHomeworkResponse makeHomework(MakeHomeworkRequest makeHomeworkRequest,
@@ -52,6 +57,23 @@ public class HomeworkServiceImpl implements HomeworkService {
         saveChoice(makeHomeworkQuestionRequest, homeworkQuestion);
 
         return new MakeHomeworkQuestionResponse(homework.getId());
+    }
+
+    @Override
+    @Transactional
+    public AssignHomeworkToClassResponse assignHomeworkToClass(
+        AssignHomeworkToClassRequest assignHomeworkToClassRequest, Integer memberId) {
+        // todo: 강사가 유효한 사용자인지 검증
+        // todo: 클래스가 유요한지 검사
+
+        Homework homework = validateHomework(assignHomeworkToClassRequest.getHomeworkId());
+
+        ClassHomework classHomework = ClassHomework.of(homework, assignHomeworkToClassRequest.getClassId(),
+            assignHomeworkToClassRequest.getDueDate());
+
+        classHomeworkRepository.save(classHomework);
+
+        return new AssignHomeworkToClassResponse(classHomework.getId());
     }
 
     private HomeworkQuestion saveHomeworkQuestion(

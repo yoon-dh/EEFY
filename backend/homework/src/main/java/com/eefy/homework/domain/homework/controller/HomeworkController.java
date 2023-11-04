@@ -1,7 +1,9 @@
 package com.eefy.homework.domain.homework.controller;
 
+import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.service.HomeworkService;
@@ -46,4 +48,15 @@ public class HomeworkController {
             homeworkService.makeQuestion(makeHomeworkQuestionRequest, memberId),
             HttpStatus.OK);
     }
+
+    @PostMapping("/assign/class")
+    public ResponseEntity<AssignHomeworkToClassResponse> assignHomeworkToClass(
+        @RequestBody AssignHomeworkToClassRequest assignHomeworkToClassRequest,
+        @RequestHeader("Member-Id") Integer memberId) {
+
+        return new ResponseEntity<>(
+            homeworkService.assignHomeworkToClass(assignHomeworkToClassRequest, memberId),
+            HttpStatus.OK);
+    }
+
 }
