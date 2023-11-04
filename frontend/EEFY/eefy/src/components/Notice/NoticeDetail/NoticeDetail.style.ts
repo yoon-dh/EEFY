@@ -23,6 +23,9 @@ export const Wrappe = styled.div`
 export const Title = styled.div`
   font-size: 30px;
   /* width: 90%; */
+  @media(max-width:1334px){
+    font-size: 20px;
+  }
 `;
 export const UseName = styled.div`
   margin: 2px 0px 0px 3%;

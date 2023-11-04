@@ -1,10 +1,13 @@
 import NoteLeft from "./NoteLeft"
 import NoteRigth from "./NoteRigth"
 import NoteCenter from "./NoteCenter"
+import styled from "styled-components"
 
+const Box = styled.div``
 function Note(){
+
   return(
-    <div className='flex w-full h-full rounded-lg' >
+    <Box className='flex w-full h-full rounded-lg'>
       <div style={{flex:2}}>
         <NoteLeft/>
       </div>
@@ -14,8 +17,9 @@ function Note(){
       <div style={{flex:7}}>
         <NoteRigth/>
       </div>
-    </div>
+    </Box>
   )
 }
 
 export default Note
+

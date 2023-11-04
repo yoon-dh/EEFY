@@ -13,7 +13,7 @@ function NoticeListBoard() {
   return (
     <Container
       style={{
-        width: '100%',
+        width: '90%',
         height: '100%',
       }}
     >
@@ -27,14 +27,16 @@ function NoticeListBoard() {
             className='bg-default'
             key={index}
             style={{
-              margin: index == noticeList.length-1 ? '15px auto 4px auto' :(index == 0 ? '0px auto 15px auto' : ''),
+              margin: index == noticeList.length-1 ? '25px auto 4px auto' :(index == 0 ? '3px auto 25px auto' : ''),
             }}
             onClick={() => {
               console.log(item);
               setNum(item);
             }}
           >
-            <Title>{item.title.slice(0,15) + '...'}</Title>
+            <Title>
+                {item.title.slice(0,30) + '...'}
+            </Title>
             <Time>{dayjs(item.createTime).format('YYYY.MM.DD')}</Time>
           </Card>
         ))}
