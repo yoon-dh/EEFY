@@ -34,7 +34,7 @@ public class MemberController {
 
     @GetMapping("/tutor")
     public List<StudentResponse> getStudent(@RequestParam String key,
-                                           @RequestParam String value) {
+                                            @RequestParam String value) {
         return memberService.getStudent(key, value);
     }
 

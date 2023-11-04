@@ -53,7 +53,7 @@ public class Member extends BaseEntity {
         this.role = role;
     }
 
-    public void encodePassword(PasswordEncoder passwordEncoder){
+    public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
     }
 
