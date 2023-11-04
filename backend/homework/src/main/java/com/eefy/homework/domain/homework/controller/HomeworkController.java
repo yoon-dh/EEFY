@@ -1,18 +1,24 @@
 package com.eefy.homework.domain.homework.controller;
 
+import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.service.HomeworkService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,11 +47,29 @@ public class HomeworkController {
 
         log.info("homework/make/question api 호출 : {}", makeHomeworkQuestionRequest);
 
-        homeworkService.makeQuestion(makeHomeworkQuestionRequest, memberId);
+        return new ResponseEntity<>(
+            homeworkService.makeQuestion(makeHomeworkQuestionRequest, memberId),
+            HttpStatus.OK);
+    }
+
+    @PostMapping("/assign/class")
+    public ResponseEntity<AssignHomeworkToClassResponse> assignHomeworkToClass(
+        @RequestBody AssignHomeworkToClassRequest assignHomeworkToClassRequest,
+        @RequestHeader("Member-Id") Integer memberId) {
 
         return new ResponseEntity<>(
-            null,
-            HttpStatus.OK
-        );
+            homeworkService.assignHomeworkToClass(assignHomeworkToClassRequest, memberId),
+            HttpStatus.OK);
     }
+
+    @GetMapping("/view")
+    public ResponseEntity<ViewHomeworkResponse> viewHomework(
+        ViewHomeworkRequest viewHomeworkRequest,
+        @RequestHeader("Member-Id") Integer memberId) {
+
+        return new ResponseEntity<>(
+            homeworkService.viewHomeworkByStudentId(viewHomeworkRequest, memberId),
+            HttpStatus.OK);
+    }
+
 }
