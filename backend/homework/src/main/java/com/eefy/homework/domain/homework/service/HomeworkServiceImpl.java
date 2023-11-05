@@ -3,10 +3,14 @@ package com.eefy.homework.domain.homework.service;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.request.SolveProblemRequest;
 import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
+import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.exception.HomeworkNotFoundException;
 import com.eefy.homework.domain.homework.persistence.entity.Choice;
@@ -14,11 +18,13 @@ import com.eefy.homework.domain.homework.persistence.entity.ClassHomework;
 import com.eefy.homework.domain.homework.persistence.entity.Homework;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudent;
+import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudentQuestion;
 import com.eefy.homework.domain.homework.repository.ChoiceRepository;
 import com.eefy.homework.domain.homework.repository.ClassHomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkCustomRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkRepository;
+import com.eefy.homework.domain.homework.repository.HomeworkStudentQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +44,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     private final ClassHomeworkRepository classHomeworkRepository;
     private final HomeworkStudentRepository homeworkStudentRepository;
     private final HomeworkCustomRepository homeworkCustomRepository;
+    private final HomeworkStudentQuestionRepository homeworkStudentQuestionRepository;
 
     private static final List<Integer> dummyStudentId = List.of(1, 2, 3, 4, 5, 6, 7);
 
@@ -100,6 +107,51 @@ public class HomeworkServiceImpl implements HomeworkService {
         return new ViewHomeworkResponse(
             homeworkCustomRepository.viewHomeworkByStudentId(
                 viewHomeworkRequest.getClassId(), memberId));
+    }
+
+    @Override
+    public GetProblemResponse getProblem(Integer classHomeworkId) {
+        return new GetProblemResponse(homeworkCustomRepository.getProblem(classHomeworkId));
+    }
+
+    @Override
+    @Transactional
+    public SolveProblemResponse solveProblem(SolveProblemRequest solveProblemRequest,
+        Integer memberId) {
+
+        HomeworkStudent homeworkStudent = validateHomeworkStudent(
+            solveProblemRequest.getHomeworkStudentId());
+        HomeworkQuestion homeworkQuestion = validateHomeworkQuestion(
+            solveProblemRequest.getHomeworkQuestionId());
+
+        HomeworkStudentQuestion homeworkStudentQuestion = HomeworkStudentQuestion.from(homeworkQuestion,
+            homeworkStudent, solveProblemRequest.getSubmitAnswer(), solveProblemRequest.getFilePath());
+
+        homeworkStudentQuestionRepository.save(homeworkStudentQuestion);
+        return new SolveProblemResponse(homeworkStudentQuestion.getId());
+    }
+
+    @Override
+    public SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId) {
+        // 문제를 다 풀었는지 안풀었는지 확인
+        HomeworkStudent homeworkStudent = validateHomeworkStudent(homeworkStudentId);
+        // 일단 홈워크 퀘스천 가져오기
+
+        // 문제 처잠 시작
+
+        return null;
+    }
+
+    private HomeworkStudent validateHomeworkStudent(Integer homeworkStudentId) {
+        // todo: 커스텀 익셉션
+        return homeworkStudentRepository.findById(homeworkStudentId)
+            .orElseThrow(() -> new RuntimeException("해당하는 homeworkStudent 를 찾을 수 없습니다."));
+    }
+
+    private HomeworkQuestion validateHomeworkQuestion(Integer homeworkQuestionId){
+        // todo: 커스텀 익셉션
+        return homeworkQuestionRepository.findById(homeworkQuestionId)
+            .orElseThrow(() -> new RuntimeException("해당하는 homeworkQuestion 을 찾을 수 없습니다."));
     }
 
     private HomeworkQuestion saveHomeworkQuestion(
