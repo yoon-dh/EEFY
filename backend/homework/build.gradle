@@ -46,6 +46,10 @@ dependencies {
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-zipkin', version: '2.2.8.RELEASE'
+
 }
 
 dependencyManagement {

@@ -9,6 +9,12 @@ spring:
     url: ${MYSQL_HOMEWORK_URL}
     username: ${MYSQL_NAME}
     password: ${MYSQL_PASSWORD}
+  zipkin:
+    base-url: ${ZIPKIN_URL}
+    enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0
 
   jpa:
     hibernate:
@@ -21,6 +27,8 @@ spring:
     open-in-view: false
 
 eureka:
+  instance:
+    hostname: ${HOST_NAME}
   client:
     register-with-eureka: true
     fetch-registry: true
