@@ -80,6 +80,7 @@ public class AuthFilter {
         if (path.contains("/api/member")) {
             return !path.equals("/api/member") || !method.equals("PUT");
         }
+        if (path.contains("swagger-ui")) return true;
         return false;
     }
 }
