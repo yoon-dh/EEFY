@@ -9,6 +9,7 @@ import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassRespo
 import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.exception.HomeworkNotFoundException;
@@ -128,6 +129,17 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         homeworkStudentQuestionRepository.save(homeworkStudentQuestion);
         return new SolveProblemResponse(homeworkStudentQuestion.getId());
+    }
+
+    @Override
+    public SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId) {
+        // 문제를 다 풀었는지 안풀었는지 확인
+        HomeworkStudent homeworkStudent = validateHomeworkStudent(homeworkStudentId);
+        // 일단 홈워크 퀘스천 가져오기
+
+        // 문제 처잠 시작
+
+        return null;
     }
 
     private HomeworkStudent validateHomeworkStudent(Integer homeworkStudentId) {

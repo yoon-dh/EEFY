@@ -9,6 +9,7 @@ import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassRespo
 import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 
@@ -29,4 +30,5 @@ public interface HomeworkService {
 
     SolveProblemResponse solveProblem(SolveProblemRequest solveProblemRequest, Integer memberId);
 
+    SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId);
 }

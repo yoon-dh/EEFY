@@ -9,6 +9,7 @@ import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassRespo
 import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.service.HomeworkService;
@@ -93,4 +94,15 @@ public class HomeworkController {
             homeworkService.solveProblem(solveProblemRequest, memberId),
             HttpStatus.OK);
     }
+
+    @GetMapping("/solve/{homeworkStudentId}")
+    public ResponseEntity<SolveHomeworkResponse> solveHomework(
+        @PathVariable Integer homeworkStudentId,
+        @RequestHeader("Member-Id") Integer memberId
+    ) {
+
+        homeworkService.solveHomework(homeworkStudentId, memberId);
+        return null;
+    }
+
 }
