@@ -67,6 +67,8 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${EUREKA_SERVER_URL}
+  instance:
+    hostname: ${HOST_NAME}
 
 springdoc:
   swagger-ui:
