@@ -7,16 +7,16 @@ import lombok.Data;
 @Data
 public class HomeworkStudentDto {
 
-    private Integer id;
+    private Integer homeworkStudentId;
     private Integer memberId;
     private Integer classHomeworkId;
     private LocalDateTime doneDate;
     private Integer progressRate;
 
     @QueryProjection
-    public HomeworkStudentDto(Integer id, Integer memberId, Integer classHomeworkId,
+    public HomeworkStudentDto(Integer homeworkStudentId, Integer memberId, Integer classHomeworkId,
         LocalDateTime doneDate, Integer progressRate) {
-        this.id = id;
+        this.homeworkStudentId = homeworkStudentId;
         this.memberId = memberId;
         this.classHomeworkId = classHomeworkId;
         this.doneDate = doneDate;

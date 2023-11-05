@@ -3,11 +3,13 @@ package com.eefy.homework.domain.homework.controller;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
+import com.eefy.homework.domain.homework.dto.request.SolveProblemRequest;
 import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.service.HomeworkService;
 import lombok.RequiredArgsConstructor;
@@ -81,8 +83,14 @@ public class HomeworkController {
     }
 
     // 과제 문제를 제출하는 로직
-
     // 과제가 완료되는 로직
-
-
+    @PostMapping("/solve")
+    public ResponseEntity<SolveProblemResponse> solveProblem(
+        @RequestBody SolveProblemRequest solveProblemRequest,
+        @RequestHeader("Member-Id") Integer memberId
+    ) {
+        return new ResponseEntity<>(
+            homeworkService.solveProblem(solveProblemRequest, memberId),
+            HttpStatus.OK);
+    }
 }

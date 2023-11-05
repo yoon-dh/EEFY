@@ -1,6 +1,5 @@
 package com.eefy.homework.domain.homework.dto;
 
-import com.eefy.homework.domain.homework.persistence.entity.Homework;
 import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkQuestionType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
@@ -8,7 +7,7 @@ import lombok.Data;
 @Data
 public class HomeworkQuestionDto {
 
-    private Integer id;
+    private Integer homeworkQuestionId;
     private Integer homeworkId;
     private String title;
     private String content;
@@ -17,9 +16,9 @@ public class HomeworkQuestionDto {
     private String answer;
 
     @QueryProjection
-    public HomeworkQuestionDto(Integer id, Integer homeworkId, String title, String content,
+    public HomeworkQuestionDto(Integer homeworkQuestionId, Integer homeworkId, String title, String content,
         String filePath, HomeworkQuestionType field, String answer) {
-        this.id = id;
+        this.homeworkQuestionId = homeworkQuestionId;
         this.homeworkId = homeworkId;
         this.title = title;
         this.content = content;

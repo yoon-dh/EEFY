@@ -7,7 +7,6 @@ import lombok.ToString;
 @ToString
 public class ChoiceRequest {
 
-    private Integer homeworkQuestionId;
     private String content;
     private String number;
 }
