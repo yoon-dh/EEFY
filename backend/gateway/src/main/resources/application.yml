@@ -18,21 +18,21 @@ spring:
     username: ${MYSQL_NAME}
     password: ${MYSQL_PASSWORD}
 
-  cloud:
-    gateway:
-      routes:
-        - id: member-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/api/member/**, /api/auth/**
-        - id: homework-service
-          uri: lb://HOMEWORK-SERVICE
-          predicates:
-            - Path=/api/homework/**
-        - id: study-class-service
-          uri: lb://STUDY-CLASS-SERTICE
-          predicates:
-            - Path=/api/study-class/**
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: member-service
+#          uri: lb://MEMBER-SERVICE
+#          predicates:
+#            - Path=/api/member/**, /api/auth/**
+#        - id: homework-service
+#          uri: lb://HOMEWORK-SERVICE
+#          predicates:
+#            - Path=/api/homework/**
+#        - id: study-class-service
+#          uri: lb://STUDY-CLASS-SERTICE
+#          predicates:
+#            - Path=/api/study-class/**
 
 jwt:
   secret: ${SECRET_KEY}
