@@ -30,7 +30,7 @@ spring:
           predicates:
             - Path=/api/homework/**
         - id: study-class-service
-          uri: lb://STUDY-CLASS-SERTICE
+          uri: lb://STUDY-CLASS-SERVICE
           predicates:
             - Path=/api/study-class/**
 
