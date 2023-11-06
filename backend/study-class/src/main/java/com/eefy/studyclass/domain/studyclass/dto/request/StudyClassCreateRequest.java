@@ -1,13 +1,11 @@
 package com.eefy.studyclass.domain.studyclass.dto.request;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class StudyClassCreateRequest {
-    private String title;
-    private String content;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private String type;
+    private ClassInfoRequest classInfoRequest;
     private List<StudyClassStudentRequest> students;
 }

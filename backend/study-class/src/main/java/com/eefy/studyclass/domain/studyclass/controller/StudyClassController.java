@@ -20,10 +20,10 @@ public class StudyClassController {
         return ResponseEntity.ok(studyClassService.getStudyClassList(memberId));
     }
 
-    @PostMapping("")
+    @PostMapping("/tutor")
     public ResponseEntity<Void> createStudyClass(@RequestHeader("Member-Id") Integer memberId,
                                                  @RequestBody StudyClassCreateRequest studyClassCreateRequest) {
-
+        studyClassService.createStudyClass(studyClassCreateRequest);
         return ResponseEntity.ok().build();
     }
 }
