@@ -2,6 +2,12 @@ server:
   port: 64418
 
 spring:
+  zipkin:
+    base-url: ${ZIPKIN_URL}
+    enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0
   application:
     name: study-class-service
   datasource:
