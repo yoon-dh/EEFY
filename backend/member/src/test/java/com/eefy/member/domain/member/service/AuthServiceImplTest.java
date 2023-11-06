@@ -1,11 +1,14 @@
 package com.eefy.member.domain.member.service;
 
+import com.eefy.member.domain.member.dto.request.LoginRequest;
+import com.eefy.member.domain.member.dto.response.JwtTokenResponse;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +28,7 @@ class AuthServiceImplTest {
     @Test
     void login() {
 //        LoginRequest loginRequest = new LoginRequest("test@test.com", "1234^a");
-//        ResponseEntity<JwtTokenResponse> response = memberService.login(loginRequest);
+//        ResponseEntity<JwtTokenResponse> response = authService.login(loginRequest);
 //        String accessToken = response.getHeaders().getFirst("Authorization");
 //        String refreshToken = response.getHeaders().getFirst("Authorization-Refresh");
 //        System.out.println("access: " + accessToken);

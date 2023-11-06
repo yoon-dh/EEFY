@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
                     return new IllegalArgumentException("로그인 실패: 요청 유저 없음");
                 });
 
-        if (!passwordEncoder.encode(loginRequest.getPassword()).equals(member.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(),member.getPassword())) {
             throw new IllegalStateException("로그인 실패: 비밀번호 불일치");
         }
         return makeJwtToken(member);
