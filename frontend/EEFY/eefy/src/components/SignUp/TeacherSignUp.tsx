@@ -66,8 +66,7 @@ export default function TeacherSignUp(){
 
   // 이메일 인증
   const handleMailSend = async () => {
-      // setShowCode(true)
-      // console.log(enterEmail)
+      console.log(enterEmail)
       // const res = await postEmail(enterEmail)
       // if (res.stauts === 200){
       //   setShowCode(true)
