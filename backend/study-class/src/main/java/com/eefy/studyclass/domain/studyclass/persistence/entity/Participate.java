@@ -1,9 +1,13 @@
 package com.eefy.studyclass.domain.studyclass.persistence.entity;
 
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
 public class Participate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +23,12 @@ public class Participate {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Builder
+    public Participate(Integer id, Integer memberId, StudyClass studyClass, LocalDateTime createdAt) {
+        this.id = id;
+        this.memberId = memberId;
+        this.studyClass = studyClass;
+        this.createdAt = createdAt;
+    }
 }

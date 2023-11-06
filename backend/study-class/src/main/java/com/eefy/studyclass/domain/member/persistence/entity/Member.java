@@ -6,5 +6,6 @@ import lombok.Getter;
 public class Member {
     private Integer id;
     private String name;
+    private String nickname;
     private String role;
 }
