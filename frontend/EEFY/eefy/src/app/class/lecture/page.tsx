@@ -1,8 +1,11 @@
 'use client';
 import ContainerBtn from '@/components/Lecture/ContainerBtn';
 import Note from "@/components/Notice/Note/Note";
-
+import { useRecoilValue } from 'recoil';
+import { OcrFileCheck } from '@/recoil/Homework';
+import CanvasModal from '@/components/Lecture/LectureDetail/CanvasModal';
 function Home() {
+  const ocr = useRecoilValue(OcrFileCheck)
   return (
     <div className='w-full h-full'>
       <div>
@@ -15,32 +18,7 @@ function Home() {
       }}>
         <Note/>
       </div>
-      {/* <div className='flex  rounded-lg bg-base-200' 
-      style={{ 
-        height: '90%',  
-        width: '100%', 
-        boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
-        margin:'10px 0px 0px 0px',
-        }}>
-          <NoticeListBoard/>
-          <div style={{
-            flex:8,
-            display:'flex',
-          }}>
-            <div style={{
-              flex:5,
-              backgroundColor:'white'
-            }}>
-              <LectureDetail/>
-            </div>
-            <div style={{
-              flex:5,
-              padding:'15px 20px'
-            }}>
-              <CommentList/>
-            </div>
-          </div>
-      </div> */}
+      {ocr.isSuccess && <CanvasModal/>}
     </div>
   );
 }
