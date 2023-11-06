@@ -14,7 +14,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Random;
 
@@ -67,13 +69,13 @@ public class EmailService {
     }
 
     private MimeMessage createEmailForm(String code, String email) throws MessagingException {
-        String title = "EEFY 회원가입 인증 번호";
-
+        String subject = "EEFY 회원가입 인증 번호";
+        String htmlContent = getHtmlString(code);
         MimeMessage message = javaMailSender.createMimeMessage();
-        message.addRecipients(MimeMessage.RecipientType.TO, email);
-        message.setSubject(title);
-        message.setFrom(username);
-        message.setText("인증번호: " + code, "utf-8", "html");
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+        message.setSubject(subject);
+        message.setFrom(new InternetAddress(username));
+        message.setContent(htmlContent, "text/html; charset=utf-8");
 
         return message;
     }
@@ -88,5 +90,15 @@ public class EmailService {
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
+    }
+
+    private String getHtmlString(String code) {
+        return "<html><body>" +
+                "<h1>EEFY 회원가입 이메일 인증 번호</h1>" +
+                "<p>아래 인증 번호를 회원가입 시 입력해주세요:</p>" +
+                "<p style='font-size: 18px; background-color: #f0f0f0; padding: 10px;'><strong>" +
+                code +
+                "</strong></p>" +
+                "</body></html>";
     }
 }
