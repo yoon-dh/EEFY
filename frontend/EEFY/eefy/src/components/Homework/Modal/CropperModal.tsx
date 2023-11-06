@@ -200,7 +200,7 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
               margin:'0px 0px 0px 20px'
             }}
             onClick={()=>{
-              setPageImage('')
+               ('')
               onCloseModal()}}>나가기</button>
         </div>
       </BtnBox>

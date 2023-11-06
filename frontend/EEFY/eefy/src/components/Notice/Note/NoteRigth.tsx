@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import NoticeDetail from '../NoticeDetail/NoticeDetail';
 import CommentList from '@/components/Question/Comment/CommentList';
 import LectureDetail from '@/components/Lecture/LectureDetail/LectureDetail';
@@ -10,6 +11,10 @@ function NoteRigth() {
   const data = useRecoilValue(NoticeNum)
   const lastWord = useRecoilValue(Name)
 
+  useEffect(()=>{
+    console.log(lastWord)
+    console.log(data)
+  },[])
   return (
     <div
       className='w-full h-full bg-base-200'
@@ -82,7 +87,7 @@ function NoteRigth() {
                   }}>
                     <LectureDetail/>
                   </div>
-                  <div style={{
+                  {/* <div style={{
                     flex:4,
                     padding:'15px 20px',
                     backgroundColor:'#F2F3F7',
@@ -90,7 +95,7 @@ function NoteRigth() {
                     // boxShadow: '0px 4px 7px rgba(0, 0, 0, 0.25)'
                   }}>
                     <CommentList/>
-                  </div>
+                  </div> */}
                 </div>
               </>
             )}
