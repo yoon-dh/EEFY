@@ -5,6 +5,12 @@ spring:
   application:
     name: member-service
 
+  zipkin:
+    base-url:  ${ZIPKIN_RUL}
+    sleuth:
+      sampler:
+        probability: 1.0
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_MEMBER_URL}
