@@ -4,8 +4,6 @@ import com.eefy.member.domain.member.dto.request.EmailConfirmRequest;
 import com.eefy.member.domain.member.dto.response.EmailSendResponse;
 import com.eefy.member.domain.member.persistence.EmailCodeRedisRepository;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
-import com.eefy.member.domain.member.persistence.MemberRepository;
-import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.domain.member.persistence.entity.redis.EmailCode;
 import com.eefy.member.domain.member.persistence.entity.redis.EmailConfirm;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,6 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String username;
     private final JavaMailSender javaMailSender;
-    private final MemberRepository memberRepository;
     private final EmailCodeRedisRepository emailCodeRedisRepository;
     private final EmailConfirmRedisRepository emailConfirmRedisRepository;
 
