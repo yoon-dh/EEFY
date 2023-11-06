@@ -51,13 +51,7 @@ public class EmailService {
 
     @Transactional
     public ResponseEntity<String> confirmCode(EmailConfirmRequest emailConfirmRequest) {
-        Member member = memberRepository.findMemberByEmail(emailConfirmRequest.getEmail())
-                .orElseThrow(() -> {
-                    log.error("사용자 조회 오류");
-                    return new IllegalArgumentException("사용자 조회 오류");
-                });
-
-        String email = member.getEmail();
+        String email = emailConfirmRequest.getEmail();
         String emailCode = emailCodeRedisRepository.findById(email)
                 .orElseThrow(() -> {
                     log.error("인증번호 없음");
