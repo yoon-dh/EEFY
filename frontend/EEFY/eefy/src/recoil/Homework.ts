@@ -61,3 +61,13 @@ export const Category = atom({
   key: 'Category',
   default: ''
 })
+
+export const OcrFileCheck = atom({
+  key: 'OcrFileCheck',
+  default: {
+    imgUrl:'',
+    pdfFile:'',
+    isSuccess:false
+  }
+})
+

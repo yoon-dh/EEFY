@@ -28,6 +28,7 @@
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.11.0",
     "react-pdf": "^7.5.1",
+    "react-sketch-canvas": "^6.2.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
     "styled-components": "^6.0.7"

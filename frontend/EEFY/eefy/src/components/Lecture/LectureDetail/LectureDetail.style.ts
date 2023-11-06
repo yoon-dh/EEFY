@@ -3,12 +3,11 @@ import styled from 'styled-components';
 export const Container = styled.div`
   width: 100%;
   height: 100%;
-  /* border-left: 1px solid #7b88e0; */
 `;
 export const Header = styled.div``;
 export const Wrappe = styled.div`
   width: 100%;
-  height: 80%;
+  height: 78%;
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   margin: 2% 0px 0px 0px;
@@ -74,8 +73,8 @@ width: 100%;
 flex: 0.5;
 display: flex;
 `
-export const ViewerBtn = styled.div`
-width: 40%;
+export const ViewerBtn = styled.input`
+width: 30%;
 height: 40px;
 padding: 10px 10px;
 background: #999BD5;
@@ -89,7 +88,7 @@ justify-content: center;
 align-items: center;
 `
 export const DownloadBtn = styled.div`
-width: 40%;
+width: 30%;
 height: 40px;
 padding: 10px 10px;
 background: #999BD5;

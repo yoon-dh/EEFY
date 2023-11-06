@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
 type Notice = {
   id: string;
@@ -8,6 +9,19 @@ type Notice = {
   useName: string;
   content: string;
 };
+
+const sessionStorage = 
+      typeof window !== 'undefined' ? window.sessionStorage : undefined
+
+const { persistAtom } = recoilPersist({
+  key: 'Name',
+  storage: sessionStorage,
+});
+export const Name = atom<string>({
+  key:'Name',
+  default:'',
+  effects_UNSTABLE: [persistAtom],
+})
 
 const dummyData = [];
 
@@ -33,7 +47,4 @@ export const NoticeNum = atom<Notice | null>({
   default: null,
 });
 
-export const Name = atom<string>({
-  key:'Name',
-  default:''
-})
+

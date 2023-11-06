@@ -83,7 +83,7 @@ export default function SideNav() {
 
           {/* 과제 * 3 */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/studylist'} onClick={()=>setName('studylist')}>
+            <Link href={'/class/studylist'}>
               <ImPencil className='text-3xl' />
 
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
@@ -102,7 +102,7 @@ export default function SideNav() {
 
           {/* 강의자료(자료실) */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/lecture'}>
+            <Link href={'/class/lecture'} onClick={()=>setName('lecture')}>
               <PiNotepadFill className='text-3xl' />
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react'
 import { useRecoilState } from 'recoil';
 import { NoticeNum } from '@/recoil/Notice';
 import dayjs from 'dayjs';
@@ -22,6 +22,8 @@ import {
 import Image from 'next/image';
 import down from 'public/Img/다운로드.png'
 import open from 'public/Img/열기.png'
+import { OcrFileCheck } from '@/recoil/Homework';
+
 type Notice = {
   id: string;
   title: string;
@@ -33,7 +35,50 @@ type Notice = {
 
 function LectureDetail() {
   const [notice, setNotice] = useRecoilState<Notice | null>(NoticeNum);
+  const [targetFile, setTargetFile] = useState<FileList | null>(null);
 
+  const [ocr, setOcr] = useRecoilState(OcrFileCheck)
+
+  const fileType = ["application/pdf"];
+
+  useEffect(()=>{
+    console.log(targetFile,'targetFile')
+    if (targetFile) {
+      if (targetFile && fileType.includes(targetFile[0].type)) {
+        let reader = new FileReader();
+        reader.readAsDataURL(targetFile[0]);
+        reader.onload = (e) => {
+          if (typeof e.target?.result === "string") {
+            const NewPdfFile = e.target.result
+            setOcr({...ocr,pdfFile:NewPdfFile,isSuccess:true});
+          }
+        };
+      }
+    }
+  },[targetFile])
+
+  const uploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //파일 업로드
+    if (e.target.files) {
+      const fileName = e.target.files[0].name;
+      const fileExtension = fileName.split(".").pop();
+      console.log(fileExtension,'fileExtension')
+      if(fileExtension === 'png' || fileExtension === 'JPG' || fileExtension === 'jpg'){
+        let reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onload = (e) => {
+          if (typeof e.target?.result === "string") {
+            const NewImgUrl = e.target.result
+            setOcr({...ocr,imgUrl:NewImgUrl,isSuccess:true});
+          }
+        };
+      } else if(fileExtension === 'pdf'){
+        console.log(e.target.files,'pdf 넘어간다')
+        setTargetFile(e.target.files);
+      }
+    }
+  };
+  
   return (
     <>
       <Container
@@ -83,13 +128,18 @@ function LectureDetail() {
 
             </Wrappe>
               <BtnBox>
-                <ViewerBtn>
-                  Viewer 열기
-                  <Image 
+                <ViewerBtn 
+                id="imgInput" 
+                type="file"  
+                accept=".pdf, image/*"
+                onChange={uploadFile}
+                >
+                  {/* Viewer 열기 */}
+                  {/* <Image 
                   style={{
                     margin:'0px 0px 0px 5px'
                   }}
-                  src={open} width={14} height={14} alt=''/>
+                  src={open} width={14} height={14} alt=''/> */}
                 </ViewerBtn>
                 <DownloadBtn>
                   자료 다운 받기
