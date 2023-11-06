@@ -30,7 +30,7 @@ public class AuthFilter {
             ServerHttpRequest request = exchange.getRequest();
             String path = request.getPath().toString();
             String method = request.getMethodValue();
-            System.out.println(path + " " + method);
+            log.info(path + " " + method);
             if (!isWhitePath(path, method)) {
                 log.info("인증 작업이 필요한 요청. path: {}, method: {}", path, method);
                 String jwtToken = getJwtToken(request);
@@ -42,6 +42,7 @@ public class AuthFilter {
                 request.mutate().header("Member-Id", String.valueOf(memberId)).build();
                 log.info("인증 완료. path: {}, method: {}", path, method);
             }
+            else log.info("인증 미필요 작업.");
 
             return chain.filter(exchange);
         });
