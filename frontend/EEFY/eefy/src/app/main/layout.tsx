@@ -38,24 +38,32 @@ import { useRecoilValue } from 'recoil';
 import { Thema } from '@/recoil/Thema';
 
 import Modal from 'react-modal';
+import Image from 'next/image';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   Modal.setAppElement('#root');
 
   const thema = useRecoilValue(Thema);
 
+  // const mainStyle = {
+  //   display: 'grid',
+  //   gridTemplateColumns: 'repeat(15, 1fr)',
+  //   gridTemplateRows: 'repeat(10, 1fr)',
+  //   gridTemplateAreas:
+  //     "'a a b b b b b b b b b b b b b' 'a a b b b b b b b b b b b b b' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'e e e e e e e e e e e e e e e' ",
+  // };
   const mainStyle = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(15, 1fr)',
+    gridTemplateColumns: 'repeat(8, 1fr)',
     gridTemplateRows: 'repeat(10, 1fr)',
     gridTemplateAreas:
-      "'a a b b b b b b b b b b b b b' 'a a b b b b b b b b b b b b b' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'e e e e e e e e e e e e e e e' ",
+      "'a b b b b b b b' 'a b b b b b b b' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'e e e e e e e e' ",
   };
 
   return (
     <div className='w-full h-full' style={mainStyle} data-theme={thema} id='root'>
       <div style={{ gridArea: 'a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <img style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} width={130} height={130} />
+        <Image style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} width={130} height={130} alt='' />
       </div>
       <div style={{ gridArea: 'b' }}>
         <TopNav />
