@@ -139,8 +139,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Override
     @Transactional
     public SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId) {
-        String testData = aiServerRestClient.getAnnounceScore("testData");
-        log.info(testData + "@@@@@@@@@");
+//        String score = aiServerRestClient.getAnnounceScore("Chapter5-18_copy.mp3");
 
         HomeworkStudent homeworkStudent = validateHomeworkStudent(homeworkStudentId);
 
