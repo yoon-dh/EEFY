@@ -4,6 +4,7 @@ import com.eefy.member.domain.member.dto.request.JoinRequest;
 import com.eefy.member.domain.member.dto.request.MemberUpdateRequest;
 import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.event.UploadProfileImageEvent;
+import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final EmailConfirmRedisRepository emailConfirmRedisRepository;
+
+    private final MemberValidator memberValidator;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -32,14 +35,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void join(JoinRequest joinRequest) {
         Member member = joinRequest.toEntity();
-        checkEmailConfirmStatus(joinRequest.getEmail());
-
-        if (memberRepository.findMemberByEmail(joinRequest.getEmail()).isPresent()) {
-            throw new IllegalStateException("이미 회원가입 된 상태");
-        }
-        if (!joinRequest.getPassword().equals(joinRequest.getCheckedPassword())) {
-            throw new IllegalArgumentException("비밀번호 확인 필요");
-        }
+        checkJoinStatus(joinRequest);
 
         member.encodePassword(passwordEncoder);
         emailConfirmRedisRepository.deleteById(member.getEmail());
@@ -55,12 +51,17 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void updateMember(int memberId, MemberUpdateRequest request, MultipartFile profileImage) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("없는 사용자 조회 요청"));
+        Member member = memberValidator.getValidMember(memberRepository.findById(memberId));
 
         eventPublisher.publishEvent(new UploadProfileImageEvent(member, profileImage));
 
         member.updateMemberInfo(request);
+    }
+
+    private void checkJoinStatus(JoinRequest joinRequest) {
+        checkEmailConfirmStatus(joinRequest.getEmail());
+        memberValidator.checkJoinStatus(memberRepository.findMemberByEmail(joinRequest.getEmail()),
+                joinRequest.getPassword(), joinRequest.getCheckedPassword());
     }
 
     private void checkEmailConfirmStatus(String email) {
