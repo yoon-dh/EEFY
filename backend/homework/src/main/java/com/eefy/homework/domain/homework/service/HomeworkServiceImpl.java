@@ -39,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class HomeworkServiceImpl implements HomeworkService {
 
-    //    private final ModelMapper modelMapper;
     private final HomeworkRepository homeworkRepository;
     private final HomeworkQuestionRepository homeworkQuestionRepository;
     private final ChoiceRepository choiceRepository;
@@ -139,8 +138,6 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Override
     @Transactional
     public SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId) {
-//        String score = aiServerRestClient.getAnnounceScore("Chapter5-18_copy.mp3");
-
         HomeworkStudent homeworkStudent = validateHomeworkStudent(homeworkStudentId);
 
         List<HomeworkStudentQuestion> homeworkStudentQuestions =
@@ -155,7 +152,9 @@ public class HomeworkServiceImpl implements HomeworkService {
         int index = 0;
         for (HomeworkStudentQuestion homeworkStudentQuestion : homeworkStudentQuestions) {
             if (homeworkQuestions.get(index).getType().equals(HomeworkQuestionType.VOICE)) {
-                // todo: 보이스 점수 확인
+                String score = aiServerRestClient.getAnnounceScore(
+                    homeworkStudentQuestion.getFilePath());
+                homeworkStudentQuestion.updateScore(Integer.parseInt(score) * 20);
             } else {
                 updateChoiceAndWriteProblemScore(homeworkQuestions.get(index),
                     homeworkStudentQuestion);
@@ -164,7 +163,6 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
 
         homeworkStudent.updateDoneDate();
-        // homeworkStudent 의 doneDate 업데이트
         return new SolveHomeworkResponse(homeworkStudentId);
     }
 
