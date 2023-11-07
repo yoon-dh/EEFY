@@ -2,7 +2,7 @@ from fastapi import APIRouter, File
 from domain.announce.service.announce_service import evaluate_announce
 
 router = APIRouter(
-    prefix="/api/announce"
+    prefix="/api/ai/announce"
 )
 
 @router.post("/evaluate")

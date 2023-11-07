@@ -6,7 +6,7 @@ from fastapi import APIRouter, File, UploadFile
 from domain.stt.service import stt_service
 
 router = APIRouter(
-    prefix="/api/stt"
+    prefix="/api/ai/stt"
 )
 
 
