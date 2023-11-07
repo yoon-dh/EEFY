@@ -5,6 +5,7 @@ router = APIRouter(
     prefix="/api/ai/announce"
 )
 
-@router.post("/evaluate")
-def get_document(voice_file: bytes = File()):
-    return evaluate_announce(voice_file)
+@router.get("/evaluate/{voice_file_path}")
+def get_document(voice_file_path):
+    print("announce" + voice_file_path)
+    return evaluate_announce(voice_file_path)

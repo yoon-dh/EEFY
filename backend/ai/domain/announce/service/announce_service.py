@@ -11,9 +11,9 @@ def evaluate_announce(voice_file):
     languageCode = "english"
     # script = "PRONUNCIATION_SCRIPT"
 
-    file = voice_file
-    audioContents = base64.b64encode(file).decode("utf8")
-    # file.close()
+    file = open(voice_file, "rb")
+    audioContents = base64.b64encode(file.read()).decode("utf8")
+    file.close()
 
     requestJson = {
         "argument": {
