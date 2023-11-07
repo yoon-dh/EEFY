@@ -29,7 +29,6 @@ public class StudyClassController {
     @PostMapping("/tutor")
     public ResponseEntity<Void> createStudyClass(@RequestHeader("Member-Id") Integer memberId,
                                                  @RequestBody StudyClassCreateRequest studyClassCreateRequest) {
-        System.out.println("======================= Controller =======================");
         studyClassService.createStudyClass(memberId, studyClassCreateRequest);
         return ResponseEntity.ok().build();
     }

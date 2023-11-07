@@ -83,11 +83,8 @@ public class StudyClassServiceImpl implements StudyClassService {
     public void modifyStudyClass(StudyClassModifyRequest studyClassModifyRequest) {
         studyClassValidator.existsStudyClassByClassId(studyClassRepository, studyClassModifyRequest.getId());
 
-        studyClassRepository.updateStudyClass(studyClassModifyRequest.getTitle(),
-                                              studyClassModifyRequest.getContent(),
-                                              studyClassModifyRequest.getType(),
-                                              studyClassModifyRequest.getStartDate(),
-                                              studyClassModifyRequest.getEndDate());
+        StudyClass studyClass = studyClassRepository.findById(studyClassModifyRequest.getId()).get();
+        studyClass.updateStudyClassInfo(studyClassModifyRequest);
     }
 
     @Override
