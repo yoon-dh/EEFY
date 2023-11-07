@@ -6,11 +6,13 @@ import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/study-class")
 @RequiredArgsConstructor
@@ -27,7 +29,8 @@ public class StudyClassController {
     @PostMapping("/tutor")
     public ResponseEntity<Void> createStudyClass(@RequestHeader("Member-Id") Integer memberId,
                                                  @RequestBody StudyClassCreateRequest studyClassCreateRequest) {
-        studyClassService.createStudyClass(studyClassCreateRequest);
+        System.out.println("======================= Controller =======================");
+        studyClassService.createStudyClass(memberId, studyClassCreateRequest);
         return ResponseEntity.ok().build();
     }
 

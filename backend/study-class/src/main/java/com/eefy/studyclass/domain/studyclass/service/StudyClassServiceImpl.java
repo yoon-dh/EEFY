@@ -12,6 +12,7 @@ import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
+import com.eefy.studyclass.domain.studyclass.persistence.entity.enums.StudyTypeEnum;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
@@ -55,15 +56,19 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void createStudyClass(StudyClassCreateRequest studyClassCreateRequest) {
+    public void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest) {
         ClassInfoRequest classInfoRequest = studyClassCreateRequest.getClassInfoRequest();
 
         StudyClass studyClass = StudyClass.builder()
+                .memberId(memberId)
                 .classTitle(classInfoRequest.getTitle())
                 .classContent(classInfoRequest.getContent())
                 .startDate(classInfoRequest.getStartDate())
                 .endDate(classInfoRequest.getEndDate())
+                .type(StudyTypeEnum.valueOf(classInfoRequest.getType()))
                 .build();
+
+        studyClassRepository.save(studyClass);
 
         for (StudyClassStudentRequest studentRequest: studyClassCreateRequest.getStudents()) {
             Participate participate = Participate.builder()

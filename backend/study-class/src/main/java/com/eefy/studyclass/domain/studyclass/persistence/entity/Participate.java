@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.persistence.entity;
 
+import com.eefy.studyclass.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Participate {
+public class Participate extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "participate_id")
@@ -23,14 +24,10 @@ public class Participate {
     @JoinColumn(name = "class_id")
     private StudyClass studyClass;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     @Builder
-    public Participate(Integer id, Integer memberId, StudyClass studyClass, LocalDateTime createdAt) {
+    public Participate(Integer id, Integer memberId, StudyClass studyClass) {
         this.id = id;
         this.memberId = memberId;
         this.studyClass = studyClass;
-        this.createdAt = createdAt;
     }
 }

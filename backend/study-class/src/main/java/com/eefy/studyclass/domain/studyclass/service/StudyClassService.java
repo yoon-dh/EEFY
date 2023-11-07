@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface StudyClassService {
     StudyClassListResponse getStudyClassList(Integer memberId);
-    void createStudyClass(StudyClassCreateRequest studyClassCreateRequest);
+    void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest);
     void modifyStudyClass(StudyClassModifyRequest studyClassModifyRequest);
     List<SearchStudentResponse> searchStudentList(Integer teacherId, Integer classId);
     List<SearchStudentResponse> searchStudentList(Integer teacherId);
