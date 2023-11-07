@@ -5,13 +5,11 @@ import com.eefy.member.domain.member.exception.message.MemberEnum;
 import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.domain.member.persistence.entity.redis.EmailConfirm;
 import com.eefy.member.global.exception.CustomException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Slf4j
 @Component
 public class MemberValidator {
 
