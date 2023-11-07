@@ -14,7 +14,7 @@ public interface StudyClassRepository extends JpaRepository<StudyClass, Integer>
     @Query("SELECT s FROM StudyClass s LEFT JOIN s.participateList p where p.memberId = :memberId")
     List<StudyClass> findByStudentId(Integer memberId);
 
-    @Modifying(clearAutomatically = true)
-    @Query("update StudyClass s set s.classTitle=:title, s.classContent=:content, s.type=:type, s.startDate=:startDate, s.endDate=:endDate")
-    void updateStudyClass(String title, String content, String type, LocalDateTime startDate, LocalDateTime endDate);
+    boolean existsByMemberId(Integer teacherId);
+
+    boolean existsByIdAndMemberId(Integer classId, Integer teacherId);
 }

@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.persistence.entity;
 
+import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.enums.StudyTypeEnum;
 import com.eefy.studyclass.global.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -57,5 +58,13 @@ public class StudyClass extends BaseEntity {
         this.type = type;
         this.participateList = participateList;
         this.studentCnt = studentCnt;
+    }
+
+    public void updateStudyClassInfo(StudyClassModifyRequest studyClassModifyRequest) {
+        this.classTitle = studyClassModifyRequest.getTitle();
+        this.classContent = studyClassModifyRequest.getContent();
+        this.startDate = studyClassModifyRequest.getStartDate();
+        this.endDate = studyClassModifyRequest.getEndDate();
+        this.type = StudyTypeEnum.valueOf(studyClassModifyRequest.getType());
     }
 }
