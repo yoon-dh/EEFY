@@ -55,7 +55,7 @@ public class MemberController {
 
     @Operation(summary = "특정 사용자 정보 조회", description = "특정 사용자 한 명의 정보를 조회하는 API")
     @GetMapping
-    public MemberResponse getMember(@RequestHeader("Member-Id") int memberId) {
+    public MemberResponse getMember(@RequestParam int memberId) {
         return memberService.getMember(memberId);
     }
 }
