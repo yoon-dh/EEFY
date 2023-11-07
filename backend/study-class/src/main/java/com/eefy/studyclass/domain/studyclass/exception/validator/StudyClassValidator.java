@@ -19,8 +19,8 @@ public class StudyClassValidator {
                 .build();
     }
 
-    public void existsByStudyClassByTeacherIdAndClassId(StudyClassRepository studyClassRepository, Integer teacherId, Integer classId) {
-        if(!studyClassRepository.existsByMemberIdAndClassId(teacherId, classId)) throw CustomException.builder()
+    public void existsByStudyClassByTeacherIdAndClassId(StudyClassRepository studyClassRepository, Integer classId, Integer teacherId) {
+        if(!studyClassRepository.existsByIdAndMemberId(classId, teacherId)) throw CustomException.builder()
                 .status(HttpStatus.NO_CONTENT)
                 .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getCode())
                 .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getMessage())

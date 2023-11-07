@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ParticipateRepository extends JpaRepository<Participate, Integer> {
 
-    List<Participate> findByMemberIdAndClassId(Integer teacherId, Integer classId);
-
     List<Participate> findByMemberId(Integer teacherId);
+
+    List<Participate> findByMemberIdAndStudyClassId(Integer teacherId, Integer classId);
 }

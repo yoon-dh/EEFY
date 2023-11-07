@@ -90,7 +90,7 @@ public class StudyClassServiceImpl implements StudyClassService {
         studyClassValidator.existsStudyClassByClassId(studyClassRepository, classId);
         studyClassValidator.existsByStudyClassByTeacherIdAndClassId(studyClassRepository, teacherId, classId);
 
-        List<Participate> byMemberIdAndClassId = participateRepository.findByMemberIdAndClassId(teacherId, classId);
+        List<Participate> byMemberIdAndClassId = participateRepository.findByMemberIdAndStudyClassId(teacherId, classId);
 
         return getSearchStudentList(byMemberIdAndClassId);
     }
