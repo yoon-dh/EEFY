@@ -2,6 +2,9 @@ package com.eefy.member.domain.member.service;
 
 import com.eefy.member.domain.member.dto.request.EmailConfirmRequest;
 import com.eefy.member.domain.member.dto.response.EmailSendResponse;
+import com.eefy.member.domain.member.exception.EmailCodeException;
+import com.eefy.member.domain.member.exception.message.EmailErrorEnum;
+import com.eefy.member.domain.member.exception.validator.AuthValidator;
 import com.eefy.member.domain.member.persistence.EmailCodeRedisRepository;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
 import com.eefy.member.domain.member.persistence.entity.redis.EmailCode;
@@ -27,23 +30,21 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String username;
     private final JavaMailSender javaMailSender;
+    private final AuthValidator authValidator;
+
     private final EmailCodeRedisRepository emailCodeRedisRepository;
     private final EmailConfirmRedisRepository emailConfirmRedisRepository;
 
     @Transactional
     public ResponseEntity<EmailSendResponse> sendEmail(String toEmail) {
         String code = createCode();
+        authValidator.checkSendEmailStatus(emailCodeRedisRepository.existsById(toEmail));
         try {
-            if (emailCodeRedisRepository.existsById(toEmail)) {
-                throw new IllegalAccessException("시간 만료 후 이메일 인증 재요청");
-            }
             MimeMessage emailForm = createEmailForm(code, toEmail);
             emailCodeRedisRepository.save(new EmailCode(toEmail, code));
             javaMailSender.send(emailForm);
-        } catch (IllegalAccessException e) {
-            log.error(e.getMessage());
         } catch (MessagingException e) {
-            log.error("이메일 인증 코드 발송 오류");
+            throw new EmailCodeException(EmailErrorEnum.FAILED_EMAIL_CODE_SENDING);
         }
         return ResponseEntity.ok(new EmailSendResponse(code));
     }
@@ -51,17 +52,9 @@ public class EmailService {
     @Transactional
     public ResponseEntity<String> confirmCode(EmailConfirmRequest emailConfirmRequest) {
         String email = emailConfirmRequest.getEmail();
-        String emailCode = emailCodeRedisRepository.findById(email)
-                .orElseThrow(() -> {
-                    log.error("인증번호 없음");
-                    return new IllegalArgumentException("인증번호 없음");
-                })
-                .getCode();
-
-        if (!emailCode.equals(emailConfirmRequest.getCode())) {
-            log.error("이메일 인증번호 확인 오류");
-            throw new IllegalStateException("이메일 인증번호 확인 오류");
-        }
+        authValidator.checkEmailCode(
+                emailCodeRedisRepository.findById(email),
+                emailConfirmRequest.getCode());
 
         emailCodeRedisRepository.deleteById(email);
         emailConfirmRedisRepository.save(new EmailConfirm(email, true));
