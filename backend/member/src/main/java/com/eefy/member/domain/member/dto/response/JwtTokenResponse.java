@@ -1,11 +1,12 @@
 package com.eefy.member.domain.member.dto.response;
 
 import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtTokenResponse {
     private int memberId;
     private String email;
