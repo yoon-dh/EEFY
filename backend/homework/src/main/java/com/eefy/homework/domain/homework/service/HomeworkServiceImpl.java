@@ -1,5 +1,6 @@
 package com.eefy.homework.domain.homework.service;
 
+import com.eefy.homework.domain.homework.AiServerRestClient;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
@@ -46,6 +47,7 @@ public class HomeworkServiceImpl implements HomeworkService {
     private final HomeworkStudentRepository homeworkStudentRepository;
     private final HomeworkCustomRepository homeworkCustomRepository;
     private final HomeworkStudentQuestionRepository homeworkStudentQuestionRepository;
+    private final AiServerRestClient aiServerRestClient;
 
     private static final List<Integer> dummyStudentId = List.of(1, 2, 3, 4, 5, 6, 7);
 
@@ -137,6 +139,9 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Override
     @Transactional
     public SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId) {
+        String testData = aiServerRestClient.getAnnounceScore("testData");
+        log.info(testData + "@@@@@@@@@");
+
         HomeworkStudent homeworkStudent = validateHomeworkStudent(homeworkStudentId);
 
         List<HomeworkStudentQuestion> homeworkStudentQuestions =
