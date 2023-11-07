@@ -7,6 +7,7 @@ import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,15 +68,17 @@ public class AuthServiceImpl implements AuthService {
     private ResponseEntity<JwtTokenResponse> makeJwtToken(Member member) {
         String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getId());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
-        return makeLoginResponse(accessToken, refreshToken, member.getId());
+        return makeLoginResponse(accessToken, refreshToken, member);
     }
 
-    private ResponseEntity<JwtTokenResponse> makeLoginResponse(String accessToken, String refreshToken, int memberId) {
+    private ResponseEntity<JwtTokenResponse> makeLoginResponse(String accessToken, String refreshToken, Member member) {
         HttpHeaders headers = new HttpHeaders();
         String TOKEN_PREFIX = "Bearer ";
         headers.add("Authorization", TOKEN_PREFIX + accessToken);
         headers.add("Authorization-Refresh", TOKEN_PREFIX + refreshToken);
+
+        ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok().headers(headers)
-                .body(new JwtTokenResponse(memberId));
+                .body(modelMapper.map(member, JwtTokenResponse.class));
     }
 }
