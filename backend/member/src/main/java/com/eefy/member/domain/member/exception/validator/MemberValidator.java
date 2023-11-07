@@ -3,12 +3,15 @@ package com.eefy.member.domain.member.exception.validator;
 import com.eefy.member.domain.member.exception.message.AuthErrorEnum;
 import com.eefy.member.domain.member.exception.message.MemberEnum;
 import com.eefy.member.domain.member.persistence.entity.Member;
+import com.eefy.member.domain.member.persistence.entity.redis.EmailConfirm;
 import com.eefy.member.global.exception.CustomException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class MemberValidator {
 
@@ -26,7 +29,6 @@ public class MemberValidator {
     public void checkJoinStatus(Optional<Member> memberOptional, String pasword, String checkedPassword) {
         checkAlreadyJoinStatus(memberOptional);
         checkPasswordStatus(pasword, checkedPassword);
-
     }
 
     private void checkAlreadyJoinStatus(Optional<Member> memberOptional) {
@@ -45,6 +47,27 @@ public class MemberValidator {
                     .status(HttpStatus.BAD_REQUEST)
                     .code(MemberEnum.PASSWORD_CHECK_MISMATCH.getCode())
                     .message(MemberEnum.PASSWORD_CHECK_MISMATCH.getMessage())
+                    .build();
+        }
+    }
+
+    public void checkEmailConfirmStatus(Optional<EmailConfirm> emailConfirmOptional) {
+        if (emailConfirmOptional.isEmpty() || !emailConfirmOptional.get().isConfirmStatus()) {
+            throw CustomException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .code(MemberEnum.INVALID_EMAIL_CONFIRM_STATUS.getCode())
+                    .message(MemberEnum.INVALID_EMAIL_CONFIRM_STATUS.getMessage())
+                    .build();
+        }
+
+    }
+
+    public void checkSelectMemersKey(String key) {
+        if (!key.equals("email") && !key.equals("name")) {
+            throw CustomException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .code(MemberEnum.INVALID_SELECT_MEMBERS_KEY.getCode())
+                    .message(MemberEnum.INVALID_SELECT_MEMBERS_KEY.getMessage())
                     .build();
         }
     }
