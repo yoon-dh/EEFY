@@ -1,16 +1,16 @@
 package com.eefy.homework.domain.homework.persistence.entity;
 
 import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkQuestionType;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,20 +43,21 @@ public class HomeworkQuestion {
     private String filePath;
 
     @Column(nullable = false, length = 200)
-    private HomeworkQuestionType field;
+    @Enumerated(EnumType.STRING)
+    private HomeworkQuestionType type;
 
     @Column(nullable = true, length = 500)
     private String answer;
 
     public static HomeworkQuestion of(Homework homework, String title, String content,
-        String filePath, HomeworkQuestionType field, String answer) {
+        String filePath, HomeworkQuestionType type, String answer) {
 
         return HomeworkQuestion.builder()
             .homework(homework)
             .title(title)
             .content(content)
             .filePath(filePath)
-            .field(field)
+            .type(type)
             .answer(answer)
             .build();
     }

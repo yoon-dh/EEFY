@@ -29,7 +29,7 @@ public class HomeworkCustomRepository {
                     homeworkQuestion.title,
                     homeworkQuestion.content,
                     homeworkQuestion.filePath,
-                    homeworkQuestion.field,
+                    homeworkQuestion.type,
                     homeworkQuestion.answer
                 )
             ).from(homeworkQuestion)

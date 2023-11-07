@@ -76,7 +76,7 @@ public class HomeworkController {
             HttpStatus.OK);
     }
 
-    @GetMapping("/problem/{classHomeworkId}")
+    @GetMapping("/getProblem/{classHomeworkId}")
     public ResponseEntity<GetProblemResponse> getProblems(
         @PathVariable Integer classHomeworkId
     ) {
@@ -101,8 +101,8 @@ public class HomeworkController {
         @RequestHeader("Member-Id") Integer memberId
     ) {
 
-        homeworkService.solveHomework(homeworkStudentId, memberId);
-        return null;
+        return new ResponseEntity<>(homeworkService.solveHomework(homeworkStudentId, memberId),
+            HttpStatus.OK);
     }
 
 }

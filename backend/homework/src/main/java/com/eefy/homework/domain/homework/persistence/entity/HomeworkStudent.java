@@ -45,4 +45,8 @@ public class HomeworkStudent {
     public static HomeworkStudent from(Integer memberId, ClassHomework classHomework) {
         return new HomeworkStudent(memberId, classHomework, 0);
     }
+
+    public void updateDoneDate(){
+        this.doneDate = LocalDateTime.now();
+    }
 }

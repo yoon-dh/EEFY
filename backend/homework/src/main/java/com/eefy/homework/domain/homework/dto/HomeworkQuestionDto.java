@@ -12,18 +12,18 @@ public class HomeworkQuestionDto {
     private String title;
     private String content;
     private String filePath;
-    private HomeworkQuestionType field;
+    private HomeworkQuestionType type;
     private String answer;
 
     @QueryProjection
     public HomeworkQuestionDto(Integer homeworkQuestionId, Integer homeworkId, String title, String content,
-        String filePath, HomeworkQuestionType field, String answer) {
+        String filePath, HomeworkQuestionType type, String answer) {
         this.homeworkQuestionId = homeworkQuestionId;
         this.homeworkId = homeworkId;
         this.title = title;
         this.content = content;
         this.filePath = filePath;
-        this.field = field;
+        this.type = type;
         this.answer = answer;
     }
 }

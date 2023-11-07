@@ -19,6 +19,7 @@ import com.eefy.homework.domain.homework.persistence.entity.Homework;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudent;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudentQuestion;
+import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkQuestionType;
 import com.eefy.homework.domain.homework.repository.ChoiceRepository;
 import com.eefy.homework.domain.homework.repository.ClassHomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkCustomRepository;
@@ -124,22 +125,63 @@ public class HomeworkServiceImpl implements HomeworkService {
         HomeworkQuestion homeworkQuestion = validateHomeworkQuestion(
             solveProblemRequest.getHomeworkQuestionId());
 
-        HomeworkStudentQuestion homeworkStudentQuestion = HomeworkStudentQuestion.from(homeworkQuestion,
-            homeworkStudent, solveProblemRequest.getSubmitAnswer(), solveProblemRequest.getFilePath());
+        HomeworkStudentQuestion homeworkStudentQuestion = HomeworkStudentQuestion.from(
+            homeworkQuestion,
+            homeworkStudent, solveProblemRequest.getSubmitAnswer(),
+            solveProblemRequest.getFilePath());
 
         homeworkStudentQuestionRepository.save(homeworkStudentQuestion);
         return new SolveProblemResponse(homeworkStudentQuestion.getId());
     }
 
     @Override
+    @Transactional
     public SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId) {
-        // 문제를 다 풀었는지 안풀었는지 확인
         HomeworkStudent homeworkStudent = validateHomeworkStudent(homeworkStudentId);
-        // 일단 홈워크 퀘스천 가져오기
 
-        // 문제 처잠 시작
+        List<HomeworkStudentQuestion> homeworkStudentQuestions =
+            validateHomeworkStudentQuestionByHomeworkStudent(homeworkStudent);
+        List<HomeworkQuestion> homeworkQuestions = validateHomeworkQuestionByHomework(
+            homeworkStudentQuestions.get(0).getHomeworkQuestion().getHomework());
 
-        return null;
+        if (homeworkQuestions.size() != homeworkStudentQuestions.size()) {
+            throw new RuntimeException("문제를 다 안풀었습니다.");
+        }
+
+        int index = 0;
+        for (HomeworkStudentQuestion homeworkStudentQuestion : homeworkStudentQuestions) {
+            if (homeworkQuestions.get(index).getType().equals(HomeworkQuestionType.VOICE)) {
+                // todo: 보이스 점수 확인
+            } else {
+                updateChoiceAndWriteProblemScore(homeworkQuestions.get(index),
+                    homeworkStudentQuestion);
+            }
+            index++;
+        }
+
+        homeworkStudent.updateDoneDate();
+        // homeworkStudent 의 doneDate 업데이트
+        return new SolveHomeworkResponse(homeworkStudentId);
+    }
+
+    private void updateChoiceAndWriteProblemScore(HomeworkQuestion homeworkQuestion,
+        HomeworkStudentQuestion homeworkStudentQuestion) {
+        if (homeworkQuestion.getAnswer()
+            .equals(homeworkStudentQuestion.getSubmitAnswer())) {
+            homeworkStudentQuestion.updateScore(100);
+        } else {
+            homeworkStudentQuestion.updateScore(0);
+        }
+    }
+
+    private List<HomeworkQuestion> validateHomeworkQuestionByHomework(Homework homework) {
+        return homeworkQuestionRepository.findByHomeworkOrderById(homework);
+    }
+
+    private List<HomeworkStudentQuestion> validateHomeworkStudentQuestionByHomeworkStudent(
+        HomeworkStudent homeworkStudent) {
+        return homeworkStudentQuestionRepository.findByHomeworkStudentOrderByHomeworkQuestion(
+            homeworkStudent);
     }
 
     private HomeworkStudent validateHomeworkStudent(Integer homeworkStudentId) {
@@ -148,7 +190,7 @@ public class HomeworkServiceImpl implements HomeworkService {
             .orElseThrow(() -> new RuntimeException("해당하는 homeworkStudent 를 찾을 수 없습니다."));
     }
 
-    private HomeworkQuestion validateHomeworkQuestion(Integer homeworkQuestionId){
+    private HomeworkQuestion validateHomeworkQuestion(Integer homeworkQuestionId) {
         // todo: 커스텀 익셉션
         return homeworkQuestionRepository.findById(homeworkQuestionId)
             .orElseThrow(() -> new RuntimeException("해당하는 homeworkQuestion 을 찾을 수 없습니다."));

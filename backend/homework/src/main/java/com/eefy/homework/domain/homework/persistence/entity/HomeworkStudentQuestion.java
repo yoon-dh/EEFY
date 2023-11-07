@@ -56,4 +56,8 @@ public class HomeworkStudentQuestion {
             .filePath(filePath)
             .build();
     }
+
+    public void updateScore(Integer score){
+        this.score = score;
+    }
 }
