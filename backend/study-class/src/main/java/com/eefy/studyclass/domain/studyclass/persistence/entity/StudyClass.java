@@ -34,10 +34,7 @@ public class StudyClass extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime startDate;
 
-    @Column(nullable = false)
-    private LocalDateTime endDate;
-
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private StudyTypeEnum type;
 
@@ -48,13 +45,12 @@ public class StudyClass extends BaseEntity {
     private Integer studentCnt;
 
     @Builder
-    public StudyClass(Integer id, Integer memberId, String classTitle, String classContent, LocalDateTime startDate, LocalDateTime endDate, StudyTypeEnum type, List<Participate> participateList, Integer studentCnt) {
+    public StudyClass(Integer id, Integer memberId, String classTitle, String classContent, LocalDateTime startDate, StudyTypeEnum type, List<Participate> participateList, Integer studentCnt) {
         this.id = id;
         this.memberId = memberId;
         this.classTitle = classTitle;
         this.classContent = classContent;
         this.startDate = startDate;
-        this.endDate = endDate;
         this.type = type;
         this.participateList = participateList;
         this.studentCnt = studentCnt;
@@ -64,7 +60,6 @@ public class StudyClass extends BaseEntity {
         this.classTitle = studyClassModifyRequest.getTitle();
         this.classContent = studyClassModifyRequest.getContent();
         this.startDate = studyClassModifyRequest.getStartDate();
-        this.endDate = studyClassModifyRequest.getEndDate();
         this.type = StudyTypeEnum.valueOf(studyClassModifyRequest.getType());
     }
 }
