@@ -23,7 +23,7 @@ const config: Config = {
       {
         dark: {
           ...require('daisyui/src/theming/themes')['[data-theme=dark]'],
-          '.boxShadow': { 'box-shadow': '0px 4px 4px 0px rgba(200, 200, 200, 0.25)' },
+          '.boxShadow': { 'box-shadow': '0px 2px 4px 0px rgba(200, 200, 200, 0.25)' },
         },
       },
       'cupcake',

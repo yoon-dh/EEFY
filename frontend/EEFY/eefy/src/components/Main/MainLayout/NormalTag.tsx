@@ -8,7 +8,7 @@ export default function NormalTag() {
         background: 'linear-gradient(99deg, #999BD5 53.12%, #4F489B 155.43%)',
         boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
         border: '1px solid rgba(131, 129, 129, 0.2)',
-        width: '98%',
+        width: '97%',
         height: '80%',
       }}
     >

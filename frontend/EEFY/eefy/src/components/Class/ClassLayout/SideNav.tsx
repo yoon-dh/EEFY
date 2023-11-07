@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import { Name } from '@/recoil/Notice';
 export default function SideNav() {
-  const [name, setName] = useRecoilState<string>(Name)
+  const [name, setName] = useRecoilState<string>(Name);
   return (
     <div className='w-full h-full'>
       <div className='h-full' style={{ display: 'flex', justifyContent: 'center' }}>
@@ -24,8 +24,7 @@ export default function SideNav() {
           }}
         >
           {/* toggle(hamburger) */}
-          {/* <br />
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/* <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <label className='btn swap swap-rotate bg-transparent border-none' style={{ padding: '0px 14px' }}>
               this hidden checkbox controls the state
               <input type='checkbox' />
@@ -59,14 +58,14 @@ export default function SideNav() {
               </svg> */}
             </Link>
           </li>
+
           <br />
           <br />
 
           {/* 공지사항 */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/notice'} onClick={()=>setName('notice')}>
+            <Link href={'/class/notice'} onClick={() => setName('notice')} className='tooltip tooltip-right tooltip-base-300' data-tip='공지사항'>
               <AiTwotoneNotification className='text-3xl' />
-
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
                   strokeLinecap='round'
@@ -83,9 +82,8 @@ export default function SideNav() {
 
           {/* 과제 * 3 */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/studylist'}>
+            <Link href={'/class/studylist'} className='tooltip tooltip-right tooltip-base-300' data-tip='과제'>
               <ImPencil className='text-3xl' />
-
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
                   strokeLinecap='round'
@@ -102,7 +100,7 @@ export default function SideNav() {
 
           {/* 강의자료(자료실) */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/lecture'} onClick={()=>setName('lecture')}>
+            <Link href={'/class/lecture'} onClick={() => setName('lecture')} className='tooltip tooltip-right tooltip-base-300' data-tip='학습자료'>
               <PiNotepadFill className='text-3xl' />
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
@@ -120,7 +118,7 @@ export default function SideNav() {
 
           {/* Q&A */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/class/question'} onClick={()=>setName('question')}>
+            <Link href={'/class/question'} onClick={() => setName('question')} className='tooltip tooltip-right tooltip-base-300' data-tip='질문게시판'>
               <RiQuestionnaireFill className='text-3xl' />
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path

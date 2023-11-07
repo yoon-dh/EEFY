@@ -127,7 +127,7 @@ function StudyList() {
         </div>
         <div className='flex flex-col overflow-auto no-scrollbar gap-2'>
           {SpeakingDummyData.map((item, idx) => (
-            <Link key={idx} href={'/class/studydetail'}>
+            <Link key={idx} href={'/class/studydetail/speaking'}>
               <SpeakingStudyItem
                 title={item.title}
                 finishDate={item.finishDate}

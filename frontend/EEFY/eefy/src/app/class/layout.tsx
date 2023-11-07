@@ -10,12 +10,19 @@ import { Thema } from '@/recoil/Thema';
 export default function ClassLayout({ children }: { children: React.ReactNode }) {
   const thema = useRecoilValue(Thema);
 
+  // const mainStyle = {
+  //   display: 'grid',
+  //   gridTemplateColumns: 'repeat(15, 1fr)',
+  //   gridTemplateRows: 'repeat(10, 1fr)',
+  //   gridTemplateAreas:
+  //     "'a a b b b b b b b b b b b b b' 'a a b b b b b b b b b b b b b' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'e e e e e e e e e e e e e e e' ",
+  // };
   const mainStyle = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(15, 1fr)',
+    gridTemplateColumns: 'repeat(8, 1fr)',
     gridTemplateRows: 'repeat(10, 1fr)',
     gridTemplateAreas:
-      "'a a b b b b b b b b b b b b b' 'a a b b b b b b b b b b b b b' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'c c d d d d d d d d d d d d d' 'e e e e e e e e e e e e e e e' ",
+      "'a b b b b b b b' 'a b b b b b b b' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'c d d d d d d d' 'e e e e e e e e' ",
   };
 
   return (
@@ -29,7 +36,7 @@ export default function ClassLayout({ children }: { children: React.ReactNode })
       <div style={{ gridArea: 'c' }}>
         <SideNav />
       </div>
-      <div style={{ gridArea: 'd', width: '98%' }}>{children}</div>
+      <div style={{ gridArea: 'd', width: '97%' }}>{children}</div>
       <div style={{ gridArea: 'e' }}>
         <Footer />
       </div>
