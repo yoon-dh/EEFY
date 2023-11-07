@@ -2,11 +2,10 @@ package com.eefy.studyclass.domain.studyclass.persistence.mysql;
 
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface StudyClassRepository extends JpaRepository<StudyClass, Integer> {
     List<StudyClass> findByMemberId(Integer memberId);
@@ -17,4 +16,6 @@ public interface StudyClassRepository extends JpaRepository<StudyClass, Integer>
     boolean existsByMemberId(Integer teacherId);
 
     boolean existsByIdAndMemberId(Integer classId, Integer teacherId);
+
+    Optional<StudyClass> findByIdAndMemberId(Integer classId, Integer memberId);
 }

@@ -16,5 +16,5 @@ public interface StudyClassService {
     List<SearchStudentResponse> searchStudentList(Integer teacherId, Integer classId);
     List<SearchStudentResponse> searchStudentList(Integer teacherId);
     List<SearchStudentResponse> getSearchStudentList(List<Participate> participateList);
-    void inviteMember(List<InviteMemberRequest> inviteMemberRequests);
+    void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest);
 }

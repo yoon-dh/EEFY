@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.service;
 
+import com.eefy.studyclass.domain.member.exception.validator.MemberValidator;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
@@ -9,7 +10,6 @@ import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
-import com.eefy.studyclass.domain.studyclass.persistence.entity.enums.StudyTypeEnum;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,7 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     private final MemberServiceImpl memberService;
     private final StudyClassValidator studyClassValidator;
+    private final MemberValidator memberValidator;
 
     @Override
     public StudyClassListResponse getStudyClassList(Integer memberId) {
@@ -55,6 +56,8 @@ public class StudyClassServiceImpl implements StudyClassService {
     @Override
     public void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest) {
 
+        studyClassValidator.checkUserRoleCreateStudyClass(memberService.getMember(memberId));
+
         StudyClass studyClass = StudyClass.builder()
                 .memberId(memberId)
                 .classTitle(studyClassCreateRequest.getTitle())
@@ -79,7 +82,7 @@ public class StudyClassServiceImpl implements StudyClassService {
         studyClassValidator.existsStudyClassByClassId(studyClassRepository, classId);
         studyClassValidator.existsByStudyClassByTeacherIdAndClassId(studyClassRepository, teacherId, classId);
 
-        List<Participate> byMemberIdAndClassId = participateRepository.findByMemberIdAndStudyClassId(teacherId, classId);
+        List<Participate> byMemberIdAndClassId = participateRepository.findByStudyClassId(classId);
 
         return getSearchStudentList(byMemberIdAndClassId);
     }
@@ -109,7 +112,22 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void inviteMember(List<InviteMemberRequest> inviteMemberRequests) {
+    public void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest) {
+        memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMember(memberId),
+                studyClassRepository.findByIdAndMemberId(inviteMemberRequest.getClassId(), memberId));
 
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, inviteMemberRequest.getClassId());
+
+        StudyClass studyClass = studyClassRepository.findById(inviteMemberRequest.getClassId()).get();
+
+        for (StudyClassStudentRequest studentRequest: inviteMemberRequest.getMemberList()) {
+
+            studyClassValidator.alreadyJoinStudyClass(participateRepository.findByMemberIdAndStudyClassId(studentRequest.getMemberId(), inviteMemberRequest.getClassId()));
+
+            Participate participate = Participate.builder()
+                    .memberId(studentRequest.getMemberId())
+                    .studyClass(studyClass).build();
+            participateRepository.save(participate);
+        }
     }
 }

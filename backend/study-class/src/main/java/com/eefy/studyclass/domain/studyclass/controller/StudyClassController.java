@@ -54,6 +54,7 @@ public class StudyClassController {
     public ResponseEntity<Void> inviteMember(@RequestHeader("Member-Id") Integer memberId,
                                              @RequestBody InviteMemberRequest inviteMemberRequest) {
 
+        studyClassService.inviteMember(memberId, inviteMemberRequest);
         return ResponseEntity.ok().build();
     }
 }
