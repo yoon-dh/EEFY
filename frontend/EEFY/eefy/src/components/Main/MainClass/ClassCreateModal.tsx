@@ -1,3 +1,5 @@
+'use client';
+
 import Modal from 'react-modal';
 import * as S from './ClassCreateModal.style';
 import { useRecoilState } from 'recoil';
