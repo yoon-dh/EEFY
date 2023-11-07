@@ -1,12 +1,95 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Thema } from '@/recoil/Thema';
+import { useRecoilState } from 'recoil';
+
+import { TbArrowBackUp } from 'react-icons/tb';
+import { IoNotificationsOutline } from 'react-icons/io5';
+import Link from 'next/link';
+
+import { initializeApp } from 'firebase/app';
+import { getMessaging, onMessage, getToken } from 'firebase/messaging';
+import './Footer.css';
+import { MessageModalOpen } from '@/recoil/PushNotification';
 
 export default function Footer() {
   const [darkModeIsAcitive, setdarkModeIsAcitive] = useState(false);
-
+  const [thema, setThema] = useRecoilState(Thema);
   const checkHandler = () => {
-    setdarkModeIsAcitive(!darkModeIsAcitive);
+    const isActiv = !darkModeIsAcitive;
+    setdarkModeIsAcitive(isActiv);
+    if (!isActiv) {
+      setThema('winter');
+    } else {
+      setThema('dark');
+    }
   };
+
+  const [onMessageTitle, setOnMessageTitle] = useState<string | undefined>('');
+  const [startShake, setStartShake] = useState<boolean>(false);
+  const [isNewMessage, setIsNewMessage] = useState<boolean>(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useRecoilState(MessageModalOpen);
+
+  useEffect(() => {
+    if (onMessageTitle) {
+      setStartShake(true);
+
+      const timer = setTimeout(() => {
+        setStartShake(false);
+        setOnMessageTitle('');
+        setIsNewMessage(true);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [onMessageTitle]);
+
+  // push test
+
+  const onMessageFCM = async () => {
+    // 브라우저에 알림 권한을 요청합니다.
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+
+    // 이곳에도 아까 위에서 앱 등록할때 받은 'firebaseConfig' 값을 넣어주세요.
+    const firebaseApp = initializeApp({
+      apiKey: process.env.FIREBASE_API_KEY,
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      appId: process.env.FIREBASE_APP_ID,
+      measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+    });
+
+    const messaging = getMessaging(firebaseApp);
+
+    // 이곳 vapidKey 값으로 아까 토큰에서 사용한다고 했던 인증서 키 값을 넣어주세요.
+    getToken(messaging, { vapidKey: process.env.VAPID_KEY })
+      .then(currentToken => {
+        if (currentToken) {
+          // 정상적으로 토큰이 발급되면 콘솔에 출력합니다.
+          console.log(currentToken);
+          // setFCMToken(currentToken);
+        } else {
+          console.log('No registration token available. Request permission to generate one.');
+        }
+      })
+      .catch(err => {
+        console.log('An error occurred while retrieving token. ', err);
+      });
+
+    // 메세지가 수신되면 역시 콘솔에 출력합니다.
+    onMessage(messaging, payload => {
+      console.log('Message received. ', payload);
+      console.log(payload.notification?.title);
+      setOnMessageTitle(payload.notification?.title);
+    });
+  };
+
+  useEffect(() => {
+    onMessageFCM();
+  }, []);
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
@@ -23,13 +106,11 @@ export default function Footer() {
         </div>
 
         {/* 오른쪽 */}
-        <div className='flex items-center gap-3'>
-          <svg xmlns='http://www.w3.org/2000/svg' className='w-8 h-8' viewBox='0 0 37 37' fill='none'>
-            <path
-              d='M21.6079 22.8847C22.2141 22.8847 22.7062 23.3394 22.7062 23.8997V25.1401C22.7062 28.3643 19.8677 30.9875 16.3773 30.9875H9.42501C5.92891 30.9875 3.08325 28.3577 3.08325 25.1256C3.08325 24.5653 3.57536 24.1119 4.18158 24.1119C4.7878 24.1119 5.2799 24.5653 5.2799 25.1256C5.2799 27.2399 7.13992 28.9575 9.42501 28.9575H16.3773C18.6566 28.9575 20.5095 27.2452 20.5095 25.1401V23.8997C20.5095 23.3394 21.0016 22.8847 21.6079 22.8847ZM31.2763 16.7902C31.7213 16.7902 32.1221 17.038 32.2919 17.419C32.4616 17.7986 32.366 18.2362 32.0522 18.5262L27.8843 22.3608C27.6689 22.5572 27.3893 22.6574 27.1083 22.6574C26.8273 22.6574 26.5449 22.5572 26.3309 22.3582C25.903 21.9601 25.903 21.3181 26.3338 20.9227L28.6175 18.8215H14.1395C13.5333 18.8215 13.0398 18.3667 13.0398 17.8065C13.0398 17.2463 13.5333 16.7902 14.1395 16.7902H31.2763ZM16.3633 4.625C19.8608 4.625 22.7065 7.25476 22.7065 10.4869V11.7142C22.7065 12.2731 22.2144 12.7278 21.6081 12.7278C21.0019 12.7278 20.5098 12.2731 20.5098 11.7142V10.4869C20.5098 8.37258 18.6498 6.65499 16.3633 6.65499H9.41246C7.13308 6.65499 5.28019 8.36862 5.28019 10.4724V20.5104C5.28019 21.0706 4.78808 21.5254 4.18186 21.5254C3.57564 21.5254 3.08354 21.0706 3.08354 20.5104V10.4724C3.08354 7.24817 5.92207 4.625 9.41246 4.625H16.3633ZM26.3281 13.2589C26.756 12.8582 27.4492 12.8556 27.8814 13.251L28.9313 14.2107C29.3635 14.6061 29.3663 15.2481 28.9398 15.6462C28.7244 15.8465 28.442 15.948 28.1596 15.948C27.88 15.948 27.6004 15.8492 27.3865 15.6541L26.3352 14.6931C25.9045 14.299 25.9016 13.6557 26.3281 13.2589Z'
-              fill='#6C7894'
-            />
-          </svg>
+        <div className='flex items-center gap-7'>
+          <Link href={'/main/classlist'} className='tooltip tooltip-top tooltip-base-300' data-tip='홈으로 돌아가기'>
+            <TbArrowBackUp className='text-3xl' />
+          </Link>
+
           {/* 테마 변경 */}
           <label className='swap swap-rotate'>
             {/* this hidden checkbox controls the state */}
@@ -48,35 +129,21 @@ export default function Footer() {
 
           {/* 알람 */}
 
-          <div className='indicator'>
-            <span
-              className='indicator-item badge badge-secondary w-1'
-              style={{ paddingLeft: '5px', paddingRight: '5px', left: '18px', height: '11.6px', bottom: '1px' }}
-            ></span>
-            <svg className='w-8 h-8' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 30' fill='none'>
-              <path
-                d='M15.3789 25.9757C15.7812 25.6167 16.3986 25.5945 16.8281 25.9468C17.3006 26.3343 17.3668 27.0283 16.976 27.4969C16.0127 28.7463 14.5224 29.4853 12.9366 29.5L12.6218 29.4867C11.1597 29.3806 9.80656 28.6597 8.91005 27.4969L8.81477 27.3639C8.53468 26.9047 8.62847 26.2991 9.05799 25.9468C9.53046 25.5592 10.2303 25.6249 10.621 26.0935C10.7926 26.321 10.9962 26.5229 11.2256 26.6931C11.8388 27.1459 12.6088 27.3372 13.3648 27.2246C14.1208 27.112 14.8002 26.7049 15.2522 26.0935H15.2651L15.3789 25.9757ZM12.9495 0.5C17.4006 0.5 22.392 3.63858 22.958 8.67818V11.3064C23.1512 12.255 23.5952 13.1356 24.2444 13.8581C24.2829 13.9018 24.3173 13.9487 24.3474 13.9985C24.936 14.8846 25.2737 15.9113 25.325 16.9712L25.2865 17.2391C25.3308 18.6895 24.8467 20.1073 23.9228 21.2325C22.743 22.5056 21.1301 23.3008 19.3946 23.4652C15.1195 23.9345 10.8052 23.9345 6.53013 23.4652C4.81994 23.2896 3.23512 22.4947 2.07904 21.2325C1.13994 20.1234 0.641332 18.7125 0.676821 17.2646V17.086C0.747548 15.9944 1.1118 14.9415 1.7317 14.0367L1.83462 13.9092C2.47931 13.1836 2.92263 12.3043 3.12106 11.3575V8.72921L3.1922 8.58239C3.40848 8.20964 3.82971 7.99163 4.27089 8.03936C4.76721 8.09306 5.16577 8.46978 5.24369 8.95887V11.5871C5.24869 11.6338 5.24869 11.6808 5.24369 11.7275C4.97583 13.0437 4.36358 14.2669 3.4684 15.2743C3.12366 15.8189 2.92852 16.4435 2.90237 17.086V17.3667C2.87381 18.2704 3.17532 19.1539 3.75142 19.8546C4.55012 20.6728 5.61819 21.1798 6.76169 21.2835C10.9004 21.7301 15.0757 21.7301 19.2144 21.2835C20.3892 21.1766 21.4834 20.6454 22.289 19.7908C22.8369 19.1066 23.1238 18.2528 23.0995 17.3795V17.086C23.0731 16.4413 22.8828 15.8137 22.5463 15.2615C21.6139 14.2656 20.9656 13.0414 20.6681 11.7147C20.6631 11.668 20.6631 11.621 20.6681 11.5744V8.93335C20.2951 5.08029 16.4229 2.69446 13.0524 2.69446C11.6194 2.69119 10.2101 3.05602 8.96151 3.75341L8.80859 3.82932C8.49421 3.95626 8.13454 3.93397 7.8356 3.76168C7.48685 3.56066 7.27604 3.18733 7.28547 2.78738C7.29489 2.38744 7.52305 2.02428 7.8809 1.83964C9.42803 0.972804 11.1726 0.51172 12.9495 0.5Z'
-                fill='black'
-              />
-            </svg>
+          <div className={`indicator  ${startShake ? 'shake' : ''}`} onClick={() => setIsMessageModalOpen(true)}>
+            {isNewMessage ? (
+              <span
+                className='indicator-item badge badge-secondary w-1'
+                style={{ paddingLeft: '5px', paddingRight: '5px', left: '18px', height: '11.6px', bottom: '1px' }}
+                onClick={() => {
+                  setIsNewMessage(false);
+                }}
+              ></span>
+            ) : null}
+
+            <IoNotificationsOutline className='text-3xl' style={{ fontWeight: '400' }} />
           </div>
         </div>
       </div>
-
-      {/* <label className="swap text-6xl">
-        <input type="checkbox" id="allCk"/>
-        <div className="swap-on">🥵</div>
-        <div className="swap-off">🥶</div>
-      </label>
-      <label className="swap swap-active text-6xl">
-        <div className="swap-on">🥳</div>
-        <div className="swap-off">😭</div>
-      </label> */}
-
-      {/* <div className="indicator">
-  <span className="indicator-item badge badge-secondary"></span> 
-  <div className="grid w-32 h-32 bg-base-300 place-items-center">content</div>
-</div> */}
     </div>
   );
 }

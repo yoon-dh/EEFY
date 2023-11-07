@@ -32,12 +32,16 @@
 
 import TopNav from '@/components/Main/MainLayout/TopNav';
 import SideNav from '@/components/Main/MainLayout/SideNav';
-import Footer from '@/components/Class/ClassLayout/Footer';
+import Footer from '@/components/Main/MainLayout/Footer';
 
 import { useRecoilValue } from 'recoil';
 import { Thema } from '@/recoil/Thema';
 
+import Modal from 'react-modal';
+
 export default function MainLayout({ children }: { children: React.ReactNode }) {
+  Modal.setAppElement('#root');
+
   const thema = useRecoilValue(Thema);
 
   const mainStyle = {
@@ -49,9 +53,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <div className='w-full h-full' style={mainStyle} data-theme={thema}>
+    <div className='w-full h-full' style={mainStyle} data-theme={thema} id='root'>
       <div style={{ gridArea: 'a', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <img style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} width = {130} height={130} />
+        <img style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} width={130} height={130} />
       </div>
       <div style={{ gridArea: 'b' }}>
         <TopNav />

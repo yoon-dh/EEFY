@@ -3,6 +3,7 @@
 import MainClassBox from '@/components/Main/MainClass/MainClassBox';
 import * as S from '@/components/Main/MainClass/MainClassBox.style';
 import { HiPlus } from 'react-icons/hi';
+import MessageList from '@/components/Message/MessageList';
 
 function ClassList() {
   const dummyClass = [
@@ -31,6 +32,8 @@ function ClassList() {
           <MainClassBox key={item.id} title={item.class} cnt={item.cnt} />
         ))}
       </div>
+      {/* 메시지 리스트 */}
+      <MessageList />
     </div>
   );
 }

@@ -12,27 +12,13 @@ import { useEffect } from 'react';
 // };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then(function (registration) {
-          // Service Worker 등록이 성공한 경우
-          console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch(function (error) {
-          // Service Worker 등록이 실패한 경우
-          console.error('Service Worker registration failed:', error);
-        });
-    }
-  }, []);
   return (
     <html lang='en' className='w-full h-full'>
       <head>
         {/* <link rel='/manifest' href='/manifest.json' /> */}
         <link rel='manifest' href='/manifest.json' />
       </head>
-      <body className='w-full h-full'>
+      <body className='w-full h-full' id='root'>
         <RecoilRoot>
           <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
         </RecoilRoot>
