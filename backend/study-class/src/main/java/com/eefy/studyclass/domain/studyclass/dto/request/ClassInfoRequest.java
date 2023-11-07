@@ -9,6 +9,5 @@ public class ClassInfoRequest {
     private String title;
     private String content;
     private LocalDateTime startDate;
-    private LocalDateTime endDate;
     private String type;
 }

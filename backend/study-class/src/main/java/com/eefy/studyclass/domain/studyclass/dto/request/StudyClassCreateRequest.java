@@ -1,11 +1,14 @@
 package com.eefy.studyclass.domain.studyclass.dto.request;
 
+import com.eefy.studyclass.domain.studyclass.persistence.entity.enums.StudyTypeEnum;
 import lombok.Getter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 public class StudyClassCreateRequest {
-    private ClassInfoRequest classInfoRequest;
-    private List<StudyClassStudentRequest> students;
+    private String title;
+    private String content;
+    private LocalDateTime startDate;
+    private StudyTypeEnum type;
 }

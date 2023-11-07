@@ -2,10 +2,7 @@ package com.eefy.studyclass.domain.studyclass.service;
 
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
-import com.eefy.studyclass.domain.studyclass.dto.request.ClassInfoRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassCreateRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassStudentRequest;
+import com.eefy.studyclass.domain.studyclass.dto.request.*;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
@@ -57,26 +54,16 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest) {
-        ClassInfoRequest classInfoRequest = studyClassCreateRequest.getClassInfoRequest();
 
         StudyClass studyClass = StudyClass.builder()
                 .memberId(memberId)
-                .classTitle(classInfoRequest.getTitle())
-                .classContent(classInfoRequest.getContent())
-                .startDate(classInfoRequest.getStartDate())
-                .endDate(classInfoRequest.getEndDate())
-                .type(StudyTypeEnum.valueOf(classInfoRequest.getType()))
+                .classTitle(studyClassCreateRequest.getTitle())
+                .classContent(studyClassCreateRequest.getContent())
+                .startDate(studyClassCreateRequest.getStartDate())
+                .type(studyClassCreateRequest.getType())
                 .build();
 
         studyClassRepository.save(studyClass);
-
-        for (StudyClassStudentRequest studentRequest: studyClassCreateRequest.getStudents()) {
-            Participate participate = Participate.builder()
-                    .memberId(studentRequest.getMemberId())
-                    .studyClass(studyClass)
-                    .build();
-            participateRepository.save(participate);
-        }
     }
 
     @Override
@@ -119,5 +106,10 @@ public class StudyClassServiceImpl implements StudyClassService {
         }).collect(Collectors.toList());
 
         return result;
+    }
+
+    @Override
+    public void inviteMember(List<InviteMemberRequest> inviteMemberRequests) {
+
     }
 }
