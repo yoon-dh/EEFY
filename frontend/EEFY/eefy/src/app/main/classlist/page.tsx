@@ -25,7 +25,7 @@ function ClassList() {
       </div>
       <div style={{ flex: '8.5', display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
         {/* 강사면 보이고 아니면 안보이게 */}
-        {userDataObj.role === 'TEACHER' ? (
+        {userDataObj?.role === 'TEACHER' ? (
           <S.ClassBox
             onClick={() => setIsCreateModalOpen(true)}
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
