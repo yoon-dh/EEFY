@@ -22,6 +22,7 @@ public class CorsConfig {
                 "http://127.0.0.1:3000",
                 "http://k9b306.p.ssafy.io:3000",
                 "https://k9b306.p.ssafy.io"));
+        corsConfig.setAllowCredentials(true);
         corsConfig.setMaxAge(8000L);
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         corsConfig.setAllowedHeaders(List.of("Authorization", "Authorization-Refresh", "*"));
