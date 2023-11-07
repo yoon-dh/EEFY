@@ -4,10 +4,10 @@ import com.eefy.member.domain.member.dto.request.JoinRequest;
 import com.eefy.member.domain.member.dto.request.MemberUpdateRequest;
 import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.event.UploadProfileImageEvent;
+import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
-import com.eefy.member.domain.member.persistence.entity.redis.EmailConfirm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final EmailConfirmRedisRepository emailConfirmRedisRepository;
+
+    private final MemberValidator memberValidator;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -32,14 +34,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void join(JoinRequest joinRequest) {
         Member member = joinRequest.toEntity();
-        checkEmailConfirmStatus(joinRequest.getEmail());
-
-        if (memberRepository.findMemberByEmail(joinRequest.getEmail()).isPresent()) {
-            throw new IllegalStateException("이미 회원가입 된 상태");
-        }
-        if (!joinRequest.getPassword().equals(joinRequest.getCheckedPassword())) {
-            throw new IllegalArgumentException("비밀번호 확인 필요");
-        }
+        checkJoinStatus(joinRequest);
 
         member.encodePassword(passwordEncoder);
         emailConfirmRedisRepository.deleteById(member.getEmail());
@@ -49,35 +44,31 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<StudentResponse> getStudent(String key, String value) {
         List<Member> members = selectMembers(key, value);
+
+        if (members == null) return null;
         return members.stream().map(StudentResponse::new).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public void updateMember(int memberId, MemberUpdateRequest request, MultipartFile profileImage) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("없는 사용자 조회 요청"));
+        Member member = memberValidator.getValidMember(memberRepository.findById(memberId));
 
         eventPublisher.publishEvent(new UploadProfileImageEvent(member, profileImage));
 
         member.updateMemberInfo(request);
     }
 
-    private void checkEmailConfirmStatus(String email) {
-        EmailConfirm emailConfirm = emailConfirmRedisRepository.findById(email)
-                .orElseThrow(() -> {
-                    log.error("이메일 인증 재시도: 인증 기간이 만료되었거나 인증되지 않은 요청임");
-                    return new IllegalArgumentException("이메일 인증 재시도: 인증 기간이 만료되었거나 인증되지 않은 요청임");
-                });
-        if (!emailConfirm.isConfirmStatus()) {
-            log.error("인증 오류 발생");
-            throw new IllegalArgumentException("인증 오류 발생");
-        }
+    private void checkJoinStatus(JoinRequest joinRequest) {
+        memberValidator.checkEmailConfirmStatus(emailConfirmRedisRepository.findById(joinRequest.getEmail()));
+        memberValidator.checkJoinStatus(memberRepository.findMemberByEmail(joinRequest.getEmail()),
+                joinRequest.getPassword(), joinRequest.getCheckedPassword());
     }
 
     private List<Member> selectMembers(String key, String value) {
+        memberValidator.checkSelectMemersKey(key);
         if (key.equals("email")) return memberRepository.findByEmailContainingOrderByEmail(value);
         else if (key.equals("name")) return memberRepository.findByNameContainingOrderByName(value);
-        else throw new IllegalArgumentException("수강생 정보 조회 오류: 지원하지 않는 key");
+        else return null;
     }
 }

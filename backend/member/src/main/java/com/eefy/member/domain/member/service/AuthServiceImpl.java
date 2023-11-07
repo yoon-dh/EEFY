@@ -2,6 +2,7 @@ package com.eefy.member.domain.member.service;
 
 import com.eefy.member.domain.member.dto.request.LoginRequest;
 import com.eefy.member.domain.member.dto.response.JwtTokenResponse;
+import com.eefy.member.domain.member.exception.validator.AuthValidator;
 import com.eefy.member.domain.member.jwt.JwtTokenProvider;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
@@ -10,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,22 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthValidator authValidator;
     private final MemberRepository memberRepository;
 
     @Override
     @Transactional
     public ResponseEntity<JwtTokenResponse> login(LoginRequest loginRequest) {
-        Member member = memberRepository.findMemberByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> {
-                    log.error("로그인 실패: 요청 유저 없음");
-                    return new IllegalArgumentException("로그인 실패: 요청 유저 없음");
-                });
-
-        if (!passwordEncoder.matches(loginRequest.getPassword(),member.getPassword())) {
-            throw new IllegalStateException("로그인 실패: 비밀번호 불일치");
-        }
+        String email = loginRequest.getEmail();
+        Member member = checkLogin(email, loginRequest);
         return makeJwtToken(member);
     }
 
@@ -41,28 +34,30 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public ResponseEntity<JwtTokenResponse> refreshReissue(String accessToken) {
         accessToken = accessToken.split(" ")[1];
-        if (accessToken != null && jwtTokenProvider.validateToken(accessToken)) {
-            Member member = memberRepository.findById(jwtTokenProvider.getUserId(accessToken))
-                    .orElseThrow(() -> new IllegalArgumentException("사용자 조회 오류: 없는 사용자"));
-            String refreshToken = jwtTokenProvider.extractRefreshToken(member.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("refresh token 조회 오류"));
-            if (refreshToken != null) {
-                return makeJwtToken(member);
-            }
-        }
+        Member member = checkRefreshReissueStatus(accessToken);
+        makeJwtToken(member);
         return ResponseEntity.internalServerError().build();
     }
 
     @Override
     @Transactional
     public void logout(int memberId) {
-        memberRepository.findById(memberId)
-                .orElseThrow(() -> {
-                    log.error("로그인 실패: 요청 유저 없음");
-                    return new IllegalArgumentException("로그인 실패: 요청 유저 없음");
-                });
+        Member member = authValidator.getValidMember(memberRepository.findById(memberId));
+        jwtTokenProvider.deleteRefreshToken(member.getId());
+    }
 
-        jwtTokenProvider.deleteRefreshToken(memberId);
+    private Member checkLogin(String email, LoginRequest loginRequest) {
+        Member member = authValidator.getValidMember(memberRepository.findMemberByEmail(email));
+        authValidator.checkPassword(loginRequest.getPassword(), member.getPassword());
+        return member;
+    }
+
+    private Member checkRefreshReissueStatus(String accessToken) {
+        authValidator.checkAccessToken(accessToken);
+        Member member = authValidator.getValidMember(
+                memberRepository.findById(jwtTokenProvider.getUserId(accessToken)));
+        authValidator.checkRefreshToken(member.getId());
+        return member;
     }
 
     private ResponseEntity<JwtTokenResponse> makeJwtToken(Member member) {
