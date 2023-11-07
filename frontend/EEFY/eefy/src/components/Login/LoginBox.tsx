@@ -5,7 +5,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Title, InputBox, LoginBtn, PasswordBtn, Box, Etc, SignUpBtn } from './LoginBox.style';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import {postLogin} from "@/api/Auth/login"
+
 export default function LoginBox() {
   const [showPassword, setShowPassword] = useState('password');
   const router = useRouter();
@@ -13,6 +14,19 @@ export default function LoginBox() {
   const [ email, setEmail] = useState<string>('')
   const [ password, setPassword] = useState<string>('')
 
+  // 이메일 인증
+  const handleLogin = async () => {
+    const data = {
+      email:email,
+      password: password
+    }
+    console.log(data)
+    const res = await postLogin(data)
+    console.log(res)
+    if(res?.status === 200){
+    }
+  };
+  
   return (
     <div>
       <Title>Login</Title>
@@ -111,16 +125,7 @@ export default function LoginBox() {
           )}
         </div>
         <PasswordBtn>Forgot Password?</PasswordBtn>
-        <LoginBtn
-          onClick={() => {
-            const data = {
-              email:email,
-              password:password
-            }
-            console.log(data);
-            // router.push('/class');
-          }}
-        >c
+        <LoginBtn onClick={handleLogin}>
           login
         </LoginBtn>
       </InputBox>

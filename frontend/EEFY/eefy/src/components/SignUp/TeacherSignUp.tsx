@@ -40,10 +40,12 @@ export default function TeacherSignUp(){
 
   const userData = {
       email: email,
-      password: password,
-      nickname: nickname,
-      phoneNumber: phoneNumber,
       name: name,
+      nickname: nickname,
+      checkedPassword:password,
+      password: password,
+      phoneNumber: phoneNumber,
+      role:"TEACHER"
   };
 
   const authMail = {
@@ -56,27 +58,29 @@ export default function TeacherSignUp(){
 
   // 회원가입
   const onSubmit = async () => {
-    // router.push('/login');
-    // console.log(userData)
-    // const res = await postJoin(userData)
-    // if (res.stauts === 200){
-    //   router.push('/login');
-    // }
+    console.log(userData)
+    const res = await postJoin(userData)
+    console.log(res)
+    if(res?.status === 200){
+      router.push("/login")
+    }
   };
 
   // 이메일 인증
   const handleMailSend = async () => {
       console.log(enterEmail)
-      // const res = await postEmail(enterEmail)
-      // if (res.stauts === 200){
-      //   setShowCode(true)
-      // }
+      const res = await postEmail(enterEmail)
+      console.log(res)
+      if(res?.status === 200){
+        setShowCode(true)
+      }
   };
 
   // 인증 확인
   const handleAuthMail = async () => {
     console.log("코드다", authMail);
-    // const res = await postCheckEmail(authMail)
+    const res = await postCheckEmail(authMail)
+    console.log(res)
     };
 
   return(
@@ -98,6 +102,7 @@ export default function TeacherSignUp(){
           margin:'10px 0px 0px 0px'
       }}
       InputProps={{ 
+          autoComplete: "off",
           style: {
           width: '350px',
         //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -130,6 +135,7 @@ export default function TeacherSignUp(){
             },
           })}
           InputProps={{ 
+            autoComplete: "off",
               style: {
               width: '350px',
             //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -194,6 +200,7 @@ export default function TeacherSignUp(){
           value === password || "비밀번호가 일치하지 않습니다.",
       })}
       InputProps={{ 
+        autoComplete: "off",
           style: {
           width: '350px',
         //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -216,12 +223,18 @@ export default function TeacherSignUp(){
           margin:'10px 0px 0px 0px'
       }}
       {...register("phoneNumber", {
+        required: "전화번호을 입력해주세요.",
+        pattern: {
+          value: /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/,
+          message: "올바른 전화번호 형식이 아닙니다.",
+        },
       })}
       onChange={(e) => {
         setValue("phoneNumber", e.target.value);
         clearErrors("phoneNumber");
       }}
       InputProps={{ 
+        autoComplete: "off",
           style: {
           width: '350px',
         //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -251,6 +264,7 @@ export default function TeacherSignUp(){
         clearErrors("nickname");
       }}
       InputProps={{ 
+        autoComplete: "off",
           style: {
           width: '350px',
         //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -285,6 +299,7 @@ export default function TeacherSignUp(){
             clearErrors("email");
           }}
         InputProps={{ 
+          autoComplete: "off",
             style: {
             width: '350px',
             //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -322,6 +337,7 @@ export default function TeacherSignUp(){
                 clearErrors("code");
             }}
             InputProps={{ 
+              autoComplete: "off",
                 style: {
                 width: '350px',
                 //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -341,9 +357,9 @@ export default function TeacherSignUp(){
         </CodeCheckBox>
       </div>
       <SignUpBtn type="submit" 
-      onClick={onSubmit}
       >Submit</SignUpBtn>
     </form>
     </>
   )
 }
+

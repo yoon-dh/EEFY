@@ -56,5 +56,6 @@ width: 90%;
 height: 100%;
 flex: 1;
 border: 1px solid black;
+display: flex;
 `
 export const PdfBtn = styled.div``
