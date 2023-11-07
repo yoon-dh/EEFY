@@ -44,7 +44,7 @@ spring:
         - id: ai-service
           uri: lb://AI-SERVICE
           predicates:
-            - Path=/api/ocr/**, /api/stt/**
+            - Path=/api/ai/**
 
 jwt:
   secret: ${SECRET_KEY}
