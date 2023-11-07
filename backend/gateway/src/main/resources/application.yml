@@ -8,9 +8,17 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL}
 
+
 spring:
   application:
     name: gateway-service
+
+    zipkin:
+      base-url: ${ZIPKIN_URL}
+      enabled: true
+    sleuth:
+      sampler:
+        probability: 1.0
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
