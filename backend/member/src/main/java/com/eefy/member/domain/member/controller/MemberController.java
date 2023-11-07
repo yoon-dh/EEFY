@@ -2,6 +2,7 @@ package com.eefy.member.domain.member.controller;
 
 import com.eefy.member.domain.member.dto.request.JoinRequest;
 import com.eefy.member.domain.member.dto.request.MemberUpdateRequest;
+import com.eefy.member.domain.member.dto.response.MemberResponse;
 import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,5 +51,11 @@ public class MemberController {
                                    @RequestPart(name = "profileImage", required = false) MultipartFile profileImage) {
         memberService.updateMember(memberId, request, profileImage);
         return "SUCCESS";
+    }
+
+    @Operation(summary = "특정 사용자 정보 조회", description = "특정 사용자 한 명의 정보를 조회하는 API")
+    @GetMapping
+    public MemberResponse getMember(@RequestHeader("Member-Id") int memberId) {
+        return memberService.getMember(memberId);
     }
 }

@@ -1,6 +1,7 @@
 package com.eefy.member.domain.member.service;
 
 import com.eefy.member.domain.member.dto.request.JoinRequest;
+import com.eefy.member.domain.member.dto.response.MemberResponse;
 import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
 import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
@@ -44,5 +45,16 @@ class MemberServiceImplTest {
 //    void getStudent() {
 //        List<StudentResponse> members = memberService.getStudent("email", "test");
 //        members.forEach(m -> assertThat(m.getEmail().contains("test")).isTrue());
+//    }
+
+//    @Test
+//    void getMember() {
+//        MemberResponse memberResponse = memberService.getMember(1);
+//        assertThat(memberResponse.getMemberId()).isNotNull();
+//        assertThat(memberResponse.getName()).isNotNull();
+//        assertThat(memberResponse.getNickname()).isNotNull();
+//        assertThat(memberResponse.getEmail()).isNotNull();
+//        assertThat(memberResponse.getPhoneNumber()).isNotNull();
+//        assertThat(memberResponse.getRole()).isNotNull();
 //    }
 }

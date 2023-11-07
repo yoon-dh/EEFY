@@ -2,6 +2,7 @@ package com.eefy.member.domain.member.service;
 
 import com.eefy.member.domain.member.dto.request.JoinRequest;
 import com.eefy.member.domain.member.dto.request.MemberUpdateRequest;
+import com.eefy.member.domain.member.dto.response.MemberResponse;
 import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.event.UploadProfileImageEvent;
 import com.eefy.member.domain.member.exception.validator.MemberValidator;
@@ -10,6 +11,7 @@ import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,12 @@ public class MemberServiceImpl implements MemberService {
         eventPublisher.publishEvent(new UploadProfileImageEvent(member, profileImage));
 
         member.updateMemberInfo(request);
+    }
+
+    @Override
+    public MemberResponse getMember(int memberId) {
+        Member member = memberValidator.getValidMember(memberRepository.findById(memberId));
+        return new ModelMapper().map(member, MemberResponse.class);
     }
 
     private void checkJoinStatus(JoinRequest joinRequest) {
