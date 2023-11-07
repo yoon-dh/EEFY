@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.controller;
 
+import com.eefy.studyclass.domain.studyclass.dto.request.InviteMemberRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassCreateRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
@@ -47,5 +48,12 @@ public class StudyClassController {
 
         if (classId == null) return ResponseEntity.ok(studyClassService.searchStudentList(teacherId));
         else return ResponseEntity.ok(studyClassService.searchStudentList(teacherId, classId));
+    }
+
+    @PostMapping("/tutor/member")
+    public ResponseEntity<Void> inviteMember(@RequestHeader("Member-Id") Integer memberId,
+                                             @RequestBody InviteMemberRequest inviteMemberRequest) {
+
+        return ResponseEntity.ok().build();
     }
 }

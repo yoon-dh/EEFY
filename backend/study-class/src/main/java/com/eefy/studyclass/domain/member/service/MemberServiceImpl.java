@@ -9,6 +9,5 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member getMember(Integer memberId) {
         return null;
-
     }
 }
