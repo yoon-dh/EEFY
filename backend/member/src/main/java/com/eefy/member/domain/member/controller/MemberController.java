@@ -4,6 +4,8 @@ import com.eefy.member.domain.member.dto.request.JoinRequest;
 import com.eefy.member.domain.member.dto.request.MemberUpdateRequest;
 import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -23,21 +25,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
+@Tag(name = "Member", description = "사용자 관련 API")
 public class MemberController {
     private final MemberService memberService;
 
+    @Operation(summary = "회원가입", description = "회원가입 API")
     @PostMapping
     public String join(@Validated @RequestBody JoinRequest request) {
         memberService.join(request);
         return "SUCCESS";
     }
 
+    @Operation(summary = "수강생 조회", description = "강사가 수강생을 조회하는 API")
     @GetMapping("/tutor")
     public List<StudentResponse> getStudent(@RequestParam String key,
                                             @RequestParam String value) {
         return memberService.getStudent(key, value);
     }
 
+    @Operation(summary = "사용자 정보 변경", description = "닉네임, 휴대폰 번호, 프로필 사진 변경 API")
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public String MemberInfoUpdate(@RequestHeader("Member-Id") int memberId,
                                    @RequestPart(name = "request") MemberUpdateRequest request,
