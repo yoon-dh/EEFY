@@ -1,5 +1,7 @@
 package com.eefy.member.domain.member.jwt;
 
+import com.eefy.member.domain.member.exception.JwtCustomException;
+import com.eefy.member.domain.member.exception.message.JwtErrorEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -15,7 +17,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
@@ -64,16 +65,8 @@ public class JwtTokenProvider {
         return refreshToken;
     }
 
-    public String getUserEmail(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
-    }
-
     public int getUserId(String token) {
         return Integer.parseInt(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getId());
-    }
-
-    public Optional<String> extractAccessToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader("Authorization"));
     }
 
     public Optional<String> extractRefreshToken(int userId) {
@@ -99,24 +92,17 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SignatureException e) {
-            log.warn("JWT 서명이 유효하지 않습니다.");
-            throw new SignatureException("잘못된 JWT 시그니쳐");
-        } catch (MalformedJwtException e) {
-            log.warn("유효하지 않은 JWT 토큰입니다.");
-            throw new MalformedJwtException("유효하지 않은 JWT 토큰");
+            throw new JwtCustomException(JwtErrorEnum.INVALID_SIGNITURE);
         } catch (ExpiredJwtException e) {
-            log.warn("만료된 JWT 토큰입니다.");
-            throw new ExpiredJwtException(null, null, "토큰 기간 만료");
+            throw new JwtCustomException(JwtErrorEnum.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            log.warn("지원되지 않는 JWT 토큰입니다.");
-            throw new UnsupportedJwtException("지원되지 않는 JWT 토큰입니다.");
+            throw new JwtCustomException(JwtErrorEnum.NOT_SUPPORT_TOKEN);
         } catch (IllegalArgumentException e) {
-            log.warn("JWT claims string is empty.");
+            throw new JwtCustomException(JwtErrorEnum.EMPTY_CLAIMS_STRING);
         } catch (NullPointerException e) {
-            log.warn("JWT RefreshToken is empty");
+            throw new JwtCustomException(JwtErrorEnum.EMPTY_REFRESH_TOKEN);
         } catch (Exception e) {
-            log.warn("잘못된 토큰입니다.");
+            throw new JwtCustomException(JwtErrorEnum.INVALID_JWT_TOKEN);
         }
-        return false;
     }
 }
