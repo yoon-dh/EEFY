@@ -2,13 +2,13 @@ importScripts('https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js'
 importScripts('https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js');
 
 const config = {
-  apiKey: 'AIzaSyC7pFu4H7svcrh0RJ_UvKxqrUGZEjJLGXY',
-  authDomain: 'eefy-f2294.firebaseapp.com',
-  projectId: 'eefy-f2294',
-  storageBucket: 'eefy-f2294.appspot.com',
-  messagingSenderId: '433063675765',
-  appId: '1:433063675765:web:751ff0f18e47b9892d353c',
-  measurementId: 'G-V0R74XV218',
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

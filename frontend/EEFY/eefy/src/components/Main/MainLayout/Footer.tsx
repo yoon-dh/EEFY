@@ -38,7 +38,7 @@ export default function Footer() {
         setStartShake(false);
         setOnMessageTitle('');
         setIsNewMessage(true);
-      }, 1000);
+      }, 850);
 
       return () => clearTimeout(timer);
     }
