@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import ForgotPassword from './ForgotPassword';
 import { useRecoilState } from 'recoil';
 import { ForgetPasswordBox, userData } from '@/recoil/Auth';
-import {postLogin} from "@/api/Auth/login"
+import { postLogin } from '@/api/Auth/login';
 
 export default function Login() {
   const [anim, setAnim] = useState(false);
@@ -32,22 +32,22 @@ export default function Login() {
   // 이메일 인증
   const handleLogin = async () => {
     const data = {
-      email:email,
-      password: password
-    }
-    console.log(data)
-    const res = await postLogin(data)
-    console.log(res)
-    if(res?.status === 200){
+      email: email,
+      password: password,
+    };
+    console.log(data);
+    const res = await postLogin(data);
+    console.log(res);
+    if (res?.status === 200) {
       const NewData = {
-        memberId: res?.data.userId,
-        email:res?.data.email,
-        name:res?.data.name,
-        nickname:res?.data.nickname,
-        role:res?.data.role,
-      }
-      setUser(NewData)
-      router.push('/main/classlist')
+        memberId: res?.data.memberId,
+        email: res?.data.email,
+        name: res?.data.name,
+        nickname: res?.data.nickname,
+        role: res?.data.role,
+      };
+      setUser(NewData);
+      router.push('/main/classlist');
     }
   };
 
@@ -117,7 +117,7 @@ export default function Login() {
                 margin: '30px 0px 0px 0px',
               }}
               InputProps={{
-                autoComplete: "off",
+                autoComplete: 'off',
                 style: {
                   //   width: window.innerWidth <= 1340 ? '350px' : '400px',
                   width: '350px',
@@ -146,7 +146,7 @@ export default function Login() {
                   margin: '10px 0px 0px 0px',
                 }}
                 InputProps={{
-                  autoComplete: "off",
+                  autoComplete: 'off',
                   style: {
                     //   width: window.innerWidth <= 1340 ? '350px' : '400px',
                     width: '350px',
@@ -211,9 +211,7 @@ export default function Login() {
             >
               Forgot Password?
             </PasswordBtn>
-            <LoginBtn onClick={handleLogin}>
-              login
-            </LoginBtn>
+            <LoginBtn onClick={handleLogin}>login</LoginBtn>
           </InputBox>
 
           <Box>

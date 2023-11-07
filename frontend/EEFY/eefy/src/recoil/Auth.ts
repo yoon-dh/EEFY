@@ -6,8 +6,7 @@ export const ForgetPasswordBox = atom<boolean | null>({
   default: false,
 });
 
-const localStorage = 
-      typeof window !== 'undefined' ? window.localStorage : undefined
+const localStorage = typeof window !== 'undefined' ? window.localStorage : undefined;
 
 const { persistAtom } = recoilPersist({
   key: 'userData',
@@ -15,7 +14,7 @@ const { persistAtom } = recoilPersist({
 });
 
 export const userData = atom({
-  key:'userData',
-  default:null,
+  key: 'userData',
+  default: null,
   effects_UNSTABLE: [persistAtom],
-})
+});

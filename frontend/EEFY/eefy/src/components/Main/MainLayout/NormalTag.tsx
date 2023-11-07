@@ -1,6 +1,13 @@
 import React, { Children } from 'react';
+import { useRecoilValue } from 'recoil';
+import { userData } from '@/recoil/Auth';
 
 export default function NormalTag() {
+  const userDataObj = useRecoilValue(userData);
+  const userName = userDataObj.nickname;
+  console.log(userDataObj);
+  console.log(userName);
+
   return (
     <div
       className='w-5/6 shadow-lg rounded-lg py-2 px-3'
@@ -15,7 +22,7 @@ export default function NormalTag() {
       <div className='flex justify-between items-center w-full h-full'>
         <div className='ml-5 flex flex-col'>
           <div>
-            <p className='text-3xl font-bold text-white'>고다혜님, 반갑습니다!</p>
+            <p className='text-3xl font-bold text-white'>{userName}님, 반갑습니다!</p>
           </div>
           <div>
             <p className='text-lg' style={{ color: 'rgba(255, 255, 255, 0.75)' }}>

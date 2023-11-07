@@ -5,6 +5,7 @@ import StyledComponentsRegistry from '@/styles/registry';
 import './globals.css';
 import { RecoilRoot } from 'recoil';
 import { useEffect } from 'react';
+import Modal from 'react-modal';
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -12,6 +13,8 @@ import { useEffect } from 'react';
 // };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Modal.setAppElement(document.getElementById('root'));
+
   return (
     <html lang='en' className='w-full h-full'>
       <head>
