@@ -2,11 +2,14 @@ package com.eefy.studyclass.domain.studyclass.controller;
 
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassCreateRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
+import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/study-class")
@@ -34,5 +37,13 @@ public class StudyClassController {
 
         studyClassService.modifyStudyClass(studyClassModifyRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/member")
+    public ResponseEntity<List<SearchStudentResponse>> searchStudentList(@RequestHeader("Member-Id") Integer teacherId,
+                                                                         @RequestParam("classId") Integer classId) {
+
+        if (classId == null) return ResponseEntity.ok(studyClassService.searchStudentList(teacherId));
+        else return ResponseEntity.ok(studyClassService.searchStudentList(teacherId, classId));
     }
 }

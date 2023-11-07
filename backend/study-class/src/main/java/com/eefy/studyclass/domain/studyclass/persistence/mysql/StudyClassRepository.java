@@ -17,4 +17,8 @@ public interface StudyClassRepository extends JpaRepository<StudyClass, Integer>
     @Modifying(clearAutomatically = true)
     @Query("update StudyClass s set s.classTitle=:title, s.classContent=:content, s.type=:type, s.startDate=:startDate, s.endDate=:endDate")
     void updateStudyClass(String title, String content, String type, LocalDateTime startDate, LocalDateTime endDate);
+
+    boolean existsByMemberIdAndClassId(Integer teacherId, Integer classId);
+
+    boolean existsByMemberId(Integer teacherId);
 }

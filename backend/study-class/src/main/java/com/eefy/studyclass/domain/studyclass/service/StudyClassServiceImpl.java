@@ -6,6 +6,7 @@ import com.eefy.studyclass.domain.studyclass.dto.request.ClassInfoRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassCreateRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassStudentRequest;
+import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
@@ -75,12 +76,46 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void modifyStudyClass(StudyClassModifyRequest studyClassModifyRequest) {
-        studyClassValidator.existStudyClass(studyClassRepository, studyClassModifyRequest.getId());
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, studyClassModifyRequest.getId());
 
         studyClassRepository.updateStudyClass(studyClassModifyRequest.getTitle(),
                                               studyClassModifyRequest.getContent(),
                                               studyClassModifyRequest.getType(),
                                               studyClassModifyRequest.getStartDate(),
                                               studyClassModifyRequest.getEndDate());
+    }
+
+    @Override
+    public List<SearchStudentResponse> searchStudentList(Integer teacherId, Integer classId) {
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, classId);
+        studyClassValidator.existsByStudyClassByTeacherIdAndClassId(studyClassRepository, teacherId, classId);
+
+        List<Participate> byMemberIdAndClassId = participateRepository.findByMemberIdAndClassId(teacherId, classId);
+
+        return getSearchStudentList(byMemberIdAndClassId);
+    }
+
+    @Override
+    public List<SearchStudentResponse> searchStudentList(Integer teacherId) {
+        studyClassValidator.existsByTeacherId(studyClassRepository, teacherId);
+
+        List<Participate> byMemberId = participateRepository.findByMemberId(teacherId);
+
+        return getSearchStudentList(byMemberId);
+    }
+
+    @Override
+    public List<SearchStudentResponse> getSearchStudentList(List<Participate> participateList) {
+        List<SearchStudentResponse> result = participateList.stream().map(m -> {
+            Member member = memberService.getMember(m.getMemberId());
+
+            return SearchStudentResponse.builder()
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .profileImagePath(member.getProfileImagePath())
+                    .phoneNumber(member.getPhoneNumber()).build();
+        }).collect(Collectors.toList());
+
+        return result;
     }
 }

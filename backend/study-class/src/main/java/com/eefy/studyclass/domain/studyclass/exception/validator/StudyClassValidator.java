@@ -11,11 +11,27 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Component
 public class StudyClassValidator {
-    public void existStudyClass(StudyClassRepository studyClassRepository, Integer studyClassId) {
+    public void existsStudyClassByClassId(StudyClassRepository studyClassRepository, Integer studyClassId) {
         if(!studyClassRepository.existsById(studyClassId)) throw CustomException.builder()
                 .status(HttpStatus.NO_CONTENT)
-                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS.getCode())
-                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS.getMessage())
+                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getCode())
+                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getMessage())
+                .build();
+    }
+
+    public void existsByStudyClassByTeacherIdAndClassId(StudyClassRepository studyClassRepository, Integer teacherId, Integer classId) {
+        if(!studyClassRepository.existsByMemberIdAndClassId(teacherId, classId)) throw CustomException.builder()
+                .status(HttpStatus.NO_CONTENT)
+                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getCode())
+                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getMessage())
+                .build();
+    }
+
+    public void existsByTeacherId(StudyClassRepository studyClassRepository, Integer teacherId) {
+        if(!studyClassRepository.existsByMemberId(teacherId)) throw CustomException.builder()
+                .status(HttpStatus.NO_CONTENT)
+                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getCode())
+                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getMessage())
                 .build();
     }
 }
