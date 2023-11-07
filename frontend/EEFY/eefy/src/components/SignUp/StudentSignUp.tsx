@@ -81,6 +81,7 @@ export default function StudentSignUp() {
             margin: '10px 0px 0px 0px',
             }}
             InputProps={{
+                autoComplete: "off",
             style: {
                 width: '350px',
                 //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -105,6 +106,7 @@ export default function StudentSignUp() {
                 margin: '10px 0px 0px 0px',
             }}
             InputProps={{
+                autoComplete: "off",
                 style: {
                 width: '350px',
                 //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -182,6 +184,7 @@ export default function StudentSignUp() {
                   value === password || "비밀번호가 일치하지 않습니다.",
               })}
             InputProps={{
+                autoComplete: "off",
             style: {
                 width: '350px',
                 //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -204,12 +207,18 @@ export default function StudentSignUp() {
             margin: '10px 0px 0px 0px',
             }}
             {...register("phoneNumber", {
-            })}
+                required: "전화번호을 입력해주세요.",
+                pattern: {
+                  value: /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/,
+                  message: "올바른 전화번호 형식이 아닙니다.",
+                },
+              })}
             onChange={(e) => {
               setValue("phoneNumber", e.target.value);
               clearErrors("phoneNumber");
             }}
             InputProps={{
+                autoComplete: "off",
             style: {
                 width: '350px',
                 //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -240,6 +249,7 @@ export default function StudentSignUp() {
                     },
                 })}
                 InputProps={{
+                    autoComplete: "off",
                 style: {
                     width: '350px',
                     //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -277,6 +287,7 @@ export default function StudentSignUp() {
                     clearErrors("code");
                 }}
                 InputProps={{
+                    autoComplete: "off",
                     style: {
                     width: '350px',
                     //   fontSize: window.innerWidth <= 1340 ? '15px' : '20px',
@@ -296,7 +307,6 @@ export default function StudentSignUp() {
             </CodeCheckBox>
         </div>
         <SignUpBtn style={{ backgroundColor: '#3B3B84', color: '#FFFFFF' }}
-        onClick={onSubmit}
         >Submit</SignUpBtn>
       </form>
     </>
