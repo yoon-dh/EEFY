@@ -128,21 +128,16 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest) {
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, disInviteMemberRequest.getClassId());
+
         memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
                 studyClassRepository.findByIdAndMemberId(disInviteMemberRequest.getClassId(), memberId));
 
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, disInviteMemberRequest.getClassId());
-
-        StudyClass studyClass = studyClassRepository.findById(disInviteMemberRequest.getClassId()).get();
-
         for (StudyClassStudentRequest studentRequest: disInviteMemberRequest.getMemberList()) {
 
-            studyClassValidator.alreadyUnJoinStudyClass(participateRepository.findByMemberIdAndStudyClassId(studentRequest.getMemberId(), disInviteMemberRequest.getClassId()));
+            Participate participate = studyClassValidator.alreadyUnJoinStudyClass(participateRepository.findByMemberIdAndStudyClassId(studentRequest.getMemberId(), disInviteMemberRequest.getClassId()));
 
-            Participate participate = Participate.builder()
-                    .memberId(studentRequest.getMemberId())
-                    .studyClass(studyClass).build();
-            participateRepository.save(participate);
+            participateRepository.delete(participate);
         }
     }
 }

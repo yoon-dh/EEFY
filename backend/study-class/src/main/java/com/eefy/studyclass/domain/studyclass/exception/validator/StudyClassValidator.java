@@ -55,11 +55,12 @@ public class StudyClassValidator {
                 .build();
     }
 
-    public void alreadyUnJoinStudyClass(Optional<Participate> participate) {
+    public Participate alreadyUnJoinStudyClass(Optional<Participate> participate) {
         if(participate.isEmpty()) throw CustomException.builder()
                 .status(HttpStatus.ACCEPTED)
                 .code(StudyClassEnum.ALREADY_UNPARTICIPATE_STUDY_CLASS.getCode())
                 .message(StudyClassEnum.ALREADY_UNPARTICIPATE_STUDY_CLASS.getMessage())
                 .build();
+        return participate.get();
     }
 }
