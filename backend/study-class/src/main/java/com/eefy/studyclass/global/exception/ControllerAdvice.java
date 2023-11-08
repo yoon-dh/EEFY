@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ControllerAdvice {
     @ExceptionHandler(CustomException.class)
-    private ResponseEntity<ExceptionResponseDto> NoExistStudyClass(CustomException e) {
+    private ResponseEntity<ExceptionResponseDto> exception(CustomException e) {
         return ResponseEntity
                 .status(e.getStatus()).body(ExceptionResponseDto.builder()
                 .errorCode(e.getCode())

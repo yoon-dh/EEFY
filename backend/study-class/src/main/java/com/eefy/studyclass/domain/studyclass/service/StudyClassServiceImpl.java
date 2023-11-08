@@ -35,7 +35,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     public StudyClassListResponse getStudyClassList(Integer memberId) {
         List<StudyClass> studyClassList = null;
 
-        Member member = memberService.getMember(memberId);
+        Member member = memberService.getMemberInfo(memberId, memberId);
 
         if(member.getRole().equals("TEACHER")) {
             studyClassList = studyClassRepository.findByMemberId(memberId);
@@ -46,7 +46,7 @@ public class StudyClassServiceImpl implements StudyClassService {
         }
 
         List<StudyClassResponse> studyClassResponseList = studyClassList.stream().map(studyClass -> {
-            String teacherName = memberService.getMember(studyClass.getMemberId()).getNickname();
+            String teacherName = memberService.getMemberInfo(memberId, studyClass.getMemberId()).getNickname();
             return StudyClassResponse.of(studyClass, teacherName);
         }).collect(Collectors.toList());
 
@@ -56,7 +56,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     @Override
     public void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest) {
 
-        studyClassValidator.checkUserRoleCreateStudyClass(memberService.getMember(memberId));
+        studyClassValidator.checkUserRoleCreateStudyClass(memberService.getMemberInfo(memberId, memberId));
 
         StudyClass studyClass = StudyClass.builder()
                 .memberId(memberId)
@@ -84,7 +84,7 @@ public class StudyClassServiceImpl implements StudyClassService {
 
         List<Participate> byMemberIdAndClassId = participateRepository.findByStudyClassId(classId);
 
-        return getSearchStudentList(byMemberIdAndClassId);
+        return getSearchStudentList(teacherId, byMemberIdAndClassId);
     }
 
     @Override
@@ -93,13 +93,13 @@ public class StudyClassServiceImpl implements StudyClassService {
 
         List<Participate> byMemberId = participateRepository.findByMemberId(teacherId);
 
-        return getSearchStudentList(byMemberId);
+        return getSearchStudentList(teacherId, byMemberId);
     }
 
     @Override
-    public List<SearchStudentResponse> getSearchStudentList(List<Participate> participateList) {
+    public List<SearchStudentResponse> getSearchStudentList(Integer teacherId, List<Participate> participateList) {
         List<SearchStudentResponse> result = participateList.stream().map(m -> {
-            Member member = memberService.getMember(m.getMemberId());
+            Member member = memberService.getMemberInfo(teacherId, m.getMemberId());
 
             return SearchStudentResponse.builder()
                     .name(member.getName())
@@ -113,7 +113,7 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest) {
-        memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMember(memberId),
+        memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
                 studyClassRepository.findByIdAndMemberId(inviteMemberRequest.getClassId(), memberId));
 
         studyClassValidator.existsStudyClassByClassId(studyClassRepository, inviteMemberRequest.getClassId());
