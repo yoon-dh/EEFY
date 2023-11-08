@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.exception.validator;
 
+import com.eefy.studyclass.domain.member.exception.message.MemberEnum;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.studyclass.exception.message.StudyClassEnum;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
@@ -18,8 +19,8 @@ public class StudyClassValidator {
     public void checkUserRoleCreateStudyClass(Member member) {
         if(!member.getRole().equals("TEACHER")) throw CustomException.builder()
                 .status(HttpStatus.UNAUTHORIZED)
-                .code(StudyClassEnum.NO_UNAUTHORIZED_ABOUT_CREATE_CLASS.getCode())
-                .message(StudyClassEnum.NO_UNAUTHORIZED_ABOUT_CREATE_CLASS.getMessage()).build();
+                .code(MemberEnum.NO_UNAUTHORIZED_ABOUT_CREATE_CLASS.getCode())
+                .message(MemberEnum.NO_UNAUTHORIZED_ABOUT_CREATE_CLASS.getMessage()).build();
     }
 
     public void existsStudyClassByClassId(StudyClassRepository studyClassRepository, Integer studyClassId) {
