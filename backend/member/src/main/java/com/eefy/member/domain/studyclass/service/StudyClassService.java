@@ -1,9 +1,10 @@
 package com.eefy.member.domain.studyclass.service;
 
 import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
+import feign.Response;
 
 import java.util.List;
 
 public interface StudyClassService {
-    List<SearchStudentResponse> searchStudentList(int teacherId, int classId);
+    Response searchStudentList(int teacherId, int classId);
 }

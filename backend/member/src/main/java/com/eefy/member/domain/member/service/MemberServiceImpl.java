@@ -12,6 +12,8 @@ import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
 import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.member.domain.studyclass.service.StudyClassService;
+import feign.Response;
+import feign.ResponseMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -19,8 +21,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -52,8 +57,9 @@ public class MemberServiceImpl implements MemberService {
         // studyClassId != 0인 경우 클래스에 참여중인 학생 목록 조회
         // 목록 조회해서 멤버아이디 캐싱하고 내가 캐싱하고있는 데이터가 study-class쪽에서 변화된다면 리프레시하게 하고십다!
         // 이벤트 기반으로 수정(서비스 분리)
-        List<SearchStudentResponse> studentList = studyClassService.searchStudentList(teacherId, classId);
-        log.info(studentList.toString());
+        System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+        Response studentList = studyClassService.searchStudentList(teacherId, classId);
+        System.out.println(studentList.request().body().toString());
 
         List<Member> members = selectMembers(key, value);
 

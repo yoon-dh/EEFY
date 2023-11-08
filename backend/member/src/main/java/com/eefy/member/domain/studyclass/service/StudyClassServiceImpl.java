@@ -2,6 +2,7 @@ package com.eefy.member.domain.studyclass.service;
 
 import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.member.global.feign.StudyClassClient;
+import feign.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     private final StudyClassClient studyClassClient;
 
     @Override
-    public List<SearchStudentResponse> searchStudentList(int teacherId, int classId) {
+    public Response searchStudentList(int teacherId, int classId) {
         return studyClassClient.searchStudentList(teacherId, classId);
     }
 }
