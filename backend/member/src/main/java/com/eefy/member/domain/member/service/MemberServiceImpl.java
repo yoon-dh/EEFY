@@ -9,6 +9,7 @@ import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
+import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -55,9 +56,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void updateMember(int memberId, MemberUpdateRequest request, MultipartFile profileImage) {
         Member member = memberValidator.getValidMember(memberRepository.findById(memberId));
-
         eventPublisher.publishEvent(new UploadProfileImageEvent(member, profileImage));
-
         member.updateMemberInfo(request);
     }
 
@@ -75,8 +74,10 @@ public class MemberServiceImpl implements MemberService {
 
     private List<Member> selectMembers(String key, String value) {
         memberValidator.checkSelectMemersKey(key);
-        if (key.equals("email")) return memberRepository.findByEmailContainingOrderByEmail(value);
-        else if (key.equals("name")) return memberRepository.findByNameContainingOrderByName(value);
+        if (key.equals("email"))
+            return memberRepository.findByEmailContainingAndRoleOrderByEmail(value, MemberRole.STUDENT);
+        else if (key.equals("name"))
+            return memberRepository.findByNameContainingAndRoleOrderByName(value, MemberRole.STUDENT);
         else return null;
     }
 }
