@@ -107,10 +107,11 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest) {
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, inviteMemberRequest.getClassId());
+
         memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
                 studyClassRepository.findByIdAndMemberId(inviteMemberRequest.getClassId(), memberId));
 
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, inviteMemberRequest.getClassId());
 
         StudyClass studyClass = studyClassRepository.findById(inviteMemberRequest.getClassId()).get();
 

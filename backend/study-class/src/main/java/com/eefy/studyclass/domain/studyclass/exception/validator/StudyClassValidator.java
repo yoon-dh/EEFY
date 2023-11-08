@@ -25,7 +25,7 @@ public class StudyClassValidator {
 
     public void existsStudyClassByClassId(StudyClassRepository studyClassRepository, Integer studyClassId) {
         if(!studyClassRepository.existsById(studyClassId)) throw CustomException.builder()
-                .status(HttpStatus.NO_CONTENT)
+                .status(HttpStatus.BAD_REQUEST)
                 .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getCode())
                 .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getMessage())
                 .build();
@@ -33,7 +33,7 @@ public class StudyClassValidator {
 
     public void existsByStudyClassByTeacherIdAndClassId(StudyClassRepository studyClassRepository, Integer classId, Integer teacherId) {
         if(!studyClassRepository.existsByIdAndMemberId(classId, teacherId)) throw CustomException.builder()
-                .status(HttpStatus.NO_CONTENT)
+                .status(HttpStatus.BAD_REQUEST)
                 .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getCode())
                 .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getMessage())
                 .build();
@@ -41,7 +41,7 @@ public class StudyClassValidator {
 
     public void existsByTeacherId(StudyClassRepository studyClassRepository, Integer teacherId) {
         if(!studyClassRepository.existsByMemberId(teacherId)) throw CustomException.builder()
-                .status(HttpStatus.NO_CONTENT)
+                .status(HttpStatus.BAD_REQUEST)
                 .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getCode())
                 .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getMessage())
                 .build();
