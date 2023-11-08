@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "member-service", url = "https://k9b306.p.ssafy.io/api/member/memberId?")
+@FeignClient(name = "member-service", url = "https://k9b306.p.ssafy.io/api/member?")
 public interface MemberClientApi {
     @GetMapping
-    Member getMemberInfo(@RequestHeader Integer memberId, @RequestParam Integer reqMemberId);
+    Member getMemberInfo(@RequestHeader Integer teacherId, @RequestParam Integer memberId);
 }
 
