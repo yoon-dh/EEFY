@@ -130,4 +130,24 @@ public class StudyClassServiceImpl implements StudyClassService {
             participateRepository.save(participate);
         }
     }
+
+    @Override
+    public void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest) {
+        memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
+                studyClassRepository.findByIdAndMemberId(disInviteMemberRequest.getClassId(), memberId));
+
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, disInviteMemberRequest.getClassId());
+
+        StudyClass studyClass = studyClassRepository.findById(disInviteMemberRequest.getClassId()).get();
+
+        for (StudyClassStudentRequest studentRequest: disInviteMemberRequest.getMemberList()) {
+
+            studyClassValidator.alreadyUnJoinStudyClass(participateRepository.findByMemberIdAndStudyClassId(studentRequest.getMemberId(), disInviteMemberRequest.getClassId()));
+
+            Participate participate = Participate.builder()
+                    .memberId(studentRequest.getMemberId())
+                    .studyClass(studyClass).build();
+            participateRepository.save(participate);
+        }
+    }
 }

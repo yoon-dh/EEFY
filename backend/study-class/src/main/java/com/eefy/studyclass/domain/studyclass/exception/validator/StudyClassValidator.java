@@ -2,6 +2,7 @@ package com.eefy.studyclass.domain.studyclass.exception.validator;
 
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.studyclass.exception.message.StudyClassEnum;
+import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import com.eefy.studyclass.global.exception.CustomException;
 import lombok.AccessLevel;
@@ -45,11 +46,19 @@ public class StudyClassValidator {
                 .build();
     }
 
-    public void alreadyJoinStudyClass(Optional participate) {
+    public void alreadyJoinStudyClass(Optional<Participate> participate) {
         if(participate.isPresent()) throw CustomException.builder()
                 .status(HttpStatus.ACCEPTED)
                 .code(StudyClassEnum.ALREADY_PARTICIPATE_STUDY_CLASS.getCode())
                 .message(StudyClassEnum.ALREADY_PARTICIPATE_STUDY_CLASS.getMessage())
+                .build();
+    }
+
+    public void alreadyUnJoinStudyClass(Optional<Participate> participate) {
+        if(participate.isEmpty()) throw CustomException.builder()
+                .status(HttpStatus.ACCEPTED)
+                .code(StudyClassEnum.ALREADY_UNPARTICIPATE_STUDY_CLASS.getCode())
+                .message(StudyClassEnum.ALREADY_UNPARTICIPATE_STUDY_CLASS.getMessage())
                 .build();
     }
 }

@@ -57,4 +57,12 @@ public class StudyClassController {
         studyClassService.inviteMember(memberId, inviteMemberRequest);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/tutor/member")
+    public ResponseEntity<Void> disInviteMember(@RequestHeader("Member-Id") Integer memberId,
+                                                @RequestBody InviteMemberRequest disInviteMemberRequest) {
+
+        studyClassService.disInviteMember(memberId, disInviteMemberRequest);
+        return ResponseEntity.ok().build();
+    }
 }
