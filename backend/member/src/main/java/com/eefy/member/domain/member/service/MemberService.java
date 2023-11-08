@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface MemberService {
     void join(JoinRequest joinRequest);
-    List<StudentResponse> getStudent(String key, String value);
+    List<StudentResponse> getStudent(String key, String value, int teacherId, int studyClassId);
     void updateMember(int memberId, MemberUpdateRequest request, MultipartFile profileImage);
     MemberResponse getMember(int memberId);
 }

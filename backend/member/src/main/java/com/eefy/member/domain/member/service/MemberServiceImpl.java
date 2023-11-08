@@ -10,6 +10,8 @@ import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
+import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
+import com.eefy.member.domain.studyclass.service.StudyClassService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -20,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,6 +33,8 @@ public class MemberServiceImpl implements MemberService {
     private final MemberValidator memberValidator;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
+
+    private final StudyClassService studyClassService;
 
     @Override
     @Transactional
@@ -45,11 +48,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<StudentResponse> getStudent(String key, String value) {
+    public List<StudentResponse> getStudent(String key, String value, int teacherId, int classId) {
+        // studyClassId != 0인 경우 클래스에 참여중인 학생 목록 조회
+        // 목록 조회해서 멤버아이디 캐싱하고 내가 캐싱하고있는 데이터가 study-class쪽에서 변화된다면 리프레시하게 하고십다!
+        // 이벤트 기반으로 수정(서비스 분리)
+        List<SearchStudentResponse> studentList = studyClassService.searchStudentList(teacherId, classId);
+        log.info(studentList.toString());
+
         List<Member> members = selectMembers(key, value);
 
         if (members == null) return null;
-        return members.stream().map(StudentResponse::new).collect(Collectors.toList());
+        return makeStudentResponse(members);
+//        return members.stream().map(StudentResponse::new).collect(Collectors.toList());
     }
 
     @Override
@@ -70,6 +80,10 @@ public class MemberServiceImpl implements MemberService {
         memberValidator.checkEmailConfirmStatus(emailConfirmRedisRepository.findById(joinRequest.getEmail()));
         memberValidator.checkJoinStatus(memberRepository.findMemberByEmail(joinRequest.getEmail()),
                 joinRequest.getPassword(), joinRequest.getCheckedPassword());
+    }
+
+    private List<StudentResponse> makeStudentResponse(List<Member> members) {
+        return null;
     }
 
     private List<Member> selectMembers(String key, String value) {

@@ -39,9 +39,11 @@ public class MemberController {
 
     @Operation(summary = "수강생 조회", description = "강사가 수강생을 조회하는 API")
     @GetMapping("/tutor")
-    public List<StudentResponse> getStudent(@RequestParam String key,
-                                            @RequestParam String value) {
-        return memberService.getStudent(key, value);
+    public List<StudentResponse> getStudent(@RequestHeader("Member-Id") int teacherId,
+                                            @RequestParam String key,
+                                            @RequestParam String value,
+                                            @RequestParam(required = false) int classId) {
+        return memberService.getStudent(key, value, teacherId, classId);
     }
 
     @Operation(summary = "사용자 정보 변경", description = "닉네임, 휴대폰 번호, 프로필 사진 변경 API")
