@@ -94,7 +94,7 @@ public class StudyClassServiceImpl implements StudyClassService {
             Member member = memberService.getMemberInfo(teacherId, m.getMemberId());
 
             return SearchStudentResponse.builder()
-                    .memberId(m.getMemberId())
+                    .memberId(member.getMemberId())
                     .name(member.getName())
                     .nickname(member.getNickname())
                     .email(member.getEmail())
