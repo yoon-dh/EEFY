@@ -17,7 +17,7 @@ public class StudyClassResponse {
         return StudyClassResponse.builder()
                 .id(studyClass.getId())
                 .studentCnt(studyClass.getStudentCnt())
-                .title(studyClass.getClassTitle())
+                .title(studyClass.getTitle())
                 .teacher(teacherName).build();
     }
 }

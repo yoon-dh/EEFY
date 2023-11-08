@@ -26,10 +26,10 @@ public class StudyClass extends BaseEntity {
     private Integer memberId;
 
     @Column(nullable = false, length = 200)
-    private String classTitle;
+    private String title;
 
     @Column(nullable = false, length = 2000)
-    private String classContent;
+    private String content;
 
     @Column(nullable = false)
     private LocalDateTime startDate;
@@ -45,11 +45,11 @@ public class StudyClass extends BaseEntity {
     private Integer studentCnt;
 
     @Builder
-    public StudyClass(Integer id, Integer memberId, String classTitle, String classContent, LocalDateTime startDate, StudyTypeEnum type, List<Participate> participateList, Integer studentCnt) {
+    public StudyClass(Integer id, Integer memberId, String title, String content, LocalDateTime startDate, StudyTypeEnum type, List<Participate> participateList, Integer studentCnt) {
         this.id = id;
         this.memberId = memberId;
-        this.classTitle = classTitle;
-        this.classContent = classContent;
+        this.title = title;
+        this.content = content;
         this.startDate = startDate;
         this.type = type;
         this.participateList = participateList;
@@ -57,8 +57,8 @@ public class StudyClass extends BaseEntity {
     }
 
     public void updateStudyClassInfo(StudyClassModifyRequest studyClassModifyRequest) {
-        this.classTitle = studyClassModifyRequest.getTitle();
-        this.classContent = studyClassModifyRequest.getContent();
+        this.title = studyClassModifyRequest.getTitle();
+        this.content = studyClassModifyRequest.getContent();
         this.startDate = studyClassModifyRequest.getStartDate();
         this.type = StudyTypeEnum.valueOf(studyClassModifyRequest.getType());
     }

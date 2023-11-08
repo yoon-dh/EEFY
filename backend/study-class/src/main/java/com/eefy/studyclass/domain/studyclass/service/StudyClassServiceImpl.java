@@ -60,8 +60,8 @@ public class StudyClassServiceImpl implements StudyClassService {
 
         StudyClass studyClass = StudyClass.builder()
                 .memberId(memberId)
-                .classTitle(studyClassCreateRequest.getTitle())
-                .classContent(studyClassCreateRequest.getContent())
+                .title(studyClassCreateRequest.getTitle())
+                .content(studyClassCreateRequest.getContent())
                 .startDate(studyClassCreateRequest.getStartDate())
                 .type(studyClassCreateRequest.getType())
                 .build();
