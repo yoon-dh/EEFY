@@ -6,7 +6,7 @@ spring:
     name: member-service
 
   zipkin:
-    base-url:  ${ZIPKIN_RUL}
+    base-url: ${ZIPKIN_URL}
     sleuth:
       sampler:
         probability: 1.0
