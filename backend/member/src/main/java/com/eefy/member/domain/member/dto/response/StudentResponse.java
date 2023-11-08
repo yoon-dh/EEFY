@@ -13,6 +13,7 @@ public class StudentResponse {
     private String name;
     private String nickname;
     private String phoneNumber;
+    private String profileImagePath;
 
     public StudentResponse(Member member) {
         memberId = member.getId();
@@ -20,5 +21,6 @@ public class StudentResponse {
         name = member.getName();
         nickname = member.getNickname();
         phoneNumber = member.getPhoneNumber();
+        profileImagePath = member.getProfileImagePath();
     }
 }
