@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.service;
 
+import com.eefy.studyclass.domain.member.exception.validator.MemberValidator;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
@@ -9,13 +10,12 @@ import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
-import com.eefy.studyclass.domain.studyclass.persistence.entity.enums.StudyTypeEnum;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,23 +29,24 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     private final MemberServiceImpl memberService;
     private final StudyClassValidator studyClassValidator;
+    private final MemberValidator memberValidator;
 
     @Override
-    public StudyClassListResponse getStudyClassList(Integer memberId) {
+    public StudyClassListResponse getStudyClassList(Pageable pageable, Integer memberId) {
         List<StudyClass> studyClassList = null;
 
-        Member member = memberService.getMember(memberId);
+        Member member = memberService.getMemberInfo(memberId, memberId);
 
         if(member.getRole().equals("TEACHER")) {
-            studyClassList = studyClassRepository.findByMemberId(memberId);
+            studyClassList = studyClassRepository.findByMemberId(pageable, memberId);
         }
 
         if(member.getRole().equals("STUDENT")) {
-            studyClassList = studyClassRepository.findByStudentId(memberId);
+            studyClassList = studyClassRepository.findByStudentId(pageable, memberId);
         }
 
         List<StudyClassResponse> studyClassResponseList = studyClassList.stream().map(studyClass -> {
-            String teacherName = memberService.getMember(studyClass.getMemberId()).getNickname();
+            String teacherName = memberService.getMemberInfo(memberId, studyClass.getMemberId()).getNickname();
             return StudyClassResponse.of(studyClass, teacherName);
         }).collect(Collectors.toList());
 
@@ -54,6 +55,8 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest) {
+
+        studyClassValidator.checkUserRoleCreateStudyClass(memberService.getMemberInfo(memberId, memberId));
 
         StudyClass studyClass = StudyClass.builder()
                 .memberId(memberId)
@@ -79,9 +82,9 @@ public class StudyClassServiceImpl implements StudyClassService {
         studyClassValidator.existsStudyClassByClassId(studyClassRepository, classId);
         studyClassValidator.existsByStudyClassByTeacherIdAndClassId(studyClassRepository, teacherId, classId);
 
-        List<Participate> byMemberIdAndClassId = participateRepository.findByMemberIdAndStudyClassId(teacherId, classId);
+        List<Participate> byMemberIdAndClassId = participateRepository.findByStudyClassId(classId);
 
-        return getSearchStudentList(byMemberIdAndClassId);
+        return getSearchStudentList(teacherId, byMemberIdAndClassId);
     }
 
     @Override
@@ -90,13 +93,13 @@ public class StudyClassServiceImpl implements StudyClassService {
 
         List<Participate> byMemberId = participateRepository.findByMemberId(teacherId);
 
-        return getSearchStudentList(byMemberId);
+        return getSearchStudentList(teacherId, byMemberId);
     }
 
     @Override
-    public List<SearchStudentResponse> getSearchStudentList(List<Participate> participateList) {
+    public List<SearchStudentResponse> getSearchStudentList(Integer teacherId, List<Participate> participateList) {
         List<SearchStudentResponse> result = participateList.stream().map(m -> {
-            Member member = memberService.getMember(m.getMemberId());
+            Member member = memberService.getMemberInfo(teacherId, m.getMemberId());
 
             return SearchStudentResponse.builder()
                     .name(member.getName())
@@ -109,7 +112,42 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void inviteMember(List<InviteMemberRequest> inviteMemberRequests) {
+    public void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest) {
+        memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
+                studyClassRepository.findByIdAndMemberId(inviteMemberRequest.getClassId(), memberId));
 
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, inviteMemberRequest.getClassId());
+
+        StudyClass studyClass = studyClassRepository.findById(inviteMemberRequest.getClassId()).get();
+
+        for (StudyClassStudentRequest studentRequest: inviteMemberRequest.getMemberList()) {
+
+            studyClassValidator.alreadyJoinStudyClass(participateRepository.findByMemberIdAndStudyClassId(studentRequest.getMemberId(), inviteMemberRequest.getClassId()));
+
+            Participate participate = Participate.builder()
+                    .memberId(studentRequest.getMemberId())
+                    .studyClass(studyClass).build();
+            participateRepository.save(participate);
+        }
+    }
+
+    @Override
+    public void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest) {
+        memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
+                studyClassRepository.findByIdAndMemberId(disInviteMemberRequest.getClassId(), memberId));
+
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, disInviteMemberRequest.getClassId());
+
+        StudyClass studyClass = studyClassRepository.findById(disInviteMemberRequest.getClassId()).get();
+
+        for (StudyClassStudentRequest studentRequest: disInviteMemberRequest.getMemberList()) {
+
+            studyClassValidator.alreadyUnJoinStudyClass(participateRepository.findByMemberIdAndStudyClassId(studentRequest.getMemberId(), disInviteMemberRequest.getClassId()));
+
+            Participate participate = Participate.builder()
+                    .memberId(studentRequest.getMemberId())
+                    .studyClass(studyClass).build();
+            participateRepository.save(participate);
+        }
     }
 }

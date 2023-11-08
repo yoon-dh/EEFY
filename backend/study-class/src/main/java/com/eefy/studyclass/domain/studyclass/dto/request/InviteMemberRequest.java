@@ -6,5 +6,6 @@ import java.util.List;
 
 @Getter
 public class InviteMemberRequest {
+    private Integer classId;
     List<StudyClassStudentRequest> memberList;
 }
