@@ -15,6 +15,6 @@ public interface FirebaseClient {
 
     @PostMapping
     @Headers("Content-Type: application/json; UTF-8")
-    Optional<Response> sendMessageTo(@RequestHeader("Authorization") String accessToken,
-                           @RequestBody FcmMessage fcmMessage);
+    Optional<Response> sendMessageTo(
+            @RequestHeader("Authorization") String accessToken, @RequestBody FcmMessage fcmMessage);
 }

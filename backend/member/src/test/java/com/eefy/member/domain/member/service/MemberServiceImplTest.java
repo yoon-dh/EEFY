@@ -44,7 +44,10 @@ class MemberServiceImplTest {
 //    @Test
 //    void getStudent() {
 //        List<StudentResponse> members = memberService.getStudent("email", "test");
-//        members.forEach(m -> assertThat(m.getEmail().contains("test")).isTrue());
+//        members.forEach(m -> {
+//            assertThat(m.getEmail().contains("test")).isTrue();
+//            assertThat(m.getRole()).isEqualTo(MemberRole.STUDENT);
+//        });
 //    }
 
 //    @Test
