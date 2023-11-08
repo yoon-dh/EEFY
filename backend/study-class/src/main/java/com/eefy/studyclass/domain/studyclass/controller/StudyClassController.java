@@ -8,6 +8,8 @@ import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +24,10 @@ public class StudyClassController {
     private final StudyClassService studyClassService;
 
     @GetMapping("")
-    public ResponseEntity<StudyClassListResponse> getStudyClassList(@RequestHeader("Member-Id") Integer memberId) {
+    public ResponseEntity<StudyClassListResponse> getStudyClassList(@PageableDefault(sort = {"startDate"}) Pageable pageable,
+                                                                    @RequestHeader("Member-Id") Integer memberId) {
 
-        return ResponseEntity.ok(studyClassService.getStudyClassList(memberId));
+        return ResponseEntity.ok(studyClassService.getStudyClassList(pageable, memberId));
     }
 
     @PostMapping("/tutor")

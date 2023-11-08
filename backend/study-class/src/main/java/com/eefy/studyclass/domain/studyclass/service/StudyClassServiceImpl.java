@@ -13,9 +13,9 @@ import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,17 +32,17 @@ public class StudyClassServiceImpl implements StudyClassService {
     private final MemberValidator memberValidator;
 
     @Override
-    public StudyClassListResponse getStudyClassList(Integer memberId) {
+    public StudyClassListResponse getStudyClassList(Pageable pageable, Integer memberId) {
         List<StudyClass> studyClassList = null;
 
         Member member = memberService.getMemberInfo(memberId, memberId);
 
         if(member.getRole().equals("TEACHER")) {
-            studyClassList = studyClassRepository.findByMemberId(memberId);
+            studyClassList = studyClassRepository.findByMemberId(pageable, memberId);
         }
 
         if(member.getRole().equals("STUDENT")) {
-            studyClassList = studyClassRepository.findByStudentId(memberId);
+            studyClassList = studyClassRepository.findByStudentId(pageable, memberId);
         }
 
         List<StudyClassResponse> studyClassResponseList = studyClassList.stream().map(studyClass -> {

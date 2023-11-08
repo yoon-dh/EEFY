@@ -6,11 +6,12 @@ import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface StudyClassService {
-    StudyClassListResponse getStudyClassList(Integer memberId);
+    StudyClassListResponse getStudyClassList(Pageable pageable, Integer memberId);
     void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest);
     void modifyStudyClass(StudyClassModifyRequest studyClassModifyRequest);
     List<SearchStudentResponse> searchStudentList(Integer teacherId, Integer classId);
