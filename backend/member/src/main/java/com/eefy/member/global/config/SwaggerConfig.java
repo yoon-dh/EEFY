@@ -35,6 +35,22 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public GroupedOpenApi alarmApi() {
+        return GroupedOpenApi.builder()
+                .group("alarm")
+                .pathsToMatch("/api/alarm/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi questionApi() {
+        return GroupedOpenApi.builder()
+                .group("question")
+                .pathsToMatch("/api/question/**")
+                .build();
+    }
+
+    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .components(new Components())
