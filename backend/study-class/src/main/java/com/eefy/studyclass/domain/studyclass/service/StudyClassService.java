@@ -15,7 +15,6 @@ public interface StudyClassService {
     void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest);
     void modifyStudyClass(StudyClassModifyRequest studyClassModifyRequest);
     List<SearchStudentResponse> searchStudentList(Integer teacherId, Integer classId);
-    List<SearchStudentResponse> searchStudentList(Integer teacherId);
     List<SearchStudentResponse> getSearchStudentList(Integer teacherId, List<Participate> participateList);
     void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest);
     void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest);
