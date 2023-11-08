@@ -88,21 +88,15 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public List<SearchStudentResponse> searchStudentList(Integer teacherId) {
-        studyClassValidator.existsByTeacherId(studyClassRepository, teacherId);
-
-        List<Participate> byMemberId = participateRepository.findByMemberId(teacherId);
-
-        return getSearchStudentList(teacherId, byMemberId);
-    }
-
-    @Override
     public List<SearchStudentResponse> getSearchStudentList(Integer teacherId, List<Participate> participateList) {
+
         List<SearchStudentResponse> result = participateList.stream().map(m -> {
             Member member = memberService.getMemberInfo(teacherId, m.getMemberId());
 
             return SearchStudentResponse.builder()
+                    .memberId(member.getMemberId())
                     .name(member.getName())
+                    .nickname(member.getNickname())
                     .email(member.getEmail())
                     .profileImagePath(member.getProfileImagePath())
                     .phoneNumber(member.getPhoneNumber()).build();

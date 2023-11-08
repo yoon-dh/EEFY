@@ -49,8 +49,7 @@ public class StudyClassController {
     public ResponseEntity<List<SearchStudentResponse>> searchStudentList(@RequestHeader("Member-Id") Integer teacherId,
                                                                          @RequestParam("classId") Integer classId) {
 
-        if (classId == null) return ResponseEntity.ok(studyClassService.searchStudentList(teacherId));
-        else return ResponseEntity.ok(studyClassService.searchStudentList(teacherId, classId));
+        return ResponseEntity.ok(studyClassService.searchStudentList(teacherId, classId));
     }
 
     @PostMapping("/tutor/member")
