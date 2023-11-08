@@ -1,6 +1,7 @@
 package com.eefy.member.domain.member.dto.response;
 
 import com.eefy.member.domain.member.persistence.entity.Member;
+import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class StudentResponse {
     private String nickname;
     private String phoneNumber;
     private String profileImagePath;
+    private MemberRole role;
 
     public StudentResponse(Member member) {
         memberId = member.getId();
@@ -22,5 +24,6 @@ public class StudentResponse {
         nickname = member.getNickname();
         phoneNumber = member.getPhoneNumber();
         profileImagePath = member.getProfileImagePath();
+        role = member.getRole();
     }
 }
