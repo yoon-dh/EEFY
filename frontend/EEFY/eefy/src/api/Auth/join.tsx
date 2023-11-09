@@ -3,7 +3,11 @@ import { publicApi } from "..";
 interface userData {
   email: string,
   password: string,
-  nickname: string,
+  checkedPassword: string,
+  phoneNumber: String,
+  role: string,
+  nickname: string | null,
+  name:string
 }
 interface email {
   email: string,
