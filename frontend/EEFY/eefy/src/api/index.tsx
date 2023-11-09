@@ -12,10 +12,11 @@ export const setLocalStorage = (key: string, value: string) => {
     localStorage.setItem(key, value);
   }
 };
-export const removeLocalStorage = (key: string) => {
+export const removeLocalStorage = () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('userData');
   }
 };
 
