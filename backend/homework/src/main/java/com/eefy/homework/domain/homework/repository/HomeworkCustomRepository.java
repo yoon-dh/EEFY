@@ -5,9 +5,12 @@ import static com.eefy.homework.domain.homework.persistence.entity.QClassHomewor
 import static com.eefy.homework.domain.homework.persistence.entity.QHomework.homework;
 import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkQuestion.homeworkQuestion;
 import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkStudent.homeworkStudent;
+import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkStudentQuestion.homeworkStudentQuestion;
 
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.QHomeworkStudentDto;
+import com.eefy.homework.domain.homework.dto.QQuestionCountDto;
+import com.eefy.homework.domain.homework.dto.QuestionCountDto;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -33,13 +36,49 @@ public class HomeworkCustomRepository {
                 .fetch();
     }
 
+    public List<QuestionCountDto> getHomeworkProblemCount(Integer classId, Integer memberId) {
+        return
+            jpaQueryFactory.select(
+                    new QQuestionCountDto(
+                        homeworkStudent.id,
+                        homeworkQuestion.count()
+                    ))
+                .from(homework)
+                .join(classHomework)
+                .on(classHomework.homework.eq(homework))
+                .join(homeworkStudent)
+                .on(homeworkStudent.classHomework.eq(classHomework))
+                .join(homeworkQuestion)
+                .on(homeworkQuestion.homework.eq(homework))
+                .where(classHomework.classId.eq(classId), homeworkStudent.memberId.eq(memberId))
+                .groupBy(homeworkStudent)
+                .fetch();
+    }
+
+    public List<QuestionCountDto> getSolvedHomeworkProblemCount(Integer classId, Integer memberId) {
+        return
+            jpaQueryFactory.select(
+                    new QQuestionCountDto(
+                        homeworkStudent.id,
+                        homeworkStudentQuestion.count()
+                    ))
+                .from(classHomework)
+                .join(homeworkStudent)
+                .on(homeworkStudent.classHomework.eq(classHomework))
+                .join(homeworkStudentQuestion)
+                .on(homeworkStudentQuestion.homeworkStudent.eq(homeworkStudent))
+                .where(classHomework.classId.eq(classId), homeworkStudent.memberId.eq(memberId))
+                .groupBy(homeworkStudent)
+                .fetch();
+    }
+
     public List<HomeworkStudentDto> viewHomeworkByStudentId(Integer classId, Integer memberId) {
+
         return jpaQueryFactory.select(new QHomeworkStudentDto(
                 homeworkStudent.id,
                 homeworkStudent.memberId,
                 homeworkStudent.classHomework.id,
-                homeworkStudent.doneDate,
-                homeworkStudent.progressRate
+                homeworkStudent.doneDate
             ))
             .from(homeworkStudent)
             .join(homeworkStudent.classHomework, classHomework)

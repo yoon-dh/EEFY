@@ -36,9 +36,6 @@ public class HomeworkStudent {
     @Column(nullable = true)
     private LocalDateTime doneDate;
 
-    @Column(nullable = false)
-    private Integer progressRate = 0;
-
     @OneToMany(mappedBy = "homeworkStudent")
     List<HomeworkStudentQuestion> homeworkStudentQuestions = new ArrayList<>();
 
@@ -51,14 +48,13 @@ public class HomeworkStudent {
         return null;
     }
 
-    public HomeworkStudent(Integer memberId, ClassHomework classHomework, Integer progressRate) {
+    public HomeworkStudent(Integer memberId, ClassHomework classHomework) {
         this.memberId = memberId;
         this.classHomework = classHomework;
-        this.progressRate = progressRate;
     }
 
     public static HomeworkStudent from(Integer memberId, ClassHomework classHomework) {
-        return new HomeworkStudent(memberId, classHomework, 0);
+        return new HomeworkStudent(memberId, classHomework);
     }
 
     public void updateDoneDate() {

@@ -3,7 +3,9 @@ package com.eefy.homework.domain.homework.service;
 import com.eefy.homework.domain.homework.AiServerRestClient;
 import com.eefy.homework.domain.homework.dto.ChoiceDto;
 import com.eefy.homework.domain.homework.dto.HomeworkQuestionDto;
+import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentQuestionDto;
+import com.eefy.homework.domain.homework.dto.QuestionCountDto;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
@@ -124,10 +126,41 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Override
     public ViewHomeworkResponse viewHomeworkByStudentId(ViewHomeworkRequest viewHomeworkRequest,
         Integer memberId) {
+        List<HomeworkStudentDto> homeworkStudentDtos = homeworkCustomRepository.viewHomeworkByStudentId(
+            viewHomeworkRequest.getClassId(), memberId);
+        List<QuestionCountDto> solvedHomeworkProblemCount = homeworkCustomRepository.getSolvedHomeworkProblemCount(
+            viewHomeworkRequest.getClassId(),
+            memberId);
+        List<QuestionCountDto> homeworkProblemCount = homeworkCustomRepository.getHomeworkProblemCount(
+            viewHomeworkRequest.getClassId(), memberId);
 
-        return new ViewHomeworkResponse(
-            homeworkCustomRepository.viewHomeworkByStudentId(
-                viewHomeworkRequest.getClassId(), memberId));
+        insertTotalCount(homeworkStudentDtos, homeworkProblemCount);
+        insertSolvedCount(homeworkStudentDtos, solvedHomeworkProblemCount);
+        return new ViewHomeworkResponse(homeworkStudentDtos);
+    }
+
+    private void insertTotalCount(List<HomeworkStudentDto> homeworkStudentDtos,
+        List<QuestionCountDto> homeworkProblemCount) {
+        for (HomeworkStudentDto homeworkStudentDto : homeworkStudentDtos) {
+            for (QuestionCountDto questionCountDto : homeworkProblemCount) {
+                if (questionCountDto.getHomeworkStudentId()
+                    .equals(homeworkStudentDto.getHomeworkStudentId())) {
+                    homeworkStudentDto.setTotalCount(questionCountDto.getCount());
+                }
+            }
+        }
+    }
+
+    private void insertSolvedCount(List<HomeworkStudentDto> homeworkStudentDtos,
+        List<QuestionCountDto> homeworkProblemCount) {
+        for (HomeworkStudentDto homeworkStudentDto : homeworkStudentDtos) {
+            for (QuestionCountDto questionCountDto : homeworkProblemCount) {
+                if (questionCountDto.getHomeworkStudentId()
+                    .equals(homeworkStudentDto.getHomeworkStudentId())) {
+                    homeworkStudentDto.setSolvedCount(questionCountDto.getCount());
+                }
+            }
+        }
     }
 
     @Override

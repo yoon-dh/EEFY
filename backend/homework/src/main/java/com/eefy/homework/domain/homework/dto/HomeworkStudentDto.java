@@ -11,15 +11,16 @@ public class HomeworkStudentDto {
     private Integer memberId;
     private Integer classHomeworkId;
     private LocalDateTime doneDate;
-    private Integer progressRate;
+
+    private Long solvedCount;
+    private Long totalCount;
 
     @QueryProjection
     public HomeworkStudentDto(Integer homeworkStudentId, Integer memberId, Integer classHomeworkId,
-        LocalDateTime doneDate, Integer progressRate) {
+        LocalDateTime doneDate) {
         this.homeworkStudentId = homeworkStudentId;
         this.memberId = memberId;
         this.classHomeworkId = classHomeworkId;
         this.doneDate = doneDate;
-        this.progressRate = progressRate;
     }
 }
