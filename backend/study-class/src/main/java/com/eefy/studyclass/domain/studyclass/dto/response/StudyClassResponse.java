@@ -11,6 +11,7 @@ public class StudyClassResponse {
     private Integer id;
     private Integer studentCnt;
     private String title;
+    private String content;
     private String teacher;
 
     public static StudyClassResponse of(StudyClass studyClass, String teacherName) {
@@ -18,6 +19,7 @@ public class StudyClassResponse {
                 .id(studyClass.getId())
                 .studentCnt(studyClass.getStudentCnt())
                 .title(studyClass.getTitle())
+                .content(studyClass.getContent())
                 .teacher(teacherName).build();
     }
 }
