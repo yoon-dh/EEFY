@@ -32,7 +32,6 @@ import com.eefy.homework.domain.homework.repository.HomeworkQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentRepository;
-import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -125,53 +124,12 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Transactional
     public GetProblemResponse getProblem(Integer classHomeworkId, Integer memberId) {
         List<HomeworkQuestion> problem = homeworkCustomRepository.getProblem(classHomeworkId);
-        log.info("할당된 아이디");
+        HomeworkStudent homeworkStudent = validateHomeworkStudent(classHomeworkId, memberId);
 
-        log.info(problem.toString());
-
-        List<HomeworkQuestionResponse> homeworkQuestionResponses = new ArrayList<>();
-
-        for (HomeworkQuestion homeworkQuestion : problem) {
-            List<ChoiceDto> choiceDtos = homeworkQuestion.getChoices().stream()
-                .map(this::mapChoiceToDto)
-                .collect(Collectors.toList());
-
-            HomeworkQuestionDto homeworkQuestionDto = mapHomeworkQuestionToDto(homeworkQuestion);
-
-            homeworkQuestionResponses.add(
-                HomeworkQuestionResponse.of(homeworkQuestionDto, choiceDtos));
-        }
-
-        HomeworkStudent homeworkStudent = homeworkStudentRepository.findByClassHomeworkIdAndMemberId(
-                classHomeworkId, memberId)
-            .orElseThrow(
-                () -> new RuntimeException("홈워크 스튜던트 없음")
-            );
-
-        List<HomeworkStudentQuestionDto> homeworkStudentQuestionDtos = new ArrayList<>();
-
-        for (HomeworkQuestion homeworkQuestionResponse : problem) {
-            HomeworkStudentQuestion questionSolved = homeworkStudent.isQuestionSolved(
-                homeworkQuestionResponse.getId());
-
-            if (questionSolved == null) {
-                homeworkStudentQuestionDtos.add(null);
-            } else {
-                HomeworkStudentQuestionDto map = modelMapper.map(questionSolved,
-                    HomeworkStudentQuestionDto.class);
-
-                homeworkStudentQuestionDtos.add(map);
-            }
-        }
+        List<HomeworkQuestionResponse> homeworkQuestionResponses = getHomeworkQuestionWithChoice(problem);
+        List<HomeworkStudentQuestionDto> homeworkStudentQuestionDtos = getHomeworkStudentQuestionDtos(
+            problem, homeworkStudent);
         return new GetProblemResponse(homeworkQuestionResponses, homeworkStudentQuestionDtos);
-    }
-
-    private HomeworkQuestionDto mapHomeworkQuestionToDto(HomeworkQuestion homeworkQuestion) {
-        return modelMapper.map(homeworkQuestion, HomeworkQuestionDto.class);
-    }
-
-    private ChoiceDto mapChoiceToDto(Choice choice) {
-        return modelMapper.map(choice, ChoiceDto.class);
     }
 
     @Override
@@ -283,4 +241,52 @@ public class HomeworkServiceImpl implements HomeworkService {
         return homeworkRepository.findById(homeworkId)
             .orElseThrow(() -> new HomeworkNotFoundException(homeworkId));
     }
+
+
+    private List<HomeworkStudentQuestionDto> getHomeworkStudentQuestionDtos(
+        List<HomeworkQuestion> problem, HomeworkStudent homeworkStudent) {
+        List<HomeworkStudentQuestionDto> homeworkStudentQuestionDtos = new ArrayList<>();
+        for (HomeworkQuestion homeworkQuestionResponse : problem) {
+            HomeworkStudentQuestion questionSolved = homeworkStudent.isQuestionSolved(
+                homeworkQuestionResponse.getId());
+
+            if (questionSolved == null) {
+                homeworkStudentQuestionDtos.add(null);
+            } else {
+                HomeworkStudentQuestionDto map = modelMapper.map(questionSolved,
+                    HomeworkStudentQuestionDto.class);
+
+                homeworkStudentQuestionDtos.add(map);
+            }
+        }
+        return homeworkStudentQuestionDtos;
+    }
+
+    private List<HomeworkQuestionResponse> getHomeworkQuestionWithChoice(
+        List<HomeworkQuestion> problem) {
+        List<HomeworkQuestionResponse> homeworkQuestionResponses = new ArrayList<>();
+        for (HomeworkQuestion homeworkQuestion : problem) {
+            List<ChoiceDto> choiceDtos = homeworkQuestion.getChoices().stream()
+                .map(this::mapChoiceToDto)
+                .collect(Collectors.toList());
+
+            homeworkQuestionResponses.add(
+                HomeworkQuestionResponse.of(mapHomeworkQuestionToDto(homeworkQuestion), choiceDtos));
+        }
+        return homeworkQuestionResponses;
+    }
+
+    private HomeworkStudent validateHomeworkStudent(Integer classHomeworkId, Integer memberId) {
+        return homeworkStudentRepository.findByClassHomeworkIdAndMemberId(classHomeworkId, memberId)
+            .orElseThrow(() -> new RuntimeException("홈워크 스튜던트 없음"));
+    }
+
+    private HomeworkQuestionDto mapHomeworkQuestionToDto(HomeworkQuestion homeworkQuestion) {
+        return modelMapper.map(homeworkQuestion, HomeworkQuestionDto.class);
+    }
+
+    private ChoiceDto mapChoiceToDto(Choice choice) {
+        return modelMapper.map(choice, ChoiceDto.class);
+    }
+
 }
