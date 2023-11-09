@@ -39,7 +39,10 @@ public class AuthFilter {
                 if (!canPass(member, jwtToken, path)) {
                     return handleUnAuthorized(exchange);
                 }
-                request.mutate().header("Member-Id", String.valueOf(memberId)).build();
+                request.mutate()
+                        .header("Member-Id", String.valueOf(memberId))
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .build();
                 log.info("인증 완료. path: {}, method: {}", path, method);
             }
             else log.info("인증 미필요 작업.");
@@ -76,7 +79,7 @@ public class AuthFilter {
 
     private boolean isWhitePath(String path, String method) {
         if (path.contains("/api/auth")) {
-            if (path.equals("/api/auth/refresh") && method.equals("PUT")) return true;
+            if (path.equals("/api/auth/refresh") && method.equals("PUT")) return false;
             return !path.equals("/api/auth") || (!method.equals("DELETE") && !method.equals("PUT"));
         }
         if (path.contains("/api/member")) {
