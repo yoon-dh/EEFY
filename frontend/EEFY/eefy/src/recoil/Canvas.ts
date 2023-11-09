@@ -15,7 +15,6 @@ export const CanvasData = atom({
   default: {},
   effects_UNSTABLE: [persistAtom],
 });
-
 export const CanvasVarData = atom({
   key: 'CanvasVarData',
   default: {

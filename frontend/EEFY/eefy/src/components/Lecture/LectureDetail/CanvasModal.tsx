@@ -40,24 +40,8 @@ function CanvasModal() {
     } else if (ocr.pdfFile){
       console.log(ocr,'ocr.pdfFile')
       getPdfUrl();
-      if(page.numPages>=1){
-        let temp: Record<number, string> = {};
-        for (let i = 1; i <= page.numPages; i++) {
-          temp[i] = ''
-        }
-        setData(temp)
-      }
     }
   }, []);
-
-  useEffect(()=>{
-    console.log(page.numPages,'numPages temp')
-    let temp: Record<number, string> = {};
-    for (let i = 1; i <= page.numPages; i++) {
-      temp[i] = ''
-    }
-    setData(temp)
-  },[page.numPages])
 
   const handleStroke = () => {
     console.log(canvasRef.current);
@@ -101,60 +85,77 @@ function CanvasModal() {
     }
   },[varData.redo])
 
+  useEffect(()=>{
+    getPdfUrl()
+    if(page.btnType === 'before'){
+      handleSketchData(page.pageNumber+1)
+      const clearCanvas = canvasRef.current?.clearCanvas;
+      if(clearCanvas){
+        clearCanvas()
+      }
+      if (canvasRef.current) {
+        if(data[page.pageNumber]){
+          // setTimeout(function(){
+            const jsonData = JSON.parse(data[page.pageNumber]);
+            console.log(jsonData)
+            canvasRef.current?.loadPaths(jsonData);
+          // },500)
+        }
+      }
+    } else if (page.btnType === 'next'){
+      handleSketchData(page.pageNumber-1)
+      const clearCanvas = canvasRef.current?.clearCanvas;
+      if(clearCanvas){
+        clearCanvas()
+      }
+      if (canvasRef.current) {
+        console.log(data[page.pageNumber], page.pageNumber)
+        if(data[page.pageNumber]){
+          // setTimeout(function(){
+            const jsonData = JSON.parse(data[page.pageNumber]);
+            console.log(jsonData)
+            canvasRef.current?.loadPaths(jsonData);
+          // },500)
+        }
+      }
+    }
+  },[page.pageNumber])
 
-  // const handleSketchData = async () => {
-  //   if (canvasRef.current) {
-  //     const sketchData = await canvasRef.current.exportPaths();
-  //     const sketchDataJSON = JSON.parse(JSON.stringify(sketchData));
-  //     // console.log(sketchDataJSON)
-  //     const newdata = {
-  //       ...data,
-  //       [pageNumber]: sketchDataJSON,
-  //     };
-  //     // setData([...data,sketchDataJSON])
-  //     setData(newdata);
-  //   }
-  // };
-
-  const handleLoad = () => {
+  const handleSketchData = async (pageNumber:number) => {
     if (canvasRef.current) {
-      const jsonData = JSON.parse(data);
-      canvasRef.current.loadPaths(jsonData);
+      console.log(pageNumber,'데이터 저장하기')
+      const sketchData = await canvasRef.current.exportPaths();
+      console.log(sketchData, 'sketchData')
+      if(sketchData.length > 0){
+        const sketchDataJSON = JSON.stringify(sketchData);
+          const newdata = {
+            ...data, [pageNumber]:sketchDataJSON
+          }
+          setData(newdata);
+      }
+      // const newdata = {
+      //   ...data,
+      //   [pageNumber]:{
+      //     ...data[pageNumber],
+      //     canvasData : sketchDataJSON,
+      //   } 
+      // };
     }
   };
 
   const [pageImage, setPageImage] = useState<string>('');
-
-  useEffect(() => {
-    getPdfUrl();
-    const img = new Image();
-    img.src = pageImage;
-    img.onload = function () {
-      const imageHeight = img.naturalHeight;
-      setImageHeight(imageHeight);
-      const imgWidth = img.naturalWidth;
-      setImgWidth(imgWidth);
-      console.log(imageHeight, 'imageHeight', imgWidth, 'imgWidth');
-    };
-  }, [page.pageNumber]);
+  // const [pdfPagesNumber, setPdfPagesNumber] = useState<Number>(1);
+  // const [pdfNumPages, setPdfNumPages] = useState<Number>(0);
 
   const getPdfUrl = () => {
-    console.log(ocr, 'getPdfUrl');
     if (ocr.pdfFile) {
       pdfjs.getDocument(ocr.pdfFile).promise.then(pdfToImage);
-      console.log(page.pageNumber, '처음 열기');
-      if (data[page.pageNumber]) {
-        if (canvasRef.current) {
-          const jsonData = JSON.parse(data[page.pageNumber]);
-          console.log(jsonData, '처음 열기');
-          canvasRef.current.loadPaths(jsonData);
-        }
-      }
     }
   };
 
   // 캔버스를 이미지 URL로 변경
   const pdfToImage = async (pdf: any) => {
+    console.log(page.pageNumber, 'page.getPdfUrl')
     const canvas = document.createElement('canvas');
     const pages = await pdf.getPage(page.pageNumber);
     const viewport = pages.getViewport({ scale: 3 });
@@ -171,7 +172,9 @@ function CanvasModal() {
   };
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    console.log(numPages)
     setPage({...page,numPages:numPages})
+    // setPdfNumPages(numPages)
   }
 
   return (

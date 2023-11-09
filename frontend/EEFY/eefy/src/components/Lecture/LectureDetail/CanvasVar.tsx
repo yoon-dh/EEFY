@@ -95,13 +95,13 @@ function CanvasVar() {
 
   const handleBeforePage = () => {
     if (page.pageNumber > 1) {
-      setPage({ ...page, pageNumber: page.pageNumber - 1 });
+      setPage({ ...page, pageNumber: page.pageNumber - 1, btnType:'before' });
     }
   };
 
   const handleNextPage = () => {
     if (page.pageNumber < page.numPages) {
-      setPage({ ...page, pageNumber: page.pageNumber + 1 });
+      setPage({ ...page, pageNumber: page.pageNumber + 1, btnType:'next' });
     }
   };
 
