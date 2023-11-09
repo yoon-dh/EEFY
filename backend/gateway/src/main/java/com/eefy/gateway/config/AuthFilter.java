@@ -76,6 +76,7 @@ public class AuthFilter {
 
     private boolean isWhitePath(String path, String method) {
         if (path.contains("/api/auth")) {
+            if (path.equals("/api/auth/refresh") && method.equals("PUT")) return true;
             return !path.equals("/api/auth") || (!method.equals("DELETE") && !method.equals("PUT"));
         }
         if (path.contains("/api/member")) {
