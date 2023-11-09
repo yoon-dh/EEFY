@@ -78,9 +78,10 @@ public class HomeworkController {
 
     @GetMapping("/getProblem/{classHomeworkId}")
     public ResponseEntity<GetProblemResponse> getProblems(
-        @PathVariable Integer classHomeworkId
+        @PathVariable Integer classHomeworkId,
+        @RequestHeader("Member-Id") Integer memberId
     ) {
-        return new ResponseEntity<>(homeworkService.getProblem(classHomeworkId), HttpStatus.OK);
+        return new ResponseEntity<>(homeworkService.getProblem(classHomeworkId,memberId), HttpStatus.OK);
     }
 
     // 과제 문제를 제출하는 로직

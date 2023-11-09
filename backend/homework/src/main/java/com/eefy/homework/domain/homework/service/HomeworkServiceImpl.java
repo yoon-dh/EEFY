@@ -1,6 +1,9 @@
 package com.eefy.homework.domain.homework.service;
 
 import com.eefy.homework.domain.homework.AiServerRestClient;
+import com.eefy.homework.domain.homework.dto.ChoiceDto;
+import com.eefy.homework.domain.homework.dto.HomeworkQuestionDto;
+import com.eefy.homework.domain.homework.dto.HomeworkStudentQuestionDto;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
@@ -8,6 +11,7 @@ import com.eefy.homework.domain.homework.dto.request.SolveProblemRequest;
 import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
+import com.eefy.homework.domain.homework.dto.response.HomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
@@ -28,9 +32,13 @@ import com.eefy.homework.domain.homework.repository.HomeworkQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentRepository;
+import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +46,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class HomeworkServiceImpl implements HomeworkService {
+
+    private final ModelMapper modelMapper;
 
     private final HomeworkRepository homeworkRepository;
     private final HomeworkQuestionRepository homeworkQuestionRepository;
@@ -112,8 +122,56 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
-    public GetProblemResponse getProblem(Integer classHomeworkId) {
-        return new GetProblemResponse(homeworkCustomRepository.getProblem(classHomeworkId));
+    @Transactional
+    public GetProblemResponse getProblem(Integer classHomeworkId, Integer memberId) {
+        List<HomeworkQuestion> problem = homeworkCustomRepository.getProblem(classHomeworkId);
+        log.info("할당된 아이디");
+
+        log.info(problem.toString());
+
+        List<HomeworkQuestionResponse> homeworkQuestionResponses = new ArrayList<>();
+
+        for (HomeworkQuestion homeworkQuestion : problem) {
+            List<ChoiceDto> choiceDtos = homeworkQuestion.getChoices().stream()
+                .map(this::mapChoiceToDto)
+                .collect(Collectors.toList());
+
+            HomeworkQuestionDto homeworkQuestionDto = mapHomeworkQuestionToDto(homeworkQuestion);
+
+            homeworkQuestionResponses.add(
+                HomeworkQuestionResponse.of(homeworkQuestionDto, choiceDtos));
+        }
+
+        HomeworkStudent homeworkStudent = homeworkStudentRepository.findByClassHomeworkIdAndMemberId(
+                classHomeworkId, memberId)
+            .orElseThrow(
+                () -> new RuntimeException("홈워크 스튜던트 없음")
+            );
+
+        List<HomeworkStudentQuestionDto> homeworkStudentQuestionDtos = new ArrayList<>();
+
+        for (HomeworkQuestion homeworkQuestionResponse : problem) {
+            HomeworkStudentQuestion questionSolved = homeworkStudent.isQuestionSolved(
+                homeworkQuestionResponse.getId());
+
+            if (questionSolved == null) {
+                homeworkStudentQuestionDtos.add(null);
+            } else {
+                HomeworkStudentQuestionDto map = modelMapper.map(questionSolved,
+                    HomeworkStudentQuestionDto.class);
+
+                homeworkStudentQuestionDtos.add(map);
+            }
+        }
+        return new GetProblemResponse(homeworkQuestionResponses, homeworkStudentQuestionDtos);
+    }
+
+    private HomeworkQuestionDto mapHomeworkQuestionToDto(HomeworkQuestion homeworkQuestion) {
+        return modelMapper.map(homeworkQuestion, HomeworkQuestionDto.class);
+    }
+
+    private ChoiceDto mapChoiceToDto(Choice choice) {
+        return modelMapper.map(choice, ChoiceDto.class);
     }
 
     @Override
@@ -212,6 +270,10 @@ public class HomeworkServiceImpl implements HomeworkService {
     private void saveChoice(MakeHomeworkQuestionRequest makeHomeworkQuestionRequest,
         HomeworkQuestion homeworkQuestion) {
         // todo: batch를 사용한 쿼리 최적화 필요
+        if (makeHomeworkQuestionRequest.getChoiceRequests() == null) {
+            return;
+        }
+
         makeHomeworkQuestionRequest.getChoiceRequests()
             .forEach((v) ->
                 choiceRepository.save(Choice.of(homeworkQuestion, v.getContent(), v.getNumber())));

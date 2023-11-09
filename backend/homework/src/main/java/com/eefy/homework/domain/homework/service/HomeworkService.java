@@ -26,7 +26,7 @@ public interface HomeworkService {
     ViewHomeworkResponse viewHomeworkByStudentId(ViewHomeworkRequest viewHomeworkRequest,
         Integer memberId);
 
-    GetProblemResponse getProblem(Integer classHomeworkId);
+    GetProblemResponse getProblem(Integer classHomeworkId, Integer memberId);
 
     SolveProblemResponse solveProblem(SolveProblemRequest solveProblemRequest, Integer memberId);
 

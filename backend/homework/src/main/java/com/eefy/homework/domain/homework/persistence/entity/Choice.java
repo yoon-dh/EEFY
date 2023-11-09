@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,6 +36,15 @@ public class Choice {
 
     @Column(nullable = false, length = 10)
     private String number;
+
+    @Override
+    public String toString() {
+        return "Choice{" +
+            "id=" + id +
+            ", content='" + content + '\'' +
+            ", number='" + number + '\'' +
+            '}';
+    }
 
     public static Choice of(HomeworkQuestion homeworkQuestion, String content, String number) {
         return Choice.builder()

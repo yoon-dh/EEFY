@@ -1,6 +1,8 @@
 package com.eefy.homework.domain.homework.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,6 +39,18 @@ public class HomeworkStudent {
     @Column(nullable = false)
     private Integer progressRate = 0;
 
+    @OneToMany(mappedBy = "homeworkStudent")
+    List<HomeworkStudentQuestion> homeworkStudentQuestions = new ArrayList<>();
+
+    public HomeworkStudentQuestion isQuestionSolved(Integer questionId) {
+        for (HomeworkStudentQuestion homeworkStudentQuestion : homeworkStudentQuestions) {
+            if (homeworkStudentQuestion.getHomeworkQuestion().getId().equals(questionId)) {
+                return homeworkStudentQuestion;
+            }
+        }
+        return null;
+    }
+
     public HomeworkStudent(Integer memberId, ClassHomework classHomework, Integer progressRate) {
         this.memberId = memberId;
         this.classHomework = classHomework;
@@ -46,7 +61,7 @@ public class HomeworkStudent {
         return new HomeworkStudent(memberId, classHomework, 0);
     }
 
-    public void updateDoneDate(){
+    public void updateDoneDate() {
         this.doneDate = LocalDateTime.now();
     }
 }
