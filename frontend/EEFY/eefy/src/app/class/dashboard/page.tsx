@@ -6,15 +6,21 @@ import RightBoard from '@/components/Class/Dashboard/RightBoard';
 
 // Teacher
 import StudentTable from '@/components/Class/Dashboard/StudentTable';
+import StudentInvite from '@/components/Class/Dashboard/StudentInvite';
 
 // Recoil
-import { useRecoilValue } from 'recoil';
-import { UserType } from '@/recoil/UserInfo';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userData } from '@/recoil/Auth';
+import { isSearchState } from '@/recoil/TeacherClass';
 
 function Dashboard() {
-  const userType = useRecoilValue(UserType);
+  const userDataObj = useRecoilValue(userData);
+  const userRole = userDataObj?.role;
+
+  const [SearchState, setSearchState] = useRecoilState(isSearchState);
+
   let gridTemplateAreas =
-    userType == 1
+    userRole === 'TEACHER'
       ? "'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-bottom right-bottom' 'left-top left-top left-top right-bottom right-bottom' 'left-top left-top left-top right-bottom right-bottom' 'left-top left-top left-top right-bottom right-bottom' 'left-top left-top left-top right-bottom right-bottom'"
       : "'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-top right-top' 'left-top left-top left-top right-bottom right-bottom' 'left-bottom left-bottom left-bottom right-bottom right-bottom' 'left-bottom left-bottom left-bottom right-bottom right-bottom' 'left-bottom left-bottom left-bottom right-bottom right-bottom' 'left-bottom left-bottom left-bottom right-bottom right-bottom'";
 
@@ -29,11 +35,9 @@ function Dashboard() {
   return (
     <div className='flex w-full h-full rounded-lg'>
       <div className='w-full h-full' style={mainStyle}>
-        {userType == 1 ? (
+        {userRole === 'TEACHER' ? (
           <>
-            <div style={{ gridArea: 'left-top' }}>
-              <StudentTable />
-            </div>
+            <div style={{ gridArea: 'left-top' }}>{!SearchState ? <StudentTable /> : <StudentInvite />}</div>
           </>
         ) : (
           <>

@@ -12,8 +12,3 @@ export const UserInfo = atom<UserInfoTypes>({
     name: '',
   },
 });
-
-export const UserType = atom<number>({
-  key: 'UserType',
-  default: 2, // 1이면 선생, 2면 학생 (임시)
-});

@@ -1,56 +1,63 @@
+'use client';
+
 import Image from 'next/image';
+import StudentTableItem from './StudentTableItem';
+import { useRecoilState } from 'recoil';
+import { isSearchState } from '@/recoil/TeacherClass';
 
 function StudentTable() {
+  const [searchState, setSearchState] = useRecoilState(isSearchState);
+
   // 학생 프로필, 이름,  과제, 질의응답
   // 상세 : 이메일, 과제, 시험, 최근 접속 이력
   const dummyData = [
     {
       profile: '/logo.png',
+      name: '윤동훈',
+      email: 'acttoze1@gmail.com',
+      phone: '010-7748-8173',
+    },
+    {
+      profile: '/logo.png',
       name: 'Hart Hagerty',
-      statistics: '27/28',
-      questions: 0,
+      email: 'acttoze1@gmail.com',
+      phone: '010-7748-8173',
     },
     {
       profile: '/logo.png',
-      name: 'Brice Swyre',
-      statistics: '27/28',
-      questions: 0,
+      name: 'Hart Hagerty',
+      email: 'acttoze1@gmail.com',
+      phone: '010-7748-8173',
     },
     {
       profile: '/logo.png',
-      name: 'Marjy Ferencz',
-      statistics: '27/28',
-      questions: 0,
+      name: 'Hart Hagerty',
+      email: 'acttoze1@gmail.com',
+      phone: '010-7748-8173',
     },
     {
       profile: '/logo.png',
-      name: 'Yancy Tear',
-      statistics: '27/28',
-      questions: 0,
+      name: 'Hart Hagerty',
+      email: 'acttoze1@gmail.com',
+      phone: '010-7748-8173',
     },
     {
       profile: '/logo.png',
-      name: 'Yancy Tear',
-      statistics: '27/28',
-      questions: 0,
+      name: 'Hart Hagerty',
+      email: 'acttoze1@gmail.com',
+      phone: '010-7748-8173',
     },
     {
       profile: '/logo.png',
-      name: 'Yancy Tear',
-      statistics: '27/28',
-      questions: 0,
+      name: 'Hart Hagerty',
+      email: 'acttoze1@gmail.com',
+      phone: '010-7748-8173',
     },
     {
       profile: '/logo.png',
-      name: 'Yancy Tear',
-      statistics: '27/28',
-      questions: 0,
-    },
-    {
-      profile: '/logo.png',
-      name: 'Yancy Tear',
-      statistics: '27/28',
-      questions: 0,
+      name: 'Hart Hagerty',
+      email: 'acttoze1@gmail.com',
+      phone: '010-7748-8173',
     },
   ];
   // <img style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} />;
@@ -66,43 +73,20 @@ function StudentTable() {
                 <input type='checkbox' className='checkbox' />
               </label>
             </th>
-            <th>이름</th>
-            <th>학습 이력 현황</th>
-            <th>질의 응답</th>
+            <th>Name</th>
+            <th>E-mail</th>
+            <th>Phone</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
+          <tr onClick={() => setSearchState(true)} className='bg-stone-100 '>
+            <td colSpan={5} className='text-xl rounded-xl' style={{ textAlign: 'center' }}>
+              + 초대하기
+            </td>
+          </tr>
           {dummyData.map((item, idx) => (
-            <tr key={idx}>
-              <th>
-                <label>
-                  <input type='checkbox' className='checkbox' />
-                </label>
-              </th>
-              <td>
-                <div className='flex items-center space-x-3'>
-                  <div className='avatar'>
-                    <div className='mask mask-squircle w-12 h-12 bg-primary'>
-                      <Image src={item.profile} alt='Avatar Tailwind CSS Component' width={250} height={250} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className='font-bold'>{item.name}</div>
-                    <div className='text-sm opacity-50'>3rd</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Zemlak, Daniel and Leannon
-                <br />
-                <span className='badge badge-ghost badge-sm'>Desktop Support Technician</span>
-              </td>
-              <td>Purple</td>
-              <th>
-                <button className='btn btn-ghost btn-xs'>details</button>
-              </th>
-            </tr>
+            <StudentTableItem key={idx} profile={item.profile} name={item.name} email={item.email} phone={item.phone} />
           ))}
         </tbody>
       </table>
