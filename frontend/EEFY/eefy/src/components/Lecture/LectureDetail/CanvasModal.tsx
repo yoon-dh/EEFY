@@ -1,270 +1,247 @@
-import React,{useState, useEffect, createRef} from "react"
-import Cropper, { ReactCropperElement } from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
+import React, { useState, useEffect, createRef } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-import {
-  Container,
-  Wrappe,
-  Box,
-  ImgBox,
-  BtnBox,
-  PdfBtn
-} from './CanvasModal.style'
-import { useRecoilState } from "recoil";
-import { OcrFileCheck } from "@/recoil/Homework";
-import './Canvas.css'
+import { Container, Wrappe, Box, ImgBox, BtnBox, PdfBtn, CanvasVarBox } from './CanvasModal.style';
+import { useRecoilState } from 'recoil';
+import { OcrFileCheck } from '@/recoil/Homework';
+import { CanvasData, CanvasVarData, PdfPage } from '@/recoil/Canvas';
+import './Canvas.css';
 import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
-import { CanvasData } from "@/recoil/Canvas";
 
-interface Coordinate {
-  x: number | null;
-  y: number | null;
-}
-
+import CanvasVar from './CanvasVar';
 const styles = {
-  border: "0.0625rem solid #9c9c9c",
-  borderRadius: "0.25rem",
-  margin:'0px auto 0px auto',
+  borderRadius: '0.25rem',
+  margin: '0px auto',
 };
 
-function CanvasModal(){
-  const [data, setData] = useRecoilState(CanvasData)
+function CanvasModal() {
   const canvasRef = createRef<ReactSketchCanvasRef>();
-  const [ocr, setOcr] = useRecoilState(OcrFileCheck)
-  const [isPdf, setIsPdf] = useState<boolean>(false);
 
-  const [lines, setLines] = useState([]);
+  const [data, setData] = useRecoilState(CanvasData);
+  const [varData, setVarData] = useRecoilState(CanvasVarData);
+  const [ocr, setOcr] = useRecoilState(OcrFileCheck);
+  const [page, setPage] = useRecoilState(PdfPage)
+
   const [imgWidth, setImgWidth] = useState<number>(0);
   const [imageHeight, setImageHeight] = useState<number>(0);
-  const [mode, setMode] = useState<boolean>(false)
 
-  const [mousePoint, setMousePoint] = React.useState<Coordinate>({
-    x: null,
-    y: null
-  });
+  useEffect(() => {
+    if (ocr.imgUrl) {
+      const img = new Image();
+      img.src = ocr.imgUrl;
+      img.onload = function () {
+        const imageHeight = img.naturalHeight;
+        setImageHeight(imageHeight);
+        const imgWidth = img.naturalWidth;
+        setImgWidth(imgWidth);
+      };
+    } else if (ocr.pdfFile){
+      console.log(ocr,'ocr.pdfFile')
+      getPdfUrl();
+      if(page.numPages>=1){
+        let temp: Record<number, string> = {};
+        for (let i = 1; i <= page.numPages; i++) {
+          temp[i] = ''
+        }
+        setData(temp)
+      }
+    }
+  }, []);
 
   useEffect(()=>{
-    console.log(data, 'data')
-    console.log(ocr)
-    if (ocr.imgUrl){
-      const img = new Image();
-      img.src = ocr.imgUrl
-      img.onload = function () {
-        const imageHeight = img.naturalHeight; 
-        setImageHeight(imageHeight)
-        const imgWidth = img.naturalWidth; 
-        setImgWidth(imgWidth)
-      };
+    console.log(page.numPages,'numPages temp')
+    let temp: Record<number, string> = {};
+    for (let i = 1; i <= page.numPages; i++) {
+      temp[i] = ''
     }
-  },[])
+    setData(temp)
+  },[page.numPages])
 
   const handleStroke = () => {
-    console.log(canvasRef)
-    // const savedPaths = loadSavedPaths(); // 저장된 스케치 데이터를 얻습니다.
-    // const sketchData = canvasRef.current.loadPaths(savedPaths);
-    // console.log(sketchData)
-    //   savedPaths.then(result => {
-    //     console.log("Promise 결과:", result);
-    //   }).catch(error => {
-    //     console.error("오류 발생:", error);
-    //   });
-
+    console.log(canvasRef.current);
     if (canvasRef.current) {
-      const sketchData = canvasRef.current.exportPaths();
-        sketchData.then(result => {
-          console.log("Promise 결과:", result);
-        }).catch(error => {
-          console.error("오류 발생:", error);
-        });
-      }
-    };
-    
-    const exportCanvasEraseMode = () => {
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
-        const eraseMode = canvas.eraseMode(mode);
-        setMode(!mode)
-  
-        // 필기 후 이미지로 다운로드
-        // const canvasImage = canvas.exportImage();
-        // canvasImage.then(result => {
-        //   // a 태그를 생성하여 이미지 다운로드 링크로 사용
-        //   const a = document.createElement('a');
-        //   a.href = result;
-        //   a.download = 'canvas-image.png'; // 이미지 파일 이름 지정
-        //   a.click();
-        //   })
-      }
-  }
-
-  const handleUndo = () => {
-    if (canvasRef.current) {
-      canvasRef.current.undo();
-
       const sketchData = canvasRef.current.exportPaths();
       sketchData.then(result => {
-        console.log("handleUndo 결과:", result);
-      }).catch(error => {
-        console.error("handleUndo 오류 발생:", error);
+        console.log('handleUndo 결과:', result);
       });
     }
-  }
+  };
 
-  const handleRedo = () => {
+  useEffect(() => {
+    if (canvasRef.current) {
+      const canvas = canvasRef.current;
+      const eraseMode = canvas.eraseMode(varData.mode);
+    }
+  }, [varData.mode]);
+
+  // 페이지 데이터 지우기
+  useEffect(()=>{
+    if(varData.clear){
+      const clearCanvas = canvasRef.current?.clearCanvas;
+      if (clearCanvas) {
+        clearCanvas();
+        setVarData({...varData,clear:false})
+      }
+    }
+  },[varData.clear])
+
+  useEffect(()=>{
+    if (canvasRef.current) {
+      canvasRef.current.undo();
+      setVarData({ ...varData, undo: false});
+    }
+  },[varData.undo])
+
+  useEffect(()=>{
     if (canvasRef.current) {
       canvasRef.current.redo();
+      setVarData({ ...varData, redo: false});
     }
-  }
+  },[varData.redo])
 
-  const handleExportSvg = () => {
-    if (canvasRef.current) {
-      const svgString = canvasRef.current.exportSvg();
-      svgString.then(res=>{
-        console.log(res)
-      })
-    }
-  }
 
-  const handleSketchData = async()=>{
-    if (canvasRef.current) {
-      const sketchData = await canvasRef.current.exportPaths();
-      const sketchDataJSON = JSON.stringify(sketchData);
-      console.log(sketchDataJSON)
-      setData(sketchDataJSON)
-    }
-  }
+  // const handleSketchData = async () => {
+  //   if (canvasRef.current) {
+  //     const sketchData = await canvasRef.current.exportPaths();
+  //     const sketchDataJSON = JSON.parse(JSON.stringify(sketchData));
+  //     // console.log(sketchDataJSON)
+  //     const newdata = {
+  //       ...data,
+  //       [pageNumber]: sketchDataJSON,
+  //     };
+  //     // setData([...data,sketchDataJSON])
+  //     setData(newdata);
+  //   }
+  // };
 
-  const startSketch = () => {
-    if (canvasRef.current) {
-      canvasRef.current.eraseMode(false); // 지우개 모드를 해제
-      // 다른 스케치 초기화 또는 설정 작업
-      const sketchingTime = canvasRef.current.getSketchingTime(); // 스케치 시작 시간 측정
-      sketchingTime.then((res)=>console.log('스케치 시작 시간 측정', res))
-    }
-  }
-
-  const stopSketch = () => {
-    if (canvasRef.current) {
-      // 스케치 중지 작업
-      const sketchingTime = canvasRef.current.getSketchingTime(); // 스케치 중지 시간 측정
-      sketchingTime.then((res)=>console.log('스케치 중지 시간 측정', res))
-    }
-  }
-
-  const handleLoad = ()=>{
+  const handleLoad = () => {
     if (canvasRef.current) {
       const jsonData = JSON.parse(data);
       canvasRef.current.loadPaths(jsonData);
     }
+  };
+
+  const [pageImage, setPageImage] = useState<string>('');
+
+  useEffect(() => {
+    getPdfUrl();
+    const img = new Image();
+    img.src = pageImage;
+    img.onload = function () {
+      const imageHeight = img.naturalHeight;
+      setImageHeight(imageHeight);
+      const imgWidth = img.naturalWidth;
+      setImgWidth(imgWidth);
+      console.log(imageHeight, 'imageHeight', imgWidth, 'imgWidth');
+    };
+  }, [page.pageNumber]);
+
+  const getPdfUrl = () => {
+    console.log(ocr, 'getPdfUrl');
+    if (ocr.pdfFile) {
+      pdfjs.getDocument(ocr.pdfFile).promise.then(pdfToImage);
+      console.log(page.pageNumber, '처음 열기');
+      if (data[page.pageNumber]) {
+        if (canvasRef.current) {
+          const jsonData = JSON.parse(data[page.pageNumber]);
+          console.log(jsonData, '처음 열기');
+          canvasRef.current.loadPaths(jsonData);
+        }
+      }
+    }
+  };
+
+  // 캔버스를 이미지 URL로 변경
+  const pdfToImage = async (pdf: any) => {
+    const canvas = document.createElement('canvas');
+    const pages = await pdf.getPage(page.pageNumber);
+    const viewport = pages.getViewport({ scale: 3 });
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport,
+    };
+    await pages.render(renderContext).promise;
+    const imageData = canvas.toDataURL('image/jpeg');
+    setPageImage(imageData);
+  };
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setPage({...page,numPages:numPages})
   }
 
-//=====================
-const onChange = (updatedPaths: CanvasPath[]): void => {
-  console.log(updatedPaths,'updatedPaths')
-};
-
-  return(
+  return (
     <>
       <Container>
-        <Wrappe className="flex-col">
+        <Wrappe className='boxShadow'>
           <Box>
             <ImgBox>
-            {imgWidth && (
-              <>
-                <ReactSketchCanvas
-                  ref={canvasRef}
-                  strokeColor={'blue'}
-                  style={styles}
-                  width={`${imgWidth * 0.75}`}
-                  height={`${imageHeight * 0.75}`}
-                  strokeWidth={4}
-                  eraserWidth={8}
-                  backgroundImage={ocr.imgUrl}
-                  preserveBackgroundImageAspectRatio="none"
-                  exportWithBackgroundImage={false}
-                  onStroke={handleStroke}
-                  allowOnlyPointerType='all'
-                  id="reactSketchCanvas"
-                  withTimestamp={true}
+              <div style={{ display: 'none' }}>
+                <Document file={ocr.pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
+                  <Page width={0} height={0} pageNumber={page.pageNumber} />
+                </Document>
+              </div>
+              {ocr.imgUrl ? (
+                  <>
+                  <ReactSketchCanvas
+                    ref={canvasRef}
+                    strokeColor={varData.color}
+                    style={styles}
+                    // width={`${imgWidth}px`}
+                    width={`${'90%'}`}  
+                    // height={`${imageHeight}px`}
+                    height={`${1118}px`}
+                    strokeWidth={varData.penSize}
+                    eraserWidth={50}
+                    backgroundImage={ocr.imgUrl}
+                    preserveBackgroundImageAspectRatio='none'
+                    exportWithBackgroundImage={false}
+                    onStroke={handleStroke}
+                    allowOnlyPointerType='all'
+                    id='reactSketchCanvas'
+                    withTimestamp={true}
                   />
-              </>
-            )}
+                </>
+              ) : (
+                <>
+                {pageImage && (
+                  <>
+                    <ReactSketchCanvas
+                      ref={canvasRef}
+                      strokeColor={varData.color}
+                      style={styles}
+                      // width={`${imgWidth}px`}
+                      width={`${'90%'}`}  
+                      // height={`${imageHeight}px`}
+                      height={`${1118}px`}
+                      strokeWidth={varData.penSize}
+                      eraserWidth={50}
+                      // backgroundImage={ocr.imgUrl}
+                      backgroundImage={pageImage}
+                      preserveBackgroundImageAspectRatio='none'
+                      exportWithBackgroundImage={false}
+                      onStroke={handleStroke}
+                      allowOnlyPointerType='all'
+                      id='reactSketchCanvas'
+                      withTimestamp={true}
+                    />
+                  </>
+                )}
+                </>
+              )}
             </ImgBox>
           </Box>
-          <BtnBox>
-          <div>
-            <h2>x: {mousePoint.x}</h2>
-            <h2>y: {mousePoint.y}</h2>
-          </div>
-
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }} onClick={exportCanvasEraseMode}>지우개</button>
-
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }} onClick={handleUndo}>Undo</button>
-            
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }} onClick={handleRedo}>Redo</button>
-            
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }} onClick={handleExportSvg}>Export SVG</button>
-            
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }} onClick={handleSketchData}>sketchData</button>
-
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }} onClick={startSketch}>스케치 시작</button>
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }} onClick={stopSketch}>스케치 중지</button>
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }} onClick={handleLoad}>불러오기</button>
-            <button style={{
-              backgroundColor:'#7B88E0',
-              color:'white',
-              padding:'10px 20px',
-              borderRadius:'12px'
-            }}>선지우기</button>
-
-          </BtnBox>
+          <CanvasVarBox>
+            <CanvasVar />
+          </CanvasVarBox>
         </Wrappe>
       </Container>
     </>
-  )
+  );
 }
 
-export default CanvasModal
+export default CanvasModal;

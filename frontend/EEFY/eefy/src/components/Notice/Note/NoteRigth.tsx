@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { NoticeNum } from '@/recoil/Notice'
 import { Name } from '@/recoil/Notice';
 import NoneBox from './NoneBox';
+
 function NoteRigth() {
   const data = useRecoilValue(NoticeNum)
   const lastWord = useRecoilValue(Name)
@@ -72,21 +73,23 @@ function NoteRigth() {
             )}
             {lastWord === 'lecture' && (
               <>
-              <div style={{
-                  flex:8,
-                  display:'flex',
-                  height: '100%',  
-                  width: '97%', 
-                  backgroundColor:'white',
-                  borderRadius:'20px',
-                  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
-                  // borderLeft: '2px solid black'
-                }}>
-                  <div style={{
-                    flex:6,
+                <div style={{
+                    flex:8,
+                    display:'flex',
+                    height: '100%',  
+                    width: '97%', 
+                    backgroundColor:'white',
+                    borderRadius:'20px',
+                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
+                    // borderLeft: '2px solid black'
                   }}>
-                    <LectureDetail/>
-                  </div>
+                    <div style={{
+                      flex:6,
+                    }}>
+                      <LectureDetail/>
+                    </div>
+                </div>
+  
                   {/* <div style={{
                     flex:4,
                     padding:'15px 20px',
@@ -96,7 +99,6 @@ function NoteRigth() {
                   }}>
                     <CommentList/>
                   </div> */}
-                </div>
               </>
             )}
           </div>
