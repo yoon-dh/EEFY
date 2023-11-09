@@ -13,38 +13,36 @@ export default function SideNav() {
           style={{
             boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
             border: '1px solid rgba(131, 129, 129, 0.2)',
-            background: 'rgba(255, 255, 255, 0.5)',
+            // background: 'rgba(255, 255, 255, 0.5)',
             display: 'flex',
             flexDirection: 'column',
           }}
         >
           {/* toggle(hamburger) */}
-          <br />
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/* <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <label className='btn swap swap-rotate bg-transparent border-none' style={{ padding: '0px 14px' }}>
-              {/* this hidden checkbox controls the state */}
+              this hidden checkbox controls the state
               <input type='checkbox' />
 
-              {/* hamburger icon */}
+              hamburger icon
               <svg className='swap-off fill-current bg-transparent' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 512 512'>
                 <path d='M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z' />
               </svg>
 
-              {/* close icon */}
+              close icon
               <svg className='swap-on fill-current bg-transparent' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 512 512'>
                 <polygon points='400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49' />
               </svg>
             </label>
-          </div>
+          </div> */}
 
-          <br style={{ height: '10px' }} />
+          <br />
+          <br />
 
           {/* 메인 홈(클래스 생성 부분) */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/main/classlist'}>
-              <div className=" text-3xl' tooltip tooltip-right tooltip-base-300" data-tip='이전'>
-                <IoHome className='text-3xl' />
-              </div>
+            <Link href={'/main/classlist'} className='tooltip tooltip-right tooltip-base-300' data-tip='홈'>
+              <IoHome className='text-3xl' />
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
                   strokeLinecap='round'
@@ -55,11 +53,13 @@ export default function SideNav() {
               </svg> */}
             </Link>
           </li>
+
+          <br />
           <br />
 
           {/* 마이페이지 - 학생 OR 클래스관리 - 강사  */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/library/teacher'}>
+            <Link href={'/library/teacher'} className='tooltip tooltip-right tooltip-base-300' data-tip='서재'>
               <FaBookBookmark className='text-2xl' />
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path

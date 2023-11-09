@@ -1,14 +1,14 @@
 import React from 'react';
 
-function AudioPlayer() {
-  const dummyData = {
-    url: 'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/4.mp3',
-  };
+interface PropsType {
+  url: null | string;
+}
 
+function AudioPlayer({ url }: PropsType) {
   return (
     <div>
-      <audio controls className='w-96'>
-        <source src={dummyData.url} type='audio/mp4' />
+      <audio controls className=' w-80'>
+        {url !== null ? <source src={url} type='audio/mp4' /> : <div>오디오 파일이 비었습니다.</div>}
       </audio>
     </div>
   );
