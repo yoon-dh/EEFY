@@ -37,7 +37,7 @@ export default function StudentSignUp() {
         password: password,
         checkedPassword: password,
         nickname: null,
-        phoneNumber: phoneNumber.slice(0,3) + '-' + phoneNumber.slice(3,7) + '-' + phoneNumber.slice(7,11),
+        phoneNumber: phoneNumber,
         name: name,
         role: 'STUDENT',
     };

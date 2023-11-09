@@ -39,7 +39,7 @@ export default function TeacherSignUp() {
     nickname: nickname,
     checkedPassword: password,
     password: password,
-    phoneNumber: phoneNumber.slice(0,3) + '-' + phoneNumber.slice(3,7) + '-' + phoneNumber.slice(7,11),
+    phoneNumber: phoneNumber,
     role: 'TEACHER',
   };
 

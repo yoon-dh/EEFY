@@ -44,6 +44,9 @@ export const postCheckEmail = async (data: code) => {
 export const postJoin = async (user: userData) => {
   try{
     console.log("회원가입 진입", user);
+    const formatPhoneNum = user.phoneNumber.slice(0, 3) + '-' + user.phoneNumber.slice(3, 7) + '-' + user.phoneNumber.slice(7, 11);
+    user.phoneNumber = formatPhoneNum;
+    console.log(user);
     const response = await publicApi.post("/member", user);
     console.log("회원가입 성공", response);
     return response;    

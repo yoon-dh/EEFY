@@ -14,8 +14,8 @@ function ProfileTag() {
         </div>
       </div>
       <div className='flex flex-col'>
-        <div style={{ letterSpacing: '2px', color: 'white' }}>{userDateObj.name}</div>
-        <div style={{ color: 'rgba(255, 255, 255, 0.75)', letterSpacing: '2px' }}>{userDateObj.role}</div>
+        <div style={{ letterSpacing: '2px', color: 'white' }}>{userDateObj?.name}</div>
+        <div style={{ color: 'rgba(255, 255, 255, 0.75)', letterSpacing: '2px' }}>{userDateObj?.role}</div>
       </div>
     </div>
   );
