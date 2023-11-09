@@ -226,17 +226,34 @@ transition: opacity 1.5s, visibility 1.5s;
 }
 `
 export const LoginBtn = styled.div`
-position: fixed;
-bottom: 0;
-right: 0;
-margin: 0px 10px 10px 0px;
 display: flex;
 justify-content: center;
 align-items: center;
-z-index: 6;
 width: 100px;
-height: 30px;
-color: white;
-border: 2px solid white;
+height: 43px;
+background: #191A3E;
 border-radius: 8px;
+font-size: 16px;
+line-height: 24px;
+color: #FFFFFF;
+cursor: pointer;
+text-transform: uppercase;
+letter-spacing: 2px;
+`
+
+export const LoginText = styled.div`
+color: white;
+width: 250px;
+margin: 10px 0px 0px 0px;
+`
+export const LoginBtnBox = styled.div`
+z-index: 7;
+display: flex;
+position: fixed;
+top: 87.2%;
+left: 72.7%;
+@media(max-width:1334px){
+    top: 86%;
+    left: 66.2%;
+}
 `

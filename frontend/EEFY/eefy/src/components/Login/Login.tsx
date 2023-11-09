@@ -11,6 +11,7 @@ import ForgotPassword from './ForgotPassword';
 import { useRecoilState } from 'recoil';
 import { ForgetPasswordBox, userData } from '@/recoil/Auth';
 import { postLogin } from '@/api/Auth/login';
+import Swal from 'sweetalert2';
 
 export default function Login() {
   const [anim, setAnim] = useState(false);
@@ -29,25 +30,36 @@ export default function Login() {
     }, 1300);
   }, []);
 
-  // 이메일 인증
+  // 로그인
   const handleLogin = async () => {
     const data = {
       email: email,
       password: password,
     };
-    console.log(data);
     const res = await postLogin(data);
-    console.log(res);
     if (res?.status === 200) {
+      router.push('/main/classlist');
+      Swal.fire({
+        icon: 'success',
+        text: `${res?.data.name}님 환영합니다!`,
+        showConfirmButton: false,
+        timer: 1000,
+      });
       const NewData = {
         memberId: res?.data.memberId,
         email: res?.data.email,
         name: res?.data.name,
         nickname: res?.data.nickname,
         role: res?.data.role,
-      };
+      }
       setUser(NewData);
-      router.push('/main/classlist');
+    } else {
+      Swal.fire({
+        icon: 'error',
+        text: '로그인에 실패했습니다!',
+        showConfirmButton: false,
+        timer: 1000,
+      });
     }
   };
 
@@ -130,6 +142,8 @@ export default function Login() {
               InputLabelProps={{
                 style: {
                   color: '#AFAFAF',
+                  letterSpacing: '2px',
+                  textTransform: 'uppercase',
                 },
               }}
             />
@@ -159,6 +173,8 @@ export default function Login() {
                 InputLabelProps={{
                   style: {
                     color: '#AFAFAF',
+                    letterSpacing: '2px',
+                    textTransform: 'uppercase',
                   },
                 }}
               />
