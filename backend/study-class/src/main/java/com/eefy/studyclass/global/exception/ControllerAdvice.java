@@ -10,8 +10,8 @@ public class ControllerAdvice {
     private ResponseEntity<ExceptionResponseDto> exception(CustomException e) {
         return ResponseEntity
                 .status(e.getStatus()).body(ExceptionResponseDto.builder()
-                .errorCode(e.getCode())
-                .errorMessage(e.getMessage())
+                .code(e.getCode())
+                .message(e.getMessage())
                 .build());
     }
 }

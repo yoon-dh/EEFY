@@ -8,6 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class ExceptionResponseDto {
-    private int errorCode;
-    private String errorMessage;
+    private int code;
+    private String message;
 }
