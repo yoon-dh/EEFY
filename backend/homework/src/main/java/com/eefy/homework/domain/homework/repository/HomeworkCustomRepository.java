@@ -9,7 +9,6 @@ import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkStud
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.QHomeworkStudentDto;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
-import com.eefy.homework.domain.homework.persistence.entity.QChoice;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -33,24 +32,6 @@ public class HomeworkCustomRepository {
                 .distinct()
                 .fetch();
     }
-
-//    public List<HomeworkQuestionDto> getProblem(Integer classHomeworkId) {
-//        return jpaQueryFactory.select(
-//                new QHomeworkQuestionDto(
-//                    homeworkQuestion.id,
-//                    homeworkQuestion.homework.id,
-//                    homeworkQuestion.title,
-//                    homeworkQuestion.content,
-//                    homeworkQuestion.filePath,
-//                    homeworkQuestion.type,
-//                    homeworkQuestion.answer
-//                )
-//            ).from(homeworkQuestion)
-//            .join(homework).on(homework.id.eq(homeworkQuestion.homework.id))
-//            .join(classHomework).on(homework.id.eq(classHomework.homework.id))
-//            .where(classHomework.id.eq(classHomeworkId))
-//            .fetch();
-//    }
 
     public List<HomeworkStudentDto> viewHomeworkByStudentId(Integer classId, Integer memberId) {
         return jpaQueryFactory.select(new QHomeworkStudentDto(

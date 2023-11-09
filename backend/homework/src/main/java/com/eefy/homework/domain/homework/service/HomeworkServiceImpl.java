@@ -32,14 +32,18 @@ import com.eefy.homework.domain.homework.repository.HomeworkQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentQuestionRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkStudentRepository;
+import com.eefy.homework.global.S3Uploader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -47,6 +51,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class HomeworkServiceImpl implements HomeworkService {
 
     private final ModelMapper modelMapper;
+    private final AiServerRestClient aiServerRestClient;
+    private final S3Uploader s3Uploader;
 
     private final HomeworkRepository homeworkRepository;
     private final HomeworkQuestionRepository homeworkQuestionRepository;
@@ -55,8 +61,9 @@ public class HomeworkServiceImpl implements HomeworkService {
     private final HomeworkStudentRepository homeworkStudentRepository;
     private final HomeworkCustomRepository homeworkCustomRepository;
     private final HomeworkStudentQuestionRepository homeworkStudentQuestionRepository;
-    private final AiServerRestClient aiServerRestClient;
 
+    @Value("${cloud.aws.s3.voiceDir}")
+    private String voicePath;
     private static final List<Integer> dummyStudentId = List.of(1, 2, 3, 4, 5, 6, 7);
 
     @Override
@@ -77,12 +84,15 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Override
     @Transactional
     public MakeHomeworkQuestionResponse makeQuestion(
-        MakeHomeworkQuestionRequest makeHomeworkQuestionRequest, Integer memberId) {
+        MakeHomeworkQuestionRequest makeHomeworkQuestionRequest, Integer memberId,
+        MultipartFile voiceFile) throws IOException {
+
         // todo: 강사가 유효한 사용자인지 검증
 
         Homework homework = validateHomework(makeHomeworkQuestionRequest.getHomeworkId());
+        String filePath = s3Uploader.upload(voiceFile, voicePath);
         HomeworkQuestion homeworkQuestion = saveHomeworkQuestion(makeHomeworkQuestionRequest,
-            homework);
+            homework, filePath);
         saveChoice(makeHomeworkQuestionRequest, homeworkQuestion);
 
         return new MakeHomeworkQuestionResponse(homework.getId());
@@ -215,10 +225,10 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     private HomeworkQuestion saveHomeworkQuestion(
-        MakeHomeworkQuestionRequest makeHomeworkQuestionRequest, Homework homework) {
+        MakeHomeworkQuestionRequest makeHomeworkQuestionRequest, Homework homework, String filePath) {
         HomeworkQuestion homeworkQuestion = HomeworkQuestion.of(homework,
             makeHomeworkQuestionRequest.getTitle(),
-            makeHomeworkQuestionRequest.getContent(), makeHomeworkQuestionRequest.getFilePath(),
+            makeHomeworkQuestionRequest.getContent(), filePath,
             makeHomeworkQuestionRequest.getField(), makeHomeworkQuestionRequest.getAnswer());
 
         homeworkQuestionRepository.save(homeworkQuestion);
