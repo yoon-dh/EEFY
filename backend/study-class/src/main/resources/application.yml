@@ -37,6 +37,6 @@ eureka:
 
 springdoc:
   swagger-ui:
-    path: swagger-ui
+    path: /api/study-class/swagger-ui
   api-docs:
     path: /api/study-class/swagger-ui.html
