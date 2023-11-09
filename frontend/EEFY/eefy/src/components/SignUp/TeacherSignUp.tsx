@@ -27,7 +27,7 @@ export default function TeacherSignUp() {
   const nickname: string = watch('nickname');
   const email: string = watch('email');
   const code: string = watch('code');
-  const phoneNumber: Number = watch('phoneNumber');
+  const phoneNumber: String = watch('phoneNumber');
 
   const [showPassword, setShowPassword] = useState<string>('password');
   const [showCode, setShowCode] = useState<boolean>(false);
@@ -39,7 +39,7 @@ export default function TeacherSignUp() {
     nickname: nickname,
     checkedPassword: password,
     password: password,
-    phoneNumber: phoneNumber,
+    phoneNumber: phoneNumber.slice(0,3) + '-' + phoneNumber.slice(3,7) + '-' + phoneNumber.slice(7,11),
     role: 'TEACHER',
   };
 
@@ -53,7 +53,23 @@ export default function TeacherSignUp() {
 
   // 회원가입
   const onSubmit = async () => {
-    console.log(userData);
+    console.log(userData)
+    if(!checkCode){
+      Swal.fire({
+        icon: 'error',
+        text: '이메일 인증을 해주세요!',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
+    if(!email || !name || !nickname || !password || !phoneNumber || !userData.checkedPassword){
+      Swal.fire({
+        icon: 'error',
+        text: '입력을 전부 해주세요!',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
     const res = await postJoin(userData);
     console.log(res);
     if (res?.status === 200) {
@@ -67,12 +83,6 @@ export default function TeacherSignUp() {
     const res = await postEmail(enterEmail);
     console.log(res);
     if (res?.status === 200) {
-      Swal.fire({
-        icon: 'success',
-        text: '이메일을 확인하세요!',
-        showConfirmButton: false,
-        timer: 1000,
-      });
       setShowCode(true);
     }
   };
@@ -86,6 +96,14 @@ export default function TeacherSignUp() {
       Swal.fire({
         icon: 'success',
         text: '인증이 되었습니다!',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      setCheckCode(true)
+    } else {
+      Swal.fire({
+        icon: 'error',
+        text: '인증코드가 잘못되었습니다!',
         showConfirmButton: false,
         timer: 1000,
       });
@@ -123,6 +141,8 @@ export default function TeacherSignUp() {
           InputLabelProps={{
             style: {
               color: '#AFAFAF',
+              letterSpacing: '2px',
+              textTransform:'uppercase'
             },
           }}
         />
@@ -134,12 +154,11 @@ export default function TeacherSignUp() {
             type={showPassword}
             style={{
               margin: '10px 0px 0px 0px',
-              letterSpacing: '2px',
             }}
             {...register('password', {
               pattern: {
-                value: /(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}/,
-                message: '영문, 숫자, 특수문자를 포함한 8자 이상의 비밀번호를 입력해주세요.',
+                value: /(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}/,
+                message: '영문, 숫자, 특수문자를 포함한 8자 이상 20자 이하의 비밀번호를 입력해주세요.',
               },
             })}
             InputProps={{
@@ -155,6 +174,8 @@ export default function TeacherSignUp() {
             InputLabelProps={{
               style: {
                 color: '#AFAFAF',
+                letterSpacing: '2px',
+                textTransform:'uppercase'
               },
             }}
           />
@@ -231,6 +252,8 @@ export default function TeacherSignUp() {
           InputLabelProps={{
             style: {
               color: '#AFAFAF',
+              letterSpacing: '2px',
+              textTransform:'uppercase'
             },
           }}
         />
@@ -251,7 +274,7 @@ export default function TeacherSignUp() {
           {...register('phoneNumber', {
             required: '전화번호을 입력해주세요.',
             pattern: {
-              value: /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/,
+              value: /^[0-9]{3}[0-9]{3,4}[0-9]{4}$/,
               message: '올바른 전화번호 형식이 아닙니다.',
             },
           })}
@@ -262,6 +285,7 @@ export default function TeacherSignUp() {
               .replace(/(\-{1,2})$/g, '');
             console.log(e.target.value);
             setValue('phoneNumber', e.target.value);
+            clearErrors("phoneNumber");
           }}
           InputProps={{
             autoComplete: 'off',
@@ -276,6 +300,8 @@ export default function TeacherSignUp() {
           InputLabelProps={{
             style: {
               color: '#AFAFAF',
+              letterSpacing: '2px',
+              textTransform:'uppercase'
             },
           }}
         />
@@ -306,6 +332,8 @@ export default function TeacherSignUp() {
           InputLabelProps={{
             style: {
               color: '#AFAFAF',
+              letterSpacing: '2px',
+              textTransform:'uppercase'
             },
           }}
         />
@@ -341,6 +369,8 @@ export default function TeacherSignUp() {
             InputLabelProps={{
               style: {
                 color: '#AFAFAF',
+                letterSpacing: '2px',
+                textTransform:'uppercase'
               },
             }}
           />
@@ -386,6 +416,8 @@ export default function TeacherSignUp() {
               InputLabelProps={{
                 style: {
                   color: '#AFAFAF',
+                  letterSpacing: '2px',
+                  textTransform:'uppercase'
                 },
               }}
             />

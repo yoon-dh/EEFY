@@ -6,11 +6,15 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { TeacherSignUpBoxTitle, CodeCheckBox, CodeCheckBtn, SignUpBtn, PasswordBox } from './SignUp.style';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { postEmail, postCheckEmail, postJoin } from '../../api/Auth/join';
+import Swal from 'sweetalert2';
 
 export default function StudentSignUp() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState('password');
   const [showCode, setShowCode] = useState(false)
+  const [checkCode, setCheckCode] = useState<boolean>(false);
+
 
   // watch 함수를 사용을 위한 useForm 훅을 초기화
   const {
@@ -21,19 +25,21 @@ export default function StudentSignUp() {
         clearErrors,
         formState: { errors },
     } = useForm({ mode: "onBlur" });
+
     const name: string = watch("name");
     const password: string = watch("password");
-    const nickname: string = watch("nickname");
     const email: string = watch("email");
     const code: string = watch("code");
-    const phoneNumber: Number = watch("phoneNumber");
+    const phoneNumber: String = watch("phoneNumber");
 
     const userData = {
         email: email,
         password: password,
-        nickname: nickname,
-        phoneNumber: phoneNumber,
+        checkedPassword: password,
+        nickname: null,
+        phoneNumber: phoneNumber.slice(0,3) + '-' + phoneNumber.slice(3,7) + '-' + phoneNumber.slice(7,11),
         name: name,
+        role: 'STUDENT',
     };
   
     const authMail = {
@@ -46,20 +52,51 @@ export default function StudentSignUp() {
   
     // 회원가입
     const onSubmit = async () => {
-      router.push('/login');
-      console.log(userData)
+      if(!checkCode){
+        Swal.fire({
+          icon: 'error',
+          text: '이메일 인증을 해주세요!',
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+      const res = await postJoin(userData);
+      console.log(res);
+      if (res?.status === 200) {
+        router.push('/login');
+      }
     };
   
     // 이메일 인증
     const handleMailSend = async () => {
-        setShowCode(true)
-        console.log(enterEmail);
-        console.log(userData);
+        const res = await postEmail(enterEmail);
+        console.log(res);
+        if (res?.status === 200) {
+          setShowCode(true);
+        }
     };
   
     // 인증 확인
     const handleAuthMail = async () => {
-        console.log("코드다", code);
+        console.log('코드다', authMail);
+        const res = await postCheckEmail(authMail);
+        console.log(res);
+        if (res?.status === 200) {
+          Swal.fire({
+            icon: 'success',
+            text: '인증이 되었습니다!',
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          setCheckCode(true)
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: '인증코드가 잘못되었습니다!',
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        }
       };
 
   return (
@@ -93,7 +130,9 @@ export default function StudentSignUp() {
             InputLabelProps={{
             style: {
                 color: '#7A7979',
-            },
+                letterSpacing: '2px',
+                textTransform:'uppercase'
+                },
             }}
         />
         <PasswordBox>
@@ -118,14 +157,16 @@ export default function StudentSignUp() {
             {...register("password", {
                 pattern: {
                   value:
-                    /(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}/,
+                    /(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}/,
                   message:
-                    "영문, 숫자, 특수문자를 포함한 8자 이상의 비밀번호를 입력해주세요.",
+                    "영문, 숫자, 특수문자를 포함한 8자 이상 20자 이하의 비밀번호를 입력해주세요.",
                 },
               })}
             InputLabelProps={{
                 style: {
                 color: '#7A7979',
+                letterSpacing: '2px',
+                textTransform:'uppercase'
                 },
             }}
             />
@@ -171,6 +212,13 @@ export default function StudentSignUp() {
             </>
             )}
         </PasswordBox>
+        <div
+          style={{
+            color: '#f85a5a',
+          }}
+        >
+          {errors?.password?.message as string}
+        </div>
         <TextField
             id='standard-basic'
             label='Confirm Password'
@@ -196,9 +244,17 @@ export default function StudentSignUp() {
             InputLabelProps={{
             style: {
                 color: '#7A7979',
-            },
+                letterSpacing: '2px',
+                textTransform:'uppercase'
+                },
             }}
         />
+        <div
+          style={{
+            color: '#f85a5a',
+          }}>
+          {errors?.checkpassword?.message as string}
+        </div>
         <TextField
             id='standard-basic'
             label='Phone'
@@ -209,7 +265,7 @@ export default function StudentSignUp() {
             {...register("phoneNumber", {
                 required: "전화번호을 입력해주세요.",
                 pattern: {
-                  value: /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/,
+                  value: /^[0-9]{3}[0-9]{3,4}[0-9]{4}$/,
                   message: "올바른 전화번호 형식이 아닙니다.",
                 },
               })}
@@ -230,7 +286,9 @@ export default function StudentSignUp() {
             InputLabelProps={{
             style: {
                 color: '#7A7979',
-            },
+                letterSpacing: '2px',
+                textTransform:'uppercase'
+                },
             }}
         />
         <CodeCheckBox>
@@ -248,6 +306,10 @@ export default function StudentSignUp() {
                     message: "올바른 이메일 형식이 아닙니다.",
                     },
                 })}
+                onChange={e => {
+                    setValue('email', e.target.value);
+                    clearErrors('email');
+                  }}
                 InputProps={{
                     autoComplete: "off",
                 style: {
@@ -261,11 +323,20 @@ export default function StudentSignUp() {
                 InputLabelProps={{
                 style: {
                     color: '#7A7979',
+                    letterSpacing: '2px',
+                    textTransform:'uppercase'
                 },
                 }}
             />
             <CodeCheckBtn style={{ backgroundColor: '#3B3B84', color: '#FFFFFF' }} onClick={handleMailSend}>Send</CodeCheckBtn>
         </CodeCheckBox>
+        <div
+          style={{
+            color: '#f85a5a',
+          }}
+        >
+          {errors?.email?.message as string}
+        </div>
         <div
             style={{
             opacity:showCode ? '1':'0',
@@ -299,6 +370,8 @@ export default function StudentSignUp() {
                 InputLabelProps={{
                     style: {
                     color: '#7A7979',
+                    letterSpacing: '2px',
+                    textTransform:'uppercase'
                     },
                 }}
                 />
