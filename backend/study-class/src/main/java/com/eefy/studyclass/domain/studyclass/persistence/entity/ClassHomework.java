@@ -1,32 +1,29 @@
 package com.eefy.studyclass.domain.studyclass.persistence.entity;
 
-import com.eefy.studyclass.global.entity.BaseEntity;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
 @NoArgsConstructor
-public class Participate extends BaseEntity {
+public class ClassHomework {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "participate_id")
+    @Column(name = "class_homework_id")
     private Integer id;
 
     @Column(nullable = false)
-    private Integer memberId;
+    private Integer homeworkId;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "class_id")
     private StudyClass studyClass;
 
     @Builder
-    public Participate(Integer id, Integer memberId, StudyClass studyClass) {
+        public ClassHomework(Integer id, Integer homeworkId, StudyClass studyClass) {
         this.id = id;
-        this.memberId = memberId;
+        this.homeworkId = homeworkId;
         this.studyClass = studyClass;
     }
 }

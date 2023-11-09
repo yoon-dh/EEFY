@@ -8,8 +8,10 @@ import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
+import com.eefy.studyclass.domain.studyclass.persistence.entity.ClassHomework;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
+import com.eefy.studyclass.domain.studyclass.persistence.mysql.ClassHomeworkRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     private final StudyClassRepository studyClassRepository;
     private final ParticipateRepository participateRepository;
+    private final ClassHomeworkRepository classHomeworkRepository;
 
     private final MemberServiceImpl memberService;
     private final StudyClassValidator studyClassValidator;
@@ -139,5 +142,20 @@ public class StudyClassServiceImpl implements StudyClassService {
 
             participateRepository.delete(participate);
         }
+    }
+
+    @Override
+    public void enrollHomework(Integer teacherId, EnrollHomeworkRequest enrollHomeworkRequest) {
+        studyClassValidator.existsStudyClassByClassId(studyClassRepository, enrollHomeworkRequest.getClassId());
+
+        StudyClass studyClass = studyClassRepository.findById(enrollHomeworkRequest.getClassId()).get();
+
+        studyClassValidator.checkUserRoleEnrollHomework(teacherId, studyClass);
+
+        ClassHomework classHomework = ClassHomework.builder()
+                .homeworkId(enrollHomeworkRequest.getHomeworkId())
+                .studyClass(studyClass).build();
+
+        classHomeworkRepository.save(classHomework);
     }
 }
