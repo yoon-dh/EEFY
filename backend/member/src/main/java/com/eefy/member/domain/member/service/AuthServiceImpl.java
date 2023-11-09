@@ -35,8 +35,7 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<JwtTokenResponse> refreshReissue(String accessToken) {
         accessToken = accessToken.split(" ")[1];
         Member member = checkRefreshReissueStatus(accessToken);
-        makeJwtToken(member);
-        return ResponseEntity.internalServerError().build();
+        return makeJwtToken(member);
     }
 
     @Override
@@ -63,6 +62,7 @@ public class AuthServiceImpl implements AuthService {
     private ResponseEntity<JwtTokenResponse> makeJwtToken(Member member) {
         String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getId());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+        System.out.println("gmlmsdfdsfsdfzㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
         return makeLoginResponse(accessToken, refreshToken, member);
     }
 
