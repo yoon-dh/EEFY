@@ -30,6 +30,7 @@ function ClassList() {
 
   const onMessageFCM = async () => {
     const permission = await Notification.requestPermission();
+    console.log(permission);
     if (permission !== 'granted') return;
 
     const firebaseApp = initializeApp({
