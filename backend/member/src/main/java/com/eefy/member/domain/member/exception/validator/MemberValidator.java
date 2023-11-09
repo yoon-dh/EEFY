@@ -3,6 +3,7 @@ package com.eefy.member.domain.member.exception.validator;
 import com.eefy.member.domain.member.exception.message.AuthErrorEnum;
 import com.eefy.member.domain.member.exception.message.MemberEnum;
 import com.eefy.member.domain.member.persistence.entity.Member;
+import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
 import com.eefy.member.domain.member.persistence.entity.redis.EmailConfirm;
 import com.eefy.member.global.exception.CustomException;
 import org.springframework.http.HttpStatus;
@@ -66,6 +67,16 @@ public class MemberValidator {
                     .status(HttpStatus.BAD_REQUEST)
                     .code(MemberEnum.INVALID_SELECT_MEMBERS_KEY.getCode())
                     .message(MemberEnum.INVALID_SELECT_MEMBERS_KEY.getMessage())
+                    .build();
+        }
+    }
+
+    public void checkRequest(String nickname, MemberRole role) {
+        if (role.getValue().equals("TEACHER") && nickname == null) {
+            throw CustomException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .code(1008)
+                    .message("닉네임을 입력해주세요.")
                     .build();
         }
     }

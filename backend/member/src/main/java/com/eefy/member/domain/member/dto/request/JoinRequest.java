@@ -25,7 +25,6 @@ public class JoinRequest {
     @Size(min = 2, message = "이름이 너무 짧습니다.")
     private String name;
 
-    @NotBlank(message = "닉네임을 입력해주세요.")
     @Size(min = 2, message = "2자리 이상 닉네임을 입력해주세요.")
     private String nickname;
 

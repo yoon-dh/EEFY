@@ -42,7 +42,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void join(JoinRequest joinRequest) {
         Member member = joinRequest.toEntity();
-        checkJoinStatus(joinRequest);
+        checkJoinStatus(joinRequest, member.getRole());
 
         member.encodePassword(passwordEncoder);
         emailConfirmRedisRepository.deleteById(member.getEmail());
@@ -54,8 +54,7 @@ public class MemberServiceImpl implements MemberService {
         // studyClassId != 0인 경우 클래스에 참여중인 학생 목록 조회
         // 목록 조회해서 멤버아이디 캐싱하고 내가 캐싱하고있는 데이터가 study-class쪽에서 변화된다면 리프레시하게 하고십다!
         // 이벤트 기반으로 수정(서비스 분리)
-        Optional<List<SearchStudentResponse>> studentList = Optional.empty();
-        if (classId != 0) studentList = studyClassService.searchStudentList(teacherId, classId);
+        Optional<List<SearchStudentResponse>> studentList = studyClassService.searchStudentList(teacherId, classId);
         if (studentList.isEmpty()) return makeStudentResponse(selectMembers(key, value), classId);
 
         List<Integer> studentIds = studentList.get().stream()
@@ -78,10 +77,13 @@ public class MemberServiceImpl implements MemberService {
         return new ModelMapper().map(member, MemberResponse.class);
     }
 
-    private void checkJoinStatus(JoinRequest joinRequest) {
+    private void checkJoinStatus(JoinRequest joinRequest, MemberRole role) {
+        memberValidator.checkRequest(joinRequest.getNickname(), role);
         memberValidator.checkEmailConfirmStatus(emailConfirmRedisRepository.findById(joinRequest.getEmail()));
-        memberValidator.checkJoinStatus(memberRepository.findMemberByEmail(joinRequest.getEmail()),
-                joinRequest.getPassword(), joinRequest.getCheckedPassword());
+        memberValidator.checkJoinStatus(
+                memberRepository.findMemberByEmail(joinRequest.getEmail()),
+                joinRequest.getPassword(),
+                joinRequest.getCheckedPassword());
     }
 
     private List<StudentResponse> makeStudentResponse(List<Member> members, int classId) {
