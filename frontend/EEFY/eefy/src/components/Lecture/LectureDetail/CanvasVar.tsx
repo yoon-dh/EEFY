@@ -94,14 +94,18 @@ function CanvasVar() {
   };
 
   const handleBeforePage = () => {
-    if (page.pageNumber > 1) {
-      setPage({ ...page, pageNumber: page.pageNumber - 1, btnType:'before' });
+    if(ocr.pdfFile){
+      if (page.pageNumber > 1) {
+        setPage({ ...page, pageNumber: page.pageNumber - 1, btnType:'before' });
+      }
     }
   };
 
   const handleNextPage = () => {
-    if (page.pageNumber < page.numPages) {
-      setPage({ ...page, pageNumber: page.pageNumber + 1, btnType:'next' });
+    if(ocr.pdfFile){
+      if (page.pageNumber < page.numPages) {
+        setPage({ ...page, pageNumber: page.pageNumber + 1, btnType:'next' });
+      }
     }
   };
 
@@ -180,25 +184,25 @@ function CanvasVar() {
         </RedoBtn>
       </ItemBox>
 
-      <PdfPageItemBox>
-        <BeforeBtn onClick={handleBeforePage}>
-          <BiSolidLeftArrow />
-        </BeforeBtn>
-        <PdfPageItem>
-          {page.pageNumber} / {page.numPages}
-        </PdfPageItem>
-        <NextBtn onClick={handleNextPage}>
-          <BiSolidRightArrow />
-        </NextBtn>
-      </PdfPageItemBox>
+        <PdfPageItemBox>
+          <BeforeBtn onClick={handleBeforePage} >
+            <BiSolidLeftArrow />
+          </BeforeBtn>
+          <PdfPageItem>
+            {page.pageNumber} / {page.numPages}
+          </PdfPageItem>
+          <NextBtn onClick={handleNextPage}>
+            <BiSolidRightArrow />
+          </NextBtn>
+        </PdfPageItemBox>
 
       <BackBtn onClick={() => {
         setData({})
         setOcr({ ...ocr, isSuccess: false, imgUrl:'',pdfFile:'' })
         setPage({...page,pageNumber:1,numPages:0})
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', fontSize:'23px' }}>
-          <BiSolidDoorOpen />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <BiSolidDoorOpen style={{fontSize:'21px'}}/>
           BACK
         </div>
       </BackBtn>
@@ -211,7 +215,7 @@ export default CanvasVar;
 const Container = styled.div`
   margin: 0px 0px auto 0px;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(131, 129, 129, 0.25);
   border-radius: 12px;

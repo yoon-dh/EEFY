@@ -151,6 +151,8 @@ export const TeacherSignUpBoxTitle = styled.div`
 font-size: 60px;
 font-weight: bold;
 color: white;
+letter-spacing: 2px;
+text-transform: uppercase;
 @media(max-width:1340px){
     font-size: 40px;
 }
@@ -173,11 +175,15 @@ border-radius: 8px;
 font-size: 14px;
 color: #000000;
 cursor: pointer;
+letter-spacing: 2px;
+text-transform: uppercase;
 @media(max-width:1340px){
     top:12px;
 }
 `
 export const SignUpBtn = styled.button`
+letter-spacing: 2px;
+text-transform: uppercase;
 display: flex;
 flex-direction: row;
 justify-content: center;
