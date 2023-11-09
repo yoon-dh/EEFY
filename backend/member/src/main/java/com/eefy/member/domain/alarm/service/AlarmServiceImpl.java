@@ -30,6 +30,7 @@ public class AlarmServiceImpl implements AlarmService {
             if (response.isPresent()) log.info(response.get().body().toString());
             else log.info("메세지 전송 후 응답 데이터 없음");
         } catch (FeignException e) {
+            log.error(e.getMessage());
             throw CustomException.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .code(AlarmErrorEnum.FAILED_SEND_MESSAGE_WITH_CLIENT.getCode())
