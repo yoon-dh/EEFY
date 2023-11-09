@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { useRecoilValue } from 'recoil';
 import { userData } from '@/recoil/Auth';

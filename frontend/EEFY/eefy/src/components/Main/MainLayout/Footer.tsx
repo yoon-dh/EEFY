@@ -50,11 +50,9 @@ export default function Footer() {
   // push test
 
   const onMessageFCM = async () => {
-    // 브라우저에 알림 권한을 요청합니다.
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') return;
 
-    // 이곳에도 아까 위에서 앱 등록할때 받은 'firebaseConfig' 값을 넣어주세요.
     const firebaseApp = initializeApp({
       apiKey: 'AIzaSyC7pFu4H7svcrh0RJ_UvKxqrUGZEjJLGXY',
       authDomain: 'eefy-f2294.firebaseapp.com',
@@ -67,11 +65,9 @@ export default function Footer() {
 
     const messaging = getMessaging(firebaseApp);
 
-    // 이곳 vapidKey 값으로 아까 토큰에서 사용한다고 했던 인증서 키 값을 넣어주세요.
     getToken(messaging, { vapidKey: 'BFlWXe5B1irtrj-sT_GtQHYJJ3a4zv562RUM-s8EK-AvD3zIA_ezFEFBRvT_Oa3U1k9HfN3Vh0DjV-MmMvlx8xg' })
       .then(currentToken => {
         if (currentToken) {
-          // 정상적으로 토큰이 발급되면 콘솔에 출력합니다.
           console.log(currentToken);
           // setFCMToken(currentToken);
         } else {
@@ -82,7 +78,6 @@ export default function Footer() {
         console.log('An error occurred while retrieving token. ', err);
       });
 
-    // 메세지가 수신되면 역시 콘솔에 출력합니다.
     onMessage(messaging, payload => {
       console.log('Message received. ', payload);
       console.log(payload.notification?.title);

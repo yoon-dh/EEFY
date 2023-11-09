@@ -11,6 +11,9 @@ import { CreateModalOpen } from '@/recoil/ClassCreate';
 import { classCheck } from '@/api/Class/classlist';
 import { useEffect, useState } from 'react';
 
+import { initializeApp } from 'firebase/app';
+import { getMessaging, onMessage, getToken } from 'firebase/messaging';
+
 type Class = {
   id: number;
   title: string;
@@ -25,15 +28,58 @@ function ClassList() {
   const [myClassArr, setMyClassArr] = useState<Class[]>([]);
   const [classCnt, setClassCnt] = useState(null);
 
+  const onMessageFCM = async () => {
+    const permission = await Notification.requestPermission();
+    console.log(permission);
+    if (permission !== 'granted') return;
+
+    const firebaseApp = initializeApp({
+      apiKey: 'AIzaSyC7pFu4H7svcrh0RJ_UvKxqrUGZEjJLGXY',
+      authDomain: 'eefy-f2294.firebaseapp.com',
+      projectId: 'eefy-f2294',
+      storageBucket: 'eefy-f2294.appspot.com',
+      messagingSenderId: '433063675765',
+      appId: '1:433063675765:web:751ff0f18e47b9892d353c',
+      measurementId: 'G-V0R74XV218',
+    });
+
+    const messaging = getMessaging(firebaseApp);
+
+    getToken(messaging, { vapidKey: 'BFlWXe5B1irtrj-sT_GtQHYJJ3a4zv562RUM-s8EK-AvD3zIA_ezFEFBRvT_Oa3U1k9HfN3Vh0DjV-MmMvlx8xg' })
+      .then(currentToken => {
+        if (currentToken) {
+          console.log(currentToken);
+          // setFCMToken(currentToken);
+        } else {
+          console.log('No registration token available. Request permission to generate one.');
+        }
+      })
+      .catch(err => {
+        console.log('An error occurred while retrieving token. ', err);
+      });
+
+    onMessage(messaging, payload => {
+      console.log('Message received. ', payload);
+      console.log(payload.notification?.title);
+      // setOnMessageTitle(payload.notification?.title);
+    });
+  };
+
   useEffect(() => {
     // TODO: 일단 한페이지만, 나중에 페이지네이션?
     const fetchData = async () => {
       const result = await classCheck(0, 8);
+      console.log('fetchData내부========================');
+      console.log(`이거 맞지? ${result}`);
+      console.log('fetchData내부=========================');
       setMyClassArr(result.studyClassList);
       setClassCnt(result.totalCnt);
     };
 
+    console.log('classlist fetchData외부============================');
+    onMessageFCM();
     fetchData();
+    console.log('classlist fetchData외부============================');
   }, [classCreated]);
 
   return (

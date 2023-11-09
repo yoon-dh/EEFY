@@ -53,8 +53,8 @@ export default function TeacherSignUp() {
 
   // 회원가입
   const onSubmit = async () => {
-    console.log(userData)
-    if(!checkCode){
+    console.log(userData);
+    if (!checkCode) {
       Swal.fire({
         icon: 'error',
         text: '이메일 인증을 해주세요!',
@@ -62,7 +62,7 @@ export default function TeacherSignUp() {
         timer: 1000,
       });
     }
-    if(!email || !name || !nickname || !password || !phoneNumber || !userData.checkedPassword){
+    if (!email || !name || !nickname || !password || !phoneNumber || !userData.checkedPassword) {
       Swal.fire({
         icon: 'error',
         text: '입력을 전부 해주세요!',
@@ -99,7 +99,7 @@ export default function TeacherSignUp() {
         showConfirmButton: false,
         timer: 1000,
       });
-      setCheckCode(true)
+      setCheckCode(true);
     } else {
       Swal.fire({
         icon: 'error',
@@ -142,7 +142,7 @@ export default function TeacherSignUp() {
             style: {
               color: '#AFAFAF',
               letterSpacing: '2px',
-              textTransform:'uppercase'
+              textTransform: 'uppercase',
             },
           }}
         />
@@ -175,7 +175,7 @@ export default function TeacherSignUp() {
               style: {
                 color: '#AFAFAF',
                 letterSpacing: '2px',
-                textTransform:'uppercase'
+                textTransform: 'uppercase',
               },
             }}
           />
@@ -253,7 +253,7 @@ export default function TeacherSignUp() {
             style: {
               color: '#AFAFAF',
               letterSpacing: '2px',
-              textTransform:'uppercase'
+              textTransform: 'uppercase',
             },
           }}
         />
@@ -285,7 +285,7 @@ export default function TeacherSignUp() {
               .replace(/(\-{1,2})$/g, '');
             console.log(e.target.value);
             setValue('phoneNumber', e.target.value);
-            clearErrors("phoneNumber");
+            clearErrors('phoneNumber');
           }}
           InputProps={{
             autoComplete: 'off',
@@ -301,7 +301,7 @@ export default function TeacherSignUp() {
             style: {
               color: '#AFAFAF',
               letterSpacing: '2px',
-              textTransform:'uppercase'
+              textTransform: 'uppercase',
             },
           }}
         />
@@ -333,7 +333,7 @@ export default function TeacherSignUp() {
             style: {
               color: '#AFAFAF',
               letterSpacing: '2px',
-              textTransform:'uppercase'
+              textTransform: 'uppercase',
             },
           }}
         />
@@ -370,7 +370,7 @@ export default function TeacherSignUp() {
               style: {
                 color: '#AFAFAF',
                 letterSpacing: '2px',
-                textTransform:'uppercase'
+                textTransform: 'uppercase',
               },
             }}
           />
@@ -417,7 +417,7 @@ export default function TeacherSignUp() {
                 style: {
                   color: '#AFAFAF',
                   letterSpacing: '2px',
-                  textTransform:'uppercase'
+                  textTransform: 'uppercase',
                 },
               }}
             />

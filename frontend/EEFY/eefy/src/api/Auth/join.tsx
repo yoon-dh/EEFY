@@ -1,43 +1,43 @@
-import { publicApi } from "..";
+import { publicApi } from '..';
 
 interface userData {
-  email: string,
-  password: string,
-  checkedPassword: string,
-  phoneNumber: String,
-  role: string,
-  nickname: string | null,
-  name:string
+  email: string;
+  password: string;
+  checkedPassword: string;
+  phoneNumber: String;
+  role: string;
+  nickname: string | null;
+  name: string;
 }
 interface email {
-  email: string,
+  email: string;
 }
 interface code {
-  email: string,
-  code:string
+  email: string;
+  code: string;
 }
 
 // 이메일 인증(발송) api
-export const postEmail = async (email:email) => {
-  try{
+export const postEmail = async (email: email) => {
+  try {
     console.log('이메일 확인 진입', email);
-    const response = await publicApi.post("/auth/email", email);
+    const response = await publicApi.post('/auth/email', email);
     console.log('이메일 확인 성공', response);
     return response;
-  }catch(error){
-      console.log('이메일 확인 실패',error)
+  } catch (error) {
+    console.log('이메일 확인 실패', error);
   }
 };
 
 // 이메일 인증(확인) api
 export const postCheckEmail = async (data: code) => {
-  try{
+  try {
     console.log('이메일 인증 진입', data);
-    const response = await publicApi.post("/auth/email/confirm", data);
+    const response = await publicApi.post('/auth/email/confirm', data);
     console.log('이메일 인증 성공', response);
     return response;
-  }catch(error){
-    console.log('이메일 인증 실패',error)
+  } catch (error) {
+    console.log('이메일 인증 실패', error);
   }
 };
 // 회원가입 api
