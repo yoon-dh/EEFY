@@ -86,6 +86,9 @@ public class AuthFilter {
             if (path.equals("/api/member") && method.equals("POST")) return true;
             if (path.equals("/api/member") && method.equals("GET")) return true;
         }
+        if (path.contains("/api/alarm")) {
+            if (path.equals("/api/alarm") && method.equals("GET")) return true;
+        }
         if (path.contains("swagger-ui")) return true;
         if (path.contains("/api/study-class/member") && method.equals("GET")) return true;
         return false;
