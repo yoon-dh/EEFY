@@ -12,6 +12,7 @@ import StudentInviteItem from './StudentInviteItem';
 import { IoMdArrowBack } from 'react-icons/io';
 
 import { searchStudents } from '@/api/Invite/Search';
+import { isSearchState } from '@/recoil/TeacherClass';
 
 function StudentInvite() {
   const dummyData = [
@@ -79,6 +80,7 @@ function StudentInvite() {
   console.log(keyWord);
 
   const [inviteArr, setInviteArr] = useRecoilState(inviteArray);
+  const [searchState, setSearchState] = useRecoilState(isSearchState);
 
   const handleKeywordChange = (event: any) => {
     setKeyword(event.target.value);
@@ -94,10 +96,11 @@ function StudentInvite() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }} className='w-full h-full overflow-auto no-scrollbar'>
+      {/* <div style={{ display: 'flex', flexDirection: 'column' }} className='w-full h-full overflow-auto no-scrollbar'> */}
       {/* invite Nav */}
       <div className='flex justify-between items-center' style={{ padding: '8px 12px' }}>
         <div className='text-4xl'>
-          <IoMdArrowBack />
+          <IoMdArrowBack onClick={() => setSearchState(false)} />
         </div>
         <div className='text-2xl'>수강생 초대</div>
         <div className='text-primary text-2xl'>완료({inviteArr.length})</div>
@@ -129,29 +132,29 @@ function StudentInvite() {
       </div>
 
       {/* serach result */}
-      <table style={{ flex: '6' }} className='table'>
-        {/* head */}
-        <thead>
-          <tr>
-            <th>
-              <label>
-                <input type='checkbox' className='checkbox' onClick={() => console.log('xxxxx')} />
-              </label>
-            </th>
-            <th>Name</th>
-            <th>E-mail</th>
-            <th>Phone</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {dummyData.map(item => {
-            return (
-              <StudentSearchItem key={item.memberId} memberId={item.memberId} profile={item.profile} name={item.name} email={item.email} phone={item.phone} />
-            );
-          })}
-        </tbody>
-      </table>
+      <div style={{ overflowY: 'auto' }}>
+        <table style={{ display: 'block' }} className='table'>
+          {/* head */}
+          <thead style={{ width: '100%', display: 'block' }}>
+            <tr style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
+              <th style={{ flex: '0.1' }}>
+                <label>
+                  <input type='checkbox' className='checkbox' />
+                </label>
+              </th>
+              <th style={{ flex: '1' }}>Name</th>
+              <th style={{ flex: '2' }}>E-mail</th>
+            </tr>
+          </thead>
+          <tbody style={{ display: 'block' }}>
+            {dummyData.map(item => {
+              return (
+                <StudentSearchItem key={item.memberId} memberId={item.memberId} profile={item.profile} name={item.name} email={item.email} phone={item.phone} />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

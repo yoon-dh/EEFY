@@ -7,7 +7,7 @@ import { CreateModalOpen } from '@/recoil/ClassCreate';
 import { useState } from 'react';
 import { createClass } from '@/api/Class/classlist';
 
-function ClassCreateModal() {
+function ClassCreateModal({ setClassCreated }: { setClassCreated: React.Dispatch<React.SetStateAction<number>> }) {
   const modalStyle = {
     overlay: {
       position: 'fixed' as 'fixed',
@@ -30,7 +30,7 @@ function ClassCreateModal() {
       left: '30%',
       right: '30%',
       bottom: '20%',
-      border: 'border: 1px solid rgba(255,255,255,0.1)',
+      border: '1px solid rgba(255,255,255,0.1)',
       boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
       //   boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
       borderRadius: '20px',
@@ -67,6 +67,7 @@ function ClassCreateModal() {
       setClassTitle('');
       setClassDesc('');
       closeModal();
+      setClassCreated(prev => prev + 1);
     }
   };
 
@@ -75,11 +76,11 @@ function ClassCreateModal() {
       <div style={{ display: 'flex', width: '80%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '70%' }}>
           <div style={{ flex: '4' }}>
-            <div style={{ textTransform: 'uppercase' }}>Class Name</div>
+            <div style={{ textTransform: 'uppercase', letterSpacing: '2px' }}>Class Name</div>
             <S.CreateInput type='text' value={classTitle} onChange={handleClassTitleChange} />
           </div>
           <div style={{ flex: '4' }}>
-            <div style={{ textTransform: 'uppercase' }}>Class Description</div>
+            <div style={{ textTransform: 'uppercase', letterSpacing: '2px' }}>Class Description</div>
             <S.CreateInput type='text' value={classDesc} onChange={handleClassDescChange} />
           </div>
           <div style={{ flex: '2' }}>

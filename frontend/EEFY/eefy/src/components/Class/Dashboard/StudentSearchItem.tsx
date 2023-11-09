@@ -52,13 +52,13 @@ function StudentSearchItem({ memberId, profile, name, email, phone }: StudentSea
   }
 
   return (
-    <tr>
-      <th>
+    <tr style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+      <th style={{ flex: '0.1' }}>
         <label>
           <input type='checkbox' className='checkbox' checked={checkstate} onClick={handleInvite} readOnly />
         </label>
       </th>
-      <td>
+      <td style={{ flex: '1' }}>
         <div className='flex items-center space-x-3'>
           <div className='avatar'>
             <div className='mask mask-squircle w-12 h-12 bg-primary'>
@@ -71,11 +71,7 @@ function StudentSearchItem({ memberId, profile, name, email, phone }: StudentSea
           </div>
         </div>
       </td>
-      <td>{email}</td>
-      <td>{phone}</td>
-      <th>
-        <button className='btn btn-ghost btn-xs'>details</button>
-      </th>
+      <td style={{ flex: '2' }}>{email}</td>
     </tr>
   );
 }

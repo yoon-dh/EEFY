@@ -18,7 +18,7 @@ export default function NormalTag() {
       }}
     >
       <div className='flex justify-between items-center h-full'>
-        <div className='ml-5 flex flex-col'>
+        <div style={{ flex: '1' }} className='ml-5 flex flex-col'>
           <div>
             <p className='text-3xl font-bold text-white'>{dummyData.title}</p>
           </div>
@@ -28,7 +28,7 @@ export default function NormalTag() {
             </p>
           </div>
         </div>
-        <div className='mr-5 flex justify-center items-center'>
+        <div style={{ flex: 0.25 }} className='mr-5 flex justify-center items-center'>
           <ProfileTag />
           {/* <p className='text-sm font-extrabold '>점수: 90점</p> */}
         </div>
