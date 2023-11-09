@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
+import { CreateLecture } from '@/recoil/Lecture'
 import { NoticeList, NoticeNum } from '@/recoil/Notice';
 // 날짜 변환
 import dayjs from 'dayjs';
@@ -7,6 +8,7 @@ import { Card, Title, Time, Container, Wrappe } from './NoticeListBoard.style';
 function NoticeListBoard() {
   const [noticeList, setNoticeList] = useRecoilState(NoticeList);
   const [num, setNum] = useRecoilState(NoticeNum);
+  const [lecturePage, setLecturePage] = useRecoilState(CreateLecture);
   useEffect(() => {
     console.log(noticeList);
   }, []);
@@ -32,6 +34,7 @@ function NoticeListBoard() {
             onClick={() => {
               console.log(item);
               setNum(item);
+              setLecturePage(false)
             }}
           >
             <Title>
