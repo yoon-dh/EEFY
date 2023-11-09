@@ -4,6 +4,7 @@ import com.eefy.studyclass.domain.member.exception.message.MemberEnum;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.studyclass.exception.message.StudyClassEnum;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
+import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import com.eefy.studyclass.global.exception.CustomException;
 import lombok.AccessLevel;
@@ -19,8 +20,8 @@ public class StudyClassValidator {
     public void checkUserRoleCreateStudyClass(Member member) {
         if(!member.getRole().equals("TEACHER")) throw CustomException.builder()
                 .status(HttpStatus.UNAUTHORIZED)
-                .code(MemberEnum.NO_UNAUTHORIZED_ABOUT_CREATE_CLASS.getCode())
-                .message(MemberEnum.NO_UNAUTHORIZED_ABOUT_CREATE_CLASS.getMessage()).build();
+                .code(MemberEnum.UNAUTHORIZED_ABOUT_CREATE_CLASS.getCode())
+                .message(MemberEnum.UNAUTHORIZED_ABOUT_CREATE_CLASS.getMessage()).build();
     }
 
     public void existsStudyClassByClassId(StudyClassRepository studyClassRepository, Integer studyClassId) {
@@ -62,5 +63,13 @@ public class StudyClassValidator {
                 .message(StudyClassEnum.ALREADY_UNPARTICIPATE_STUDY_CLASS.getMessage())
                 .build();
         return participate.get();
+    }
+
+    public void checkUserRoleEnrollHomework(Integer teacherId, StudyClass studyClass) {
+        if(studyClass.getMemberId() != teacherId) throw CustomException.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .code(StudyClassEnum.UNAUTHORIZED_ABOUT_ENROLL_HOMEWORK.getCode())
+                .message(StudyClassEnum.UNAUTHORIZED_ABOUT_ENROLL_HOMEWORK.getMessage())
+                .build();
     }
 }

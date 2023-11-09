@@ -16,8 +16,8 @@ public class MemberValidator {
     public void checkUserRoleInviteOrDisinviteMember(Member member, Optional studyClass) {
         if(!member.getRole().equals("TEACHER") || studyClass.isEmpty()) throw CustomException.builder()
                 .status(HttpStatus.UNAUTHORIZED)
-                .code(MemberEnum.NO_UNAUTHORIZED_ABOUT_INVITE_MEMBER.getCode())
-                .message(MemberEnum.NO_UNAUTHORIZED_ABOUT_INVITE_MEMBER.getMessage())
+                .code(MemberEnum.UNAUTHORIZED_ABOUT_INVITE_MEMBER.getCode())
+                .message(MemberEnum.UNAUTHORIZED_ABOUT_INVITE_MEMBER.getMessage())
                 .build();
     }
 }

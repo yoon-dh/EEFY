@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.service;
 
+import com.eefy.studyclass.domain.studyclass.dto.request.EnrollHomeworkRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.InviteMemberRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassCreateRequest;
 import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
@@ -18,4 +19,5 @@ public interface StudyClassService {
     List<SearchStudentResponse> getSearchStudentList(Integer teacherId, List<Participate> participateList);
     void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest);
     void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest);
+    void enrollHomework(Integer teacherId, EnrollHomeworkRequest enrollHomeworkRequest);
 }
