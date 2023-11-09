@@ -1,5 +1,6 @@
-package com.eefy.member.domain.member.persistence.entity;
+package com.eefy.member.domain.question.persistence.entity;
 
+import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.global.entity.BaseEntity;
 
 import javax.persistence.*;
