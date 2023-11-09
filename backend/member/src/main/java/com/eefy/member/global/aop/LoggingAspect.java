@@ -37,10 +37,6 @@ public class LoggingAspect {
                     request.getRequestURI(),
                     paramMapToString(request.getParameterMap()),
                     end - start);
-            if (request.getMethod().equalsIgnoreCase("POST")
-                    || request.getMethod().equals("PUT")) {
-                log.info("Body: {}", IOUtils.toString(request.getReader()));
-            }
         }
     }
 
