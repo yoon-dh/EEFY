@@ -57,9 +57,9 @@ export default function SideNav() {
           <br />
           <br />
 
-          {/* 마이페이지 - 학생 OR 클래스관리 - 강사  */}
+          {/* 서재 */}
           <li className='w-full' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={'/library/teacher'} className='tooltip tooltip-right tooltip-base-300' data-tip='서재'>
+            <Link href={'/library/librarylist'} className='tooltip tooltip-right tooltip-base-300' data-tip='서재'>
               <FaBookBookmark className='text-2xl' />
               {/* <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                 <path
