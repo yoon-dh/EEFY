@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -26,9 +25,8 @@ public class AlarmServiceImpl implements AlarmService {
         FcmMessage fcmMessage = FcmUtil.makeMessage(targetToken, title, body);
         try {
             String accessToken = "Bearer " + FcmUtil.getAccessToken();
-            Optional<Response> response = firebaseClient.sendMessageTo(accessToken, fcmMessage);
-            if (response.isPresent()) log.info(response.get().body().toString());
-            else log.info("메세지 전송 후 응답 데이터 없음");
+            Response response = firebaseClient.sendMessageTo(accessToken, fcmMessage);
+            log.info(response.body().toString());
         } catch (FeignException e) {
             log.error(e.getMessage());
             throw CustomException.builder()

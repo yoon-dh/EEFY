@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -54,10 +53,10 @@ public class MemberServiceImpl implements MemberService {
         // studyClassId != 0인 경우 클래스에 참여중인 학생 목록 조회
         // 목록 조회해서 멤버아이디 캐싱하고 내가 캐싱하고있는 데이터가 study-class쪽에서 변화된다면 리프레시하게 하고십다!
         // 이벤트 기반으로 수정(서비스 분리)
-        Optional<List<SearchStudentResponse>> studentList = studyClassService.searchStudentList(teacherId, classId);
-        if (studentList.isEmpty()) return makeStudentResponse(selectMembers(key, value), classId);
+        List<SearchStudentResponse> studentList = studyClassService.searchStudentList(teacherId, classId);
+        if (studentList == null) return makeStudentResponse(selectMembers(key, value), classId);
 
-        List<Integer> studentIds = studentList.get().stream()
+        List<Integer> studentIds = studentList.stream()
                 .map(SearchStudentResponse::getMemberId).collect(Collectors.toList());
         List<Member> members = selectMembers(key, value, studentIds);
         return makeStudentResponse(members, classId);

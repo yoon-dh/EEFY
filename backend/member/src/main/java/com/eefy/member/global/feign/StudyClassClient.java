@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
 @FeignClient(name = "studyClassClient", url = "https://k9b306.p.ssafy.io/api/study-class")
 public interface StudyClassClient {
 
     @GetMapping("/member")
     @Headers("Content-Type: application/json; UTF-8")
-    Optional<List<SearchStudentResponse>> searchStudentList(
+    List<SearchStudentResponse> searchStudentList(
             @RequestHeader("Member-Id") int teacherId, @RequestParam int classId);
 }
