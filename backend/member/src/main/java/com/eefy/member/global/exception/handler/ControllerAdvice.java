@@ -3,6 +3,7 @@ package com.eefy.member.global.exception.handler;
 import com.eefy.member.global.exception.CustomException;
 import com.eefy.member.global.exception.ExceptionResponseDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerAdvice {
 
     @ExceptionHandler(CustomException.class)
-    private ResponseEntity<ExceptionResponseDto> exception(CustomException e) {
+    private ResponseEntity<ExceptionResponseDto> customException(CustomException e) {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(e.getStatus())
@@ -21,5 +22,11 @@ public class ControllerAdvice {
                         .code(e.getCode())
                         .message(e.getMessage())
                         .build());
+    }
+
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<String> exception(Exception e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 }

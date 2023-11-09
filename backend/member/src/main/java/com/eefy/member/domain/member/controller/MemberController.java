@@ -42,7 +42,7 @@ public class MemberController {
     public List<StudentResponse> getStudent(@RequestHeader("Member-Id") int teacherId,
                                             @RequestParam String key,
                                             @RequestParam String value,
-                                            @RequestParam(required = false) int classId) {
+                                            @RequestParam int classId) {
         return memberService.getStudent(key, value, teacherId, classId);
     }
 
