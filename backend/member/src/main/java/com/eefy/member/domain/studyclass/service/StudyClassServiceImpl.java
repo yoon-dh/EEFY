@@ -35,8 +35,8 @@ public class StudyClassServiceImpl implements StudyClassService {
 
 
     @Override
-    public List<SearchStudentResponse> searchStudentList(int teacherId, int classId) {
-        return studyClassClient.searchStudentList(teacherId, classId);
+    public List<SearchStudentResponse> searchStudentList(int classId, String jwtToken) {
+        return studyClassClient.searchStudentList(jwtToken, classId);
     }
 
     @Override
