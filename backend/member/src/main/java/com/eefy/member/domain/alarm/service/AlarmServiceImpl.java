@@ -60,6 +60,7 @@ public class AlarmServiceImpl implements AlarmService {
         }
         else topic = alarmOptional.get().getTopic();
         List<String> tokens = getStudentTokens(request.getStudentIds());
+        log.info(tokens.toString());
         sendSubscribe(tokens, topic);
         return new SubscribeClassTopicResponse(topic);
     }
