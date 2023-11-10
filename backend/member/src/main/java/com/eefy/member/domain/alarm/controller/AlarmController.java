@@ -1,16 +1,17 @@
 package com.eefy.member.domain.alarm.controller;
 
 import com.eefy.member.domain.alarm.dto.request.AlarmSendRequest;
+import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
+import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.service.AlarmService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,9 +32,11 @@ public class AlarmController {
         return ResponseEntity.ok().body("SUCCESS");
     }
 
-    @Operation(summary = "푸시 알림 토큰 테스트", description = "푸시 알림 토큰 값을 확인하는 API")
-    @GetMapping
-    public void getToken(@RequestParam String token) {
-        System.out.println("전달받은 토큰: " + token);
+    @Operation(summary = "클래스에 대한 토픽 구독",
+            description = "수강생이 클래스에 초대됐을 때 해당 클래스의 토픽을 구독하는 API")
+    @PostMapping("/{classId}")
+    public SubscribeClassTopicResponse subscribeClassTopic(@PathVariable int classId,
+                                                           @RequestBody SubscribeClassTopicRequest request) {
+        return alarmService.subscribeClassTopic(classId, request);
     }
 }
