@@ -1,6 +1,8 @@
 package com.eefy.member.domain.alarm.service;
 
 import com.eefy.member.domain.alarm.dto.FcmMessage;
+import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
+import com.eefy.member.domain.alarm.dto.response.ClassTopicCreateResponse;
 import com.eefy.member.domain.alarm.exception.message.AlarmErrorEnum;
 import com.eefy.member.domain.alarm.util.FcmUtil;
 import com.eefy.member.global.exception.CustomException;
@@ -41,5 +43,15 @@ public class AlarmServiceImpl implements AlarmService {
                     .message(AlarmErrorEnum.FAILED_SEND_MESSAGE_WITH_SERVER.getMessage())
                     .build();
         }
+    }
+
+    @Override
+    public ClassTopicCreateResponse makeClassTopic(int classId) {
+        return null;
+    }
+
+    @Override
+    public void subscribeClassTopic(int classId, SubscribeClassTopicRequest request) {
+
     }
 }
