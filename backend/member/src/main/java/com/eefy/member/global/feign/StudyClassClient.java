@@ -13,7 +13,6 @@ import java.util.List;
 public interface StudyClassClient {
 
     @GetMapping("/member")
-    @Headers("Content-Type: application/json; UTF-8")
     List<SearchStudentResponse> searchStudentList(
-            @RequestHeader("Member-Id") int teacherId, @RequestParam int classId);
+            @RequestHeader("Authorization") String jwtToken, @RequestParam int classId);
 }
