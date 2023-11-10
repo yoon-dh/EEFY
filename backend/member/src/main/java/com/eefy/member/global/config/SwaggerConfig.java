@@ -51,6 +51,14 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public GroupedOpenApi lectureAPI() {
+        return GroupedOpenApi.builder()
+                .group("lecture")
+                .pathsToMatch("/api/lecture/**")
+                .build();
+    }
+
+    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .components(new Components())
