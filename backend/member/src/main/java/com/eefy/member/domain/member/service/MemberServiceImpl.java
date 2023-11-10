@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
         // 목록 조회해서 멤버아이디 캐싱하고 내가 캐싱하고있는 데이터가 study-class쪽에서 변화된다면 리프레시하게 하고십다!
         // 이벤트 기반으로 수정(서비스 분리)
         List<SearchStudentResponse> studentList = studyClassService.searchStudentList(teacherId, classId);
-        if (studentList == null) return makeStudentResponse(selectMembers(key, value), classId);
+        if (studentList == null || studentList.isEmpty()) return makeStudentResponse(selectMembers(key, value), classId);
 
         List<Integer> studentIds = studentList.stream()
                 .map(SearchStudentResponse::getMemberId).collect(Collectors.toList());
