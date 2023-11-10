@@ -19,7 +19,6 @@ public class CorsConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(List.of(
                 "http://localhost:3000",
-                "http://127.0.0.1:3000",
                 "http://k9b306.p.ssafy.io:3000",
                 "https://k9b306.p.ssafy.io"));
         corsConfig.setAllowCredentials(true);
