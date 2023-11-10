@@ -6,7 +6,9 @@ import com.eefy.member.domain.member.persistence.entity.Lecture;
 import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.domain.member.persistence.mysql.LectureRepository;
 import com.eefy.member.domain.studyclass.dto.request.LectureNoteRequest;
+import com.eefy.member.domain.studyclass.dto.response.LectureNoteListResponse;
 import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
+import com.eefy.member.domain.studyclass.exception.validator.LectureValidator;
 import com.eefy.member.global.feign.StudyClassClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,9 +33,10 @@ public class StudyClassServiceImpl implements StudyClassService {
     private AwsS3Service s3Uploader;
     private final StudyClassClient studyClassClient;
     private final MemberValidator memberValidator;
+    private final LectureValidator lectureValidator;
+
     private final MemberRepository memberRepository;
     private final LectureRepository lectureRepository;
-
 
     @Override
     public List<SearchStudentResponse> searchStudentList(int classId, String jwtToken) {
@@ -41,7 +45,7 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void makeLectureNote(int teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException {
-        Member member = memberValidator.checkMemberRole(memberRepository.findById(teacherId).get());
+        Member member = memberValidator.checkMemberRole(memberRepository.findById(teacherId));
 
         log.info(">>> 강의자료 s3Uploader 실행 이전");
         String filename = s3Uploader.upload(filePath, dir);
@@ -55,5 +59,17 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .build();
 
         lectureRepository.save(lecture);
+    }
+
+    @Override
+    public List<LectureNoteListResponse> getLectureNoteList(int classId) {
+
+        List<Lecture> lectureList = lectureRepository.findByClassId(classId);
+
+        return lectureList.stream().map(lecture ->  LectureNoteListResponse.builder()
+                .id(lecture.getId())
+                .title(lecture.getTitle())
+                .createdAt(lecture.getCreatedAt())
+                .modifiedAt(lecture.getUpdatedAt()).build()).collect(Collectors.toList());
     }
 }

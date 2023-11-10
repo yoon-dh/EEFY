@@ -5,6 +5,7 @@ import com.eefy.member.domain.member.exception.message.MemberEnum;
 import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
 import com.eefy.member.domain.member.persistence.entity.redis.EmailConfirm;
+import com.eefy.member.domain.studyclass.exception.message.LectureEnum;
 import com.eefy.member.global.exception.CustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -81,13 +82,24 @@ public class MemberValidator {
         }
     }
 
-    public Member checkMemberRole(Member member) {
-        if(member == null || !member.getRole().equals(MemberRole.TEACHER)) throw CustomException.builder()
+    public Member checkMemberRole(Optional<Member> member) {
+        if(member.isEmpty() || !member.get().getRole().equals(MemberRole.TEACHER)) throw CustomException.builder()
                 .status(HttpStatus.UNAUTHORIZED)
-                .code(MemberEnum.UNAUTHORIZED_MAKE_LECTURE.getCode())
-                .message(MemberEnum.UNAUTHORIZED_MAKE_LECTURE.getMessage())
+                .code(LectureEnum.UNAUTHORIZED_MAKE_LECTURE.getCode())
+                .message(LectureEnum.UNAUTHORIZED_MAKE_LECTURE.getMessage())
                 .build();
 
-        return member;
+        return member.get();
+    }
+
+
+    public Member existMember(Optional<Member> member) {
+        if(member.isEmpty()) throw CustomException.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .code(MemberEnum.NO_EXIST_MEMBER.getCode())
+                .message(MemberEnum.NO_EXIST_MEMBER.getMessage())
+                .build();
+
+        return member.get();
     }
 }
