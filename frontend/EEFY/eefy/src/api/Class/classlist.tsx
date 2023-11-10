@@ -28,22 +28,8 @@ export const classCheck = async (pageNum: number, sizeNum: number) => {
     };
 
     const res = await privateApi.get('/study-class', { params });
-    // console.log(res.data);
+    console.log(res.data);
     return res.data;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-// token test
-
-export const tokentest = async (FCMtoken: string) => {
-  try {
-    const params = {
-      token: FCMtoken,
-    };
-
-    const res = await publicApi.get('/alarm', { params });
   } catch (err) {
     console.log(err);
   }

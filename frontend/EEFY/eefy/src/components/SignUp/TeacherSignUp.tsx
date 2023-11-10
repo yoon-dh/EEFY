@@ -9,6 +9,9 @@ import { useRouter } from 'next/navigation';
 import { postEmail, postCheckEmail, postJoin } from '../../api/Auth/join';
 import Swal from 'sweetalert2';
 
+import { FCMtoken } from '@/recoil/PushNotification';
+import { useRecoilValue } from 'recoil';
+
 export default function TeacherSignUp() {
   const router = useRouter();
 
@@ -33,6 +36,9 @@ export default function TeacherSignUp() {
   const [showCode, setShowCode] = useState<boolean>(false);
   const [checkCode, setCheckCode] = useState<boolean>(false);
 
+  // FCM token
+  const FCM = useRecoilValue(FCMtoken);
+
   const userData = {
     email: email,
     name: name,
@@ -41,6 +47,7 @@ export default function TeacherSignUp() {
     password: password,
     phoneNumber: phoneNumber,
     role: 'TEACHER',
+    token: FCM,
   };
 
   const authMail = {

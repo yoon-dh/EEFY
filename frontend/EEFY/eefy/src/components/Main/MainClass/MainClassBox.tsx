@@ -3,11 +3,12 @@ import Link from 'next/link';
 import * as S from './MainClassBox.style';
 
 interface MainClassBoxProps {
+  classId: number;
   title: string;
   cnt: number;
 }
 
-function MainClassBox({ title, cnt }: MainClassBoxProps) {
+function MainClassBox({ classId, title, cnt }: MainClassBoxProps) {
   return (
     <Link href='/class/dashboard'>
       <S.ClassBox>

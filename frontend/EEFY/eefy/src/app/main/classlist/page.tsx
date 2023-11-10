@@ -69,17 +69,10 @@ function ClassList() {
     // TODO: 일단 한페이지만, 나중에 페이지네이션?
     const fetchData = async () => {
       const result = await classCheck(0, 8);
-      console.log('fetchData내부========================');
-      console.log(`이거 맞지? ${result}`);
-      console.log('fetchData내부=========================');
       setMyClassArr(result.studyClassList);
       setClassCnt(result.totalCnt);
     };
-
-    console.log('classlist fetchData외부============================');
-    onMessageFCM();
     fetchData();
-    console.log('classlist fetchData외부============================');
   }, [classCreated]);
 
   return (
@@ -105,7 +98,7 @@ function ClassList() {
 
         {/* 클래스 리스트 */}
         {myClassArr?.map(item => (
-          <MainClassBox key={item.id} title={item.title} cnt={item.studentCnt} />
+          <MainClassBox key={item.id} classId={item.id} title={item.title} cnt={item.studentCnt} />
         ))}
       </div>
       {/* 메시지 리스트 */}

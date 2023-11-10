@@ -6,7 +6,6 @@ import { getMessaging, onMessage, getToken } from 'firebase/messaging';
 import { useEffect, useState } from 'react';
 import { FCMtoken } from '@/recoil/PushNotification';
 import { useRecoilState } from 'recoil';
-import { tokentest } from '@/api/Class/classlist';
 
 export default function Home() {
   // FCM 등록 토큰 저장
@@ -37,7 +36,6 @@ export default function Home() {
         if (currentToken) {
           console.log(currentToken);
           setFCMToken(currentToken);
-          tokentest(currentToken);
         } else {
           console.log('No registration token available. Request permission to generate one.');
         }
@@ -52,9 +50,8 @@ export default function Home() {
       setOnMessageTitle(payload.notification?.title);
     });
   };
-  console.log('hi');
+
   useEffect(() => {
-    console.log('======================');
     onMessageFCM();
   }, []);
 
