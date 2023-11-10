@@ -82,11 +82,16 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public List<SearchStudentResponse> searchStudentList(Integer teacherId, Integer classId) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, classId);
-        studyClassValidator.existsByStudyClassByTeacherIdAndClassId(studyClassRepository, teacherId, classId);
+        System.out.println("teacherId: " + teacherId + ", classId: " + classId);
+
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(classId));
+
+        studyClassValidator.checkAuthorityStudyClass(studyClass, teacherId);
+        System.out.println("22222222222222222222222222");
 
         List<Participate> byMemberIdAndClassId = participateRepository.findByStudyClassId(classId);
 
+        System.out.println("333333333333333333333333333333");
         return getSearchStudentList(teacherId, byMemberIdAndClassId);
     }
 

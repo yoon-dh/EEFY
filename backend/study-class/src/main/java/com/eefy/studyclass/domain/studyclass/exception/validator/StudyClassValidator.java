@@ -32,20 +32,14 @@ public class StudyClassValidator {
                 .build();
     }
 
-    public void existsByStudyClassByTeacherIdAndClassId(StudyClassRepository studyClassRepository, Integer classId, Integer teacherId) {
-        if(!studyClassRepository.existsByIdAndMemberId(classId, teacherId)) throw CustomException.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getCode())
-                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getMessage())
-                .build();
-    }
-
-    public void existsByTeacherId(StudyClassRepository studyClassRepository, Integer teacherId) {
-        if(!studyClassRepository.existsByMemberId(teacherId)) throw CustomException.builder()
+    public StudyClass existsStudyClassByClassId(Optional<StudyClass> optionalStudyClass) {
+        if(optionalStudyClass.isEmpty()) throw CustomException.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getCode())
                 .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getMessage())
                 .build();
+
+        return optionalStudyClass.get();
     }
 
     public void alreadyJoinStudyClass(Optional<Participate> participate) {
@@ -70,6 +64,14 @@ public class StudyClassValidator {
                 .status(HttpStatus.BAD_REQUEST)
                 .code(StudyClassEnum.UNAUTHORIZED_ABOUT_ENROLL_HOMEWORK.getCode())
                 .message(StudyClassEnum.UNAUTHORIZED_ABOUT_ENROLL_HOMEWORK.getMessage())
+                .build();
+    }
+
+    public void checkAuthorityStudyClass(StudyClass studyClass, Integer teacherId) {
+        if(studyClass.getMemberId() != teacherId) throw CustomException.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getCode())
+                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getMessage())
                 .build();
     }
 }
