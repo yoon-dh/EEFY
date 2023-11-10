@@ -87,11 +87,9 @@ public class StudyClassServiceImpl implements StudyClassService {
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(classId));
 
         studyClassValidator.checkAuthorityStudyClass(studyClass, teacherId);
-        System.out.println("22222222222222222222222222");
 
         List<Participate> byMemberIdAndClassId = participateRepository.findByStudyClassId(classId);
 
-        System.out.println("333333333333333333333333333333");
         return getSearchStudentList(teacherId, byMemberIdAndClassId);
     }
 

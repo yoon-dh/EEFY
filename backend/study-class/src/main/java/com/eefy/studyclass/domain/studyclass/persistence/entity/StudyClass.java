@@ -51,7 +51,7 @@ public class StudyClass extends BaseEntity {
         this.title = title;
         this.content = content;
         this.startDate = startDate;
-        this.type = type;
+        this.type = type == null ? StudyTypeEnum.NONE : type;
         this.participateList = participateList;
         this.studentCnt = studentCnt;
     }

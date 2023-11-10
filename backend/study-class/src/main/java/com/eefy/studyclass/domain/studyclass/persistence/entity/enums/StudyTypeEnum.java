@@ -7,7 +7,8 @@ public enum StudyTypeEnum {
 
     SPEAKING("말하기"),
     LISTENING("듣기"),
-    WRITING("쓰기");
+    WRITING("쓰기"),
+    NONE("");
 
     private final String value;
 
