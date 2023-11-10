@@ -7,6 +7,7 @@ import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.domain.member.persistence.mysql.LectureRepository;
 import com.eefy.member.domain.studyclass.dto.request.LectureNoteRequest;
 import com.eefy.member.domain.studyclass.dto.response.LectureNoteListResponse;
+import com.eefy.member.domain.studyclass.dto.response.LectureResponse;
 import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.member.domain.studyclass.exception.validator.LectureValidator;
 import com.eefy.member.global.feign.StudyClassClient;
@@ -71,5 +72,13 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .title(lecture.getTitle())
                 .createdAt(lecture.getCreatedAt())
                 .modifiedAt(lecture.getUpdatedAt()).build()).collect(Collectors.toList());
+    }
+
+    @Override
+    public LectureResponse getLecture(int lectureId) {
+
+        Lecture lecture = lectureValidator.existLecture(lectureRepository.findById(lectureId));
+
+        return new LectureResponse(lecture);
     }
 }

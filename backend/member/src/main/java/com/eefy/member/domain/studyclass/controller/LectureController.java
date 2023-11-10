@@ -3,6 +3,7 @@ package com.eefy.member.domain.studyclass.controller;
 
 import com.eefy.member.domain.studyclass.dto.request.LectureNoteRequest;
 import com.eefy.member.domain.studyclass.dto.response.LectureNoteListResponse;
+import com.eefy.member.domain.studyclass.dto.response.LectureResponse;
 import com.eefy.member.domain.studyclass.service.StudyClassService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,16 @@ public class LectureController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{classId}")
+    @GetMapping("/list/{classId}")
     public ResponseEntity<List<LectureNoteListResponse>> getLectureNoteList(@RequestHeader("Member-Id") Integer memberId,
                                                                             @PathVariable Integer classId) {
 
         return ResponseEntity.ok(studyClassService.getLectureNoteList(classId));
+    }
+
+    @GetMapping("/{lectureId}")
+    public ResponseEntity<LectureResponse> getLecture(@RequestHeader("Member-Id") Integer memberId,
+                                                      @PathVariable Integer lectureId) {
+        return ResponseEntity.ok(studyClassService.getLecture(lectureId));
     }
 }
