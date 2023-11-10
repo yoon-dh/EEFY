@@ -42,15 +42,19 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
+    @Column(nullable = false, length = 2000)
+    private String token;
+
     @Builder
-    public Member(String email, String password, String nickname,
-                  String name, String phoneNumber, MemberRole role) {
+    public Member(String email, String password, String nickname, String name,
+                  String phoneNumber, MemberRole role, String token) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.role = role;
+        this.token = token;
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
