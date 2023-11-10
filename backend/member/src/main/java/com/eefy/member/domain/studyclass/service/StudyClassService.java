@@ -11,5 +11,5 @@ import java.util.List;
 public interface StudyClassService {
     List<SearchStudentResponse> searchStudentList(int teacherId, int classId);
     void makeLectureNote(int teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException;
-    List<LectureNoteListResponse> getLectureNoteList(int memberId);
+    List<LectureNoteListResponse> getLectureNoteList(int classId);
 }

@@ -33,9 +33,10 @@ public class LectureController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<LectureNoteListResponse>> getLectureNoteList(@RequestHeader("Member-Id") Integer memberId) {
+    @GetMapping("/{classId}")
+    public ResponseEntity<List<LectureNoteListResponse>> getLectureNoteList(@RequestHeader("Member-Id") Integer memberId,
+                                                                            @PathVariable Integer classId) {
 
-        return ResponseEntity.ok(studyClassService.getLectureNoteList(memberId));
+        return ResponseEntity.ok(studyClassService.getLectureNoteList(classId));
     }
 }

@@ -4,11 +4,11 @@ import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Lecture;
 import com.eefy.member.domain.member.persistence.entity.Member;
-import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
 import com.eefy.member.domain.member.persistence.mysql.LectureRepository;
 import com.eefy.member.domain.studyclass.dto.request.LectureNoteRequest;
 import com.eefy.member.domain.studyclass.dto.response.LectureNoteListResponse;
 import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
+import com.eefy.member.domain.studyclass.exception.validator.LectureValidator;
 import com.eefy.member.global.feign.StudyClassClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,9 +33,10 @@ public class StudyClassServiceImpl implements StudyClassService {
     private AwsS3Service s3Uploader;
     private final StudyClassClient studyClassClient;
     private final MemberValidator memberValidator;
+    private final LectureValidator lectureValidator;
+
     private final MemberRepository memberRepository;
     private final LectureRepository lectureRepository;
-
 
     @Override
     public List<SearchStudentResponse> searchStudentList(int teacherId, int classId) {
@@ -60,17 +62,14 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public List<LectureNoteListResponse> getLectureNoteList(int memberId) {
-        Member member = memberValidator.existMember(memberRepository.findById(memberId));
+    public List<LectureNoteListResponse> getLectureNoteList(int classId) {
 
-        if(member.getRole().equals(MemberRole.TEACHER)) {
-            log.info("====================== 선생님입니다. ====================== ");
-        }
+        List<Lecture> lectureList = lectureRepository.findByClassId(classId);
 
-        if(member.getRole().equals(MemberRole.STUDENT)) {
-            log.info("====================== 학생입니다. ====================== ");
-
-        }
-        return null;
+        return lectureList.stream().map(lecture ->  LectureNoteListResponse.builder()
+                .id(lecture.getId())
+                .title(lecture.getTitle())
+                .createdAt(lecture.getCreatedAt())
+                .modifiedAt(lecture.getUpdatedAt()).build()).collect(Collectors.toList());
     }
 }
