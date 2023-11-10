@@ -14,6 +14,8 @@ import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.service.HomeworkService;
 import java.io.IOException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,7 +38,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class HomeworkController {
 
     private final HomeworkService homeworkService;
+    // 솔브에 파일 채점기능 구현
+    // 솔브에 파일 stt 기능 구현
+    // response stt 결과 출력
 
+    @Operation(summary = "과제 만들기")
     @PostMapping("/make")
     public ResponseEntity<MakeHomeworkResponse> makeHomework(
         @RequestBody MakeHomeworkRequest makeHomeworkRequest,
@@ -48,6 +54,7 @@ public class HomeworkController {
             HttpStatus.OK);
     }
 
+    @Operation(summary = "문제 만들고 과제에 할당하기")
     @PostMapping(value = "/make/question", consumes = {MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<MakeHomeworkQuestionResponse> makeQuestion(
@@ -62,6 +69,7 @@ public class HomeworkController {
             HttpStatus.OK);
     }
 
+    @Operation(summary = "과제를 클래스에 할당하기")
     @PostMapping("/assign/class")
     public ResponseEntity<AssignHomeworkToClassResponse> assignHomeworkToClass(
         @RequestBody AssignHomeworkToClassRequest assignHomeworkToClassRequest,
@@ -72,6 +80,7 @@ public class HomeworkController {
             HttpStatus.OK);
     }
 
+    @Operation(summary = "학생 아이디와 클래스를 기준으로 과제 불러오기, 클래스에 null 이면 전체 과제 조회")
     @GetMapping("/view")
     public ResponseEntity<ViewHomeworkResponse> viewHomework(
         ViewHomeworkRequest viewHomeworkRequest,
@@ -82,6 +91,7 @@ public class HomeworkController {
             HttpStatus.OK);
     }
 
+    @Operation(summary = "클래스에 할당된 아이디를 기준으로 문제들 불러오기")
     @GetMapping("/getProblem/{classHomeworkId}")
     public ResponseEntity<GetProblemResponse> getProblems(
         @PathVariable Integer classHomeworkId,
@@ -92,16 +102,19 @@ public class HomeworkController {
 
     // 과제 문제를 제출하는 로직
     // 과제가 완료되는 로직
-    @PostMapping("/solve")
+    @Operation(summary = "과제를 제출")
+    @PostMapping(value = "/solve", consumes = {MediaType.APPLICATION_JSON_VALUE,
+        MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SolveProblemResponse> solveProblem(
-        @RequestBody SolveProblemRequest solveProblemRequest,
+        @RequestPart SolveProblemRequest solveProblemRequest,
+        @RequestPart MultipartFile voiceFile,
         @RequestHeader("Member-Id") Integer memberId
-    ) {
+    ) throws IOException {
         return new ResponseEntity<>(
-            homeworkService.solveProblem(solveProblemRequest, memberId),
+            homeworkService.solveProblem(solveProblemRequest, memberId, voiceFile),
             HttpStatus.OK);
     }
-
+    @Operation(summary = "과제 채점")
     @GetMapping("/solve/{homeworkStudentId}")
     public ResponseEntity<SolveHomeworkResponse> solveHomework(
         @PathVariable Integer homeworkStudentId,

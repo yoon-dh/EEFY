@@ -53,7 +53,7 @@ public class S3Uploader {
         }
     }
 
-    private Optional<File> convert(MultipartFile file) throws  IOException {
+    public Optional<File> convert(MultipartFile file) throws  IOException {
         File convertFile = new File(file.getOriginalFilename());
         if(convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
@@ -64,4 +64,7 @@ public class S3Uploader {
         return Optional.empty();
     }
 
+    public void removeFile(File file){
+        removeNewFile(file);
+    }
 }

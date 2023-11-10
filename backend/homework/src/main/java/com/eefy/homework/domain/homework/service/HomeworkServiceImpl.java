@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -178,7 +179,14 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Override
     @Transactional
     public SolveProblemResponse solveProblem(SolveProblemRequest solveProblemRequest,
-        Integer memberId) {
+        Integer memberId, MultipartFile voiceFile) throws IOException {
+
+        String uploadPath = null;
+        String sttText = null;
+        if (voiceFile != null){
+            uploadPath = s3Uploader.upload(voiceFile, voicePath);
+            sttText = aiServerRestClient.getSttText(voiceFile);
+        }
 
         HomeworkStudent homeworkStudent = validateHomeworkStudent(
             solveProblemRequest.getHomeworkStudentId());
@@ -186,12 +194,10 @@ public class HomeworkServiceImpl implements HomeworkService {
             solveProblemRequest.getHomeworkQuestionId());
 
         HomeworkStudentQuestion homeworkStudentQuestion = HomeworkStudentQuestion.from(
-            homeworkQuestion,
-            homeworkStudent, solveProblemRequest.getSubmitAnswer(),
-            solveProblemRequest.getFilePath());
+            homeworkQuestion, homeworkStudent, solveProblemRequest.getSubmitAnswer(), uploadPath);
 
         homeworkStudentQuestionRepository.save(homeworkStudentQuestion);
-        return new SolveProblemResponse(homeworkStudentQuestion.getId());
+        return new SolveProblemResponse(homeworkStudentQuestion.getId(), sttText);
     }
 
     @Override

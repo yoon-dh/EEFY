@@ -8,4 +8,5 @@ import lombok.Data;
 public class SolveProblemResponse {
 
     private Integer homeworkStudentQuestionId;
+    private String  sttText;
 }

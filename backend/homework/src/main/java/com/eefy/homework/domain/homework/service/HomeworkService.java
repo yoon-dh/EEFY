@@ -31,7 +31,8 @@ public interface HomeworkService {
 
     GetProblemResponse getProblem(Integer classHomeworkId, Integer memberId);
 
-    SolveProblemResponse solveProblem(SolveProblemRequest solveProblemRequest, Integer memberId);
+    SolveProblemResponse solveProblem(SolveProblemRequest solveProblemRequest, Integer memberId,
+        MultipartFile voiceFile) throws IOException;
 
     SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId);
 }
