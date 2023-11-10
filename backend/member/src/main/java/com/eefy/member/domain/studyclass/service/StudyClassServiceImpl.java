@@ -4,8 +4,10 @@ import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Lecture;
 import com.eefy.member.domain.member.persistence.entity.Member;
+import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
 import com.eefy.member.domain.member.persistence.mysql.LectureRepository;
 import com.eefy.member.domain.studyclass.dto.request.LectureNoteRequest;
+import com.eefy.member.domain.studyclass.dto.response.LectureNoteListResponse;
 import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.member.global.feign.StudyClassClient;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +43,7 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void makeLectureNote(int teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException {
-        Member member = memberValidator.checkMemberRole(memberRepository.findById(teacherId).get());
+        Member member = memberValidator.checkMemberRole(memberRepository.findById(teacherId));
 
         log.info(">>> 강의자료 s3Uploader 실행 이전");
         String filename = s3Uploader.upload(filePath, dir);
@@ -55,5 +57,20 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .build();
 
         lectureRepository.save(lecture);
+    }
+
+    @Override
+    public List<LectureNoteListResponse> getLectureNoteList(int memberId) {
+        Member member = memberValidator.existMember(memberRepository.findById(memberId));
+
+        if(member.getRole().equals(MemberRole.TEACHER)) {
+            log.info("====================== 선생님입니다. ====================== ");
+        }
+
+        if(member.getRole().equals(MemberRole.STUDENT)) {
+            log.info("====================== 학생입니다. ====================== ");
+
+        }
+        return null;
     }
 }
