@@ -43,6 +43,8 @@ public class JoinRequest {
     @NotBlank(message = "역할이 비어있습니다.")
     private String role;
 
+    private String token;
+
     public Member toEntity() {
         return Member.builder()
                 .email(email)
@@ -51,6 +53,7 @@ public class JoinRequest {
                 .nickname(nickname)
                 .phoneNumber(phoneNumber)
                 .role(role.equals("TEACHER") ? MemberRole.TEACHER : MemberRole.STUDENT)
+                .token(token)
                 .build();
     }
 }
