@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ClassTopicCreateResponse {
+public class SubscribeClassTopicResponse {
     private String topic;
 }
