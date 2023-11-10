@@ -1,7 +1,5 @@
 from fastapi import FastAPI
 from py_eureka_client import eureka_client
-from fastapi.middleware.cors import CORSMiddleware
-
 from domain.ocr.router import ocr_router
 from domain.stt.router import stt_router
 
@@ -11,16 +9,6 @@ app.include_router(stt_router.router)
 
 your_rest_server_port = 8000
 
-origins = [
-    "*"
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"]
-)
 
 @app.on_event("startup")
 async def startup_event():
