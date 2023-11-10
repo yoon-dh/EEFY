@@ -4,6 +4,7 @@ import com.eefy.studyclass.domain.member.exception.validator.MemberValidator;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
+import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
@@ -76,9 +77,8 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void modifyStudyClass(StudyClassModifyRequest studyClassModifyRequest) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, studyClassModifyRequest.getId());
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(studyClassModifyRequest.getId()));
 
-        StudyClass studyClass = studyClassRepository.findById(studyClassModifyRequest.getId()).get();
         studyClass.updateStudyClassInfo(studyClassModifyRequest);
     }
 
@@ -115,13 +115,10 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, inviteMemberRequest.getClassId());
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(inviteMemberRequest.getClassId()));
 
         memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
                 studyClassRepository.findByIdAndMemberId(inviteMemberRequest.getClassId(), memberId));
-
-
-        StudyClass studyClass = studyClassRepository.findById(inviteMemberRequest.getClassId()).get();
 
         for (StudyClassStudentRequest studentRequest: inviteMemberRequest.getMemberList()) {
 
@@ -136,10 +133,10 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, disInviteMemberRequest.getClassId());
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(disInviteMemberRequest.getClassId()));
 
         memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
-                studyClassRepository.findByIdAndMemberId(disInviteMemberRequest.getClassId(), memberId));
+                studyClassRepository.findByIdAndMemberId(studyClass.getId(), memberId));
 
         for (StudyClassStudentRequest studentRequest: disInviteMemberRequest.getMemberList()) {
 
@@ -151,9 +148,7 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void enrollHomework(Integer teacherId, EnrollHomeworkRequest enrollHomeworkRequest) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, enrollHomeworkRequest.getClassId());
-
-        StudyClass studyClass = studyClassRepository.findById(enrollHomeworkRequest.getClassId()).get();
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(enrollHomeworkRequest.getClassId()));
 
         studyClassValidator.checkUserRoleEnrollHomework(teacherId, studyClass);
 
@@ -165,23 +160,25 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void createNotice(Integer teacherId, NoticeCreateRequest noticeCreateRequest) {
-        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(noticeCreateRequest.getClassId()));
+    public void createNotice(Integer teacherId, NoticeRequest noticeRequest) {
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(noticeRequest.getClassId()));
 
         studyClassValidator.checkAuthorityStudyClass(studyClass, teacherId);
 
         Notice notice = Notice.builder()
                 .studyClass(studyClass)
-                .title(noticeCreateRequest.getTitle())
-                .content(noticeCreateRequest.getContent())
+                .title(noticeRequest.getTitle())
+                .content(noticeRequest.getContent())
                 .build();
 
         noticeRepository.save(notice);
     }
 
     @Override
-    public void getNoticeList(Integer classId) {
+    public List<NoticeListResponse> getNoticeList(Integer classId) {
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(classId));
 
+        return noticeRepository.findByStudyClassId(studyClass.getId()).stream().map(notice -> new NoticeListResponse(notice)).collect(Collectors.toList());
     }
 
     @Override
@@ -190,7 +187,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void modifyNotice(NoticeModifyRequest noticeModifyRequest) {
+    public void modifyNotice(Integer teacherId, NoticeRequest noticeModifyRequest) {
 
     }
 }

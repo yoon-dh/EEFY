@@ -1,9 +1,7 @@
 package com.eefy.studyclass.domain.studyclass.service;
 
-import com.eefy.studyclass.domain.studyclass.dto.request.EnrollHomeworkRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.InviteMemberRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassCreateRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
+import com.eefy.studyclass.domain.studyclass.dto.request.*;
+import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
@@ -20,4 +18,8 @@ public interface StudyClassService {
     void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest);
     void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest);
     void enrollHomework(Integer teacherId, EnrollHomeworkRequest enrollHomeworkRequest);
+    void createNotice(Integer teacherId, NoticeRequest noticeCreateRequest);
+    List<NoticeListResponse> getNoticeList(Integer classId);
+    void getNoticeInfo(Integer noticeId);
+    void modifyNotice(Integer teacherId, NoticeRequest noticeModifyRequest);
 }

@@ -24,13 +24,13 @@ public class StudyClassValidator {
                 .message(MemberEnum.UNAUTHORIZED_ABOUT_CREATE_CLASS.getMessage()).build();
     }
 
-    public void existsStudyClassByClassId(StudyClassRepository studyClassRepository, Integer studyClassId) {
-        if(!studyClassRepository.existsById(studyClassId)) throw CustomException.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getCode())
-                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getMessage())
-                .build();
-    }
+//    public void existsStudyClassByClassId(StudyClassRepository studyClassRepository, Integer studyClassId) {
+//        if(!studyClassRepository.existsById(studyClassId)) throw CustomException.builder()
+//                .status(HttpStatus.BAD_REQUEST)
+//                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getCode())
+//                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getMessage())
+//                .build();
+//    }
 
     public StudyClass existsStudyClassByClassId(Optional<StudyClass> optionalStudyClass) {
         if(optionalStudyClass.isEmpty()) throw CustomException.builder()

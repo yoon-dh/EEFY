@@ -86,8 +86,15 @@ public class StudyClassController {
 
     @PostMapping("/tutor/notice")
     public ResponseEntity<Void> createNotice(@RequestHeader("Member-Id") Integer teacherId,
-                                            @RequestBody NoticeCreateRequest noticeRequest) {
+                                            @RequestBody NoticeRequest noticeRequest) {
         studyClassService.createNotice(teacherId, noticeRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/tutor/notice")
+    public ResponseEntity<Void> modifyNotice(@RequestHeader("Member-Id") Integer teacherId,
+                                             @RequestBody NoticeRequest noticeRequest) {
+        studyClassService.modifyNotice(teacherId, noticeRequest);
         return ResponseEntity.ok().build();
     }
 }
