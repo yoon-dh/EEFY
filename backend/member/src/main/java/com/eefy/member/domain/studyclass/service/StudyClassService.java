@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface StudyClassService {
-    List<SearchStudentResponse> searchStudentList(int teacherId, int classId);
+    List<SearchStudentResponse> searchStudentList(int classId, String jwtToken);
     void makeLectureNote(int teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException;
     List<LectureNoteListResponse> getLectureNoteList(int classId);
 }

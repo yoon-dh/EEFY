@@ -62,7 +62,6 @@ public class AuthServiceImpl implements AuthService {
     private ResponseEntity<JwtTokenResponse> makeJwtToken(Member member) {
         String accessToken = jwtTokenProvider.createAccessToken(member.getEmail(), member.getId());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
-        System.out.println("gmlmsdfdsfsdfzㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
         return makeLoginResponse(accessToken, refreshToken, member);
     }
 
