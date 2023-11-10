@@ -2,7 +2,7 @@ from fastapi import APIRouter, File
 from domain.ocr.service.ocr_service import get_document_bounds
 
 router = APIRouter(
-    prefix="/api/ocr"
+    prefix="/api/ai/ocr"
 )
 
 @router.post("/document")

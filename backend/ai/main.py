@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 from py_eureka_client import eureka_client
+from domain.announce.router import announce_router
 from domain.ocr.router import ocr_router
 from domain.stt.router import stt_router
 
 app = FastAPI()
 app.include_router(ocr_router.router)
 app.include_router(stt_router.router)
+app.include_router(announce_router.router)
 
 your_rest_server_port = 8000
 
