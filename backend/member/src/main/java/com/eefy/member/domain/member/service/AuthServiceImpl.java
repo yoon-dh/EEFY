@@ -71,8 +71,7 @@ public class AuthServiceImpl implements AuthService {
         headers.add("Authorization", TOKEN_PREFIX + accessToken);
         headers.add("Authorization-Refresh", TOKEN_PREFIX + refreshToken);
 
-        ModelMapper modelMapper = new ModelMapper();
         return ResponseEntity.ok().headers(headers)
-                .body(modelMapper.map(member, JwtTokenResponse.class));
+                .body(new ModelMapper().map(member, JwtTokenResponse.class));
     }
 }

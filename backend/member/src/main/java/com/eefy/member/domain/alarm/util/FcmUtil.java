@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class FcmUtil {
+
     public static FcmMessage makeMessage(String targetToken, String title, String body) {
         return FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
