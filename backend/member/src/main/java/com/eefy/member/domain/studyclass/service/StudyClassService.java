@@ -2,6 +2,7 @@ package com.eefy.member.domain.studyclass.service;
 
 import com.eefy.member.domain.studyclass.dto.request.LectureNoteRequest;
 import com.eefy.member.domain.studyclass.dto.response.LectureNoteListResponse;
+import com.eefy.member.domain.studyclass.dto.response.LectureResponse;
 import com.eefy.member.domain.studyclass.dto.response.SearchStudentResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,4 +13,5 @@ public interface StudyClassService {
     List<SearchStudentResponse> searchStudentList(int classId, String jwtToken);
     void makeLectureNote(int teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException;
     List<LectureNoteListResponse> getLectureNoteList(int classId);
+    LectureResponse getLecture(int lectureId);
 }

@@ -11,14 +11,12 @@ public class LectureNoteListResponse {
     private String title;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-    private String content;
 
     @Builder
-    public LectureNoteListResponse(Integer id, String title, LocalDateTime createdAt, LocalDateTime modifiedAt, String content) {
+    public LectureNoteListResponse(Integer id, String title, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.title = title;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.content = content;
     }
 }
