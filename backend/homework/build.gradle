@@ -51,6 +51,8 @@ dependencies {
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-zipkin', version: '2.2.8.RELEASE'
 	implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.2'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.556'
 }
 
 dependencyManagement {

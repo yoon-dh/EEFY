@@ -12,7 +12,6 @@ public class MakeHomeworkQuestionRequest {
     private Integer homeworkId;
     private String title;
     private String content;
-    private String filePath;
     private HomeworkQuestionType field;
     private String answer;
     private List<ChoiceRequest> choiceRequests;
