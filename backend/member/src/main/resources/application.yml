@@ -51,6 +51,10 @@ jwt:
     access-expiration: 43200000
     refresh-expiration: 604800000
 
+firebase:
+  sdk:
+    path: ${FIREBASE_KEY_PATH}
+
 spring.servlet.multipart.max-file-size: 500MB
 spring.servlet.multipart.max-request-size: 500MB
 

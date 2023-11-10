@@ -55,6 +55,7 @@ public class AlarmServiceImpl implements AlarmService {
         if (alarmOptional.isEmpty()) topic = makeClassTopic(classId);
         else topic = alarmOptional.get().getTopic();
         List<String> tokens = getStudentTokens(request.getStudentIds());
+        log.info(tokens.toString());
         sendSubscribe(tokens, topic);
         return null;
     }
