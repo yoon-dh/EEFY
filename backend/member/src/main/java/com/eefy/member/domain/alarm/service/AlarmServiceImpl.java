@@ -18,6 +18,7 @@ import feign.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,14 +50,18 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
+    @Transactional
     public SubscribeClassTopicResponse subscribeClassTopic(int classId, SubscribeClassTopicRequest request) {
         Optional<Alarm> alarmOptional = alarmRepository.findByClassId(classId);
         String topic;
-        if (alarmOptional.isEmpty()) topic = makeClassTopic(classId);
+        if (alarmOptional.isEmpty()) {
+            topic = makeClassTopic(classId);
+            alarmRepository.save(new Alarm(classId, topic));
+        }
         else topic = alarmOptional.get().getTopic();
         List<String> tokens = getStudentTokens(request.getStudentIds());
         sendSubscribe(tokens, topic);
-        return null;
+        return new SubscribeClassTopicResponse(topic);
     }
 
     private List<String> getStudentTokens(List<Integer> studentIds) {

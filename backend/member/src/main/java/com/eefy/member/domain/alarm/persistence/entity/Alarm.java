@@ -24,4 +24,9 @@ public class Alarm {
 
     @Column(nullable = false, length = 500)
     private String topic;
+
+    public Alarm(int classId, String topic) {
+        this.classId = classId;
+        this.topic = topic;
+    }
 }
