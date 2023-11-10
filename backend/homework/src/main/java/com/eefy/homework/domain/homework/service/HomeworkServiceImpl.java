@@ -1,7 +1,9 @@
 package com.eefy.homework.domain.homework.service;
 
 import com.eefy.homework.domain.homework.AiServerRestClient;
+import com.eefy.homework.domain.homework.ClassServiceFeignClient;
 import com.eefy.homework.domain.homework.dto.ChoiceDto;
+import com.eefy.homework.domain.homework.dto.ClassStudentDto;
 import com.eefy.homework.domain.homework.dto.HomeworkQuestionDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentQuestionDto;
@@ -41,7 +43,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,7 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     private final ModelMapper modelMapper;
     private final AiServerRestClient aiServerRestClient;
+    private final ClassServiceFeignClient classServiceFeignClient;
     private final S3Uploader s3Uploader;
 
     private final HomeworkRepository homeworkRepository;
@@ -117,8 +119,12 @@ public class HomeworkServiceImpl implements HomeworkService {
         classHomeworkRepository.save(classHomework);
 
         // todo: 실제 클래스의 사용자 받아오는 restApi 작성
-        for (Integer studentId : dummyStudentId) {
-            homeworkStudentRepository.save(HomeworkStudent.from(studentId, classHomework));
+        List<ClassStudentDto> classStudents = classServiceFeignClient.getClassStudent(memberId,
+            assignHomeworkToClassRequest.getClassId());
+        log.info(classStudents.toString());
+
+        for (ClassStudentDto classStudentDto : classStudents) {
+            homeworkStudentRepository.save(HomeworkStudent.from(classStudentDto.getMemberId(), classHomework));
         }
 
         return new AssignHomeworkToClassResponse(classHomework.getId());
@@ -170,7 +176,8 @@ public class HomeworkServiceImpl implements HomeworkService {
         List<HomeworkQuestion> problem = homeworkCustomRepository.getProblem(classHomeworkId);
         HomeworkStudent homeworkStudent = validateHomeworkStudent(classHomeworkId, memberId);
 
-        List<HomeworkQuestionResponse> homeworkQuestionResponses = getHomeworkQuestionWithChoice(problem);
+        List<HomeworkQuestionResponse> homeworkQuestionResponses = getHomeworkQuestionWithChoice(
+            problem);
         List<HomeworkStudentQuestionDto> homeworkStudentQuestionDtos = getHomeworkStudentQuestionDtos(
             problem, homeworkStudent);
         return new GetProblemResponse(homeworkQuestionResponses, homeworkStudentQuestionDtos);
@@ -183,7 +190,7 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         String uploadPath = null;
         String sttText = null;
-        if (voiceFile != null){
+        if (voiceFile != null) {
             uploadPath = s3Uploader.upload(voiceFile, voicePath);
             sttText = aiServerRestClient.getSttText(voiceFile);
         }
@@ -264,7 +271,8 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     private HomeworkQuestion saveHomeworkQuestion(
-        MakeHomeworkQuestionRequest makeHomeworkQuestionRequest, Homework homework, String filePath) {
+        MakeHomeworkQuestionRequest makeHomeworkQuestionRequest, Homework homework,
+        String filePath) {
         HomeworkQuestion homeworkQuestion = HomeworkQuestion.of(homework,
             makeHomeworkQuestionRequest.getTitle(),
             makeHomeworkQuestionRequest.getContent(), filePath,
@@ -320,7 +328,8 @@ public class HomeworkServiceImpl implements HomeworkService {
                 .collect(Collectors.toList());
 
             homeworkQuestionResponses.add(
-                HomeworkQuestionResponse.of(mapHomeworkQuestionToDto(homeworkQuestion), choiceDtos));
+                HomeworkQuestionResponse.of(mapHomeworkQuestionToDto(homeworkQuestion),
+                    choiceDtos));
         }
         return homeworkQuestionResponses;
     }
