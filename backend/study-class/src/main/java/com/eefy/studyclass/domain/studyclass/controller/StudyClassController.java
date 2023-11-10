@@ -1,9 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.controller;
 
-import com.eefy.studyclass.domain.studyclass.dto.request.EnrollHomeworkRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.InviteMemberRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassCreateRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
+import com.eefy.studyclass.domain.studyclass.dto.request.*;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;
@@ -84,6 +81,13 @@ public class StudyClassController {
                                               @RequestBody EnrollHomeworkRequest enrollHomeworkRequest) {
 
         studyClassService.enrollHomework(teacherId, enrollHomeworkRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/tutor/notice")
+    public ResponseEntity<Void> createNotice(@RequestHeader("Member-Id") Integer teacherId,
+                                            @RequestBody NoticeCreateRequest noticeRequest) {
+        studyClassService.createNotice(teacherId, noticeRequest);
         return ResponseEntity.ok().build();
     }
 }

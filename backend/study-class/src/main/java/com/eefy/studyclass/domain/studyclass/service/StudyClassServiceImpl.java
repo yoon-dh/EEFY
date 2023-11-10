@@ -9,9 +9,11 @@ import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.ClassHomework;
+import com.eefy.studyclass.domain.studyclass.persistence.entity.Notice;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ClassHomeworkRepository;
+import com.eefy.studyclass.domain.studyclass.persistence.mysql.NoticeRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     private final StudyClassRepository studyClassRepository;
     private final ParticipateRepository participateRepository;
     private final ClassHomeworkRepository classHomeworkRepository;
-
+    private final NoticeRepository noticeRepository;
     private final MemberServiceImpl memberService;
     private final StudyClassValidator studyClassValidator;
     private final MemberValidator memberValidator;
@@ -160,5 +162,35 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .studyClass(studyClass).build();
 
         classHomeworkRepository.save(classHomework);
+    }
+
+    @Override
+    public void createNotice(Integer teacherId, NoticeCreateRequest noticeCreateRequest) {
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(noticeCreateRequest.getClassId()));
+
+        studyClassValidator.checkAuthorityStudyClass(studyClass, teacherId);
+
+        Notice notice = Notice.builder()
+                .studyClass(studyClass)
+                .title(noticeCreateRequest.getTitle())
+                .content(noticeCreateRequest.getContent())
+                .build();
+
+        noticeRepository.save(notice);
+    }
+
+    @Override
+    public void getNoticeList(Integer classId) {
+
+    }
+
+    @Override
+    public void getNoticeInfo(Integer noticeId) {
+
+    }
+
+    @Override
+    public void modifyNotice(NoticeModifyRequest noticeModifyRequest) {
+
     }
 }
