@@ -1,6 +1,8 @@
 'use client';
 import Link from 'next/link';
 import * as S from './MainClassBox.style';
+import { useRecoilState } from 'recoil';
+import { EnterClassNumber } from '@/recoil/ClassCreate';
 
 interface MainClassBoxProps {
   classId: number;
@@ -9,9 +11,11 @@ interface MainClassBoxProps {
 }
 
 function MainClassBox({ classId, title, cnt }: MainClassBoxProps) {
+  const [enterClassNum, setEnterClassNum] = useRecoilState(EnterClassNumber);
+
   return (
     <Link href='/class/dashboard'>
-      <S.ClassBox>
+      <S.ClassBox onClick={() => setEnterClassNum(classId)}>
         {/* 타입에 따라서 이모지 바꿔주기 */}
         <div
           style={{ position: 'absolute', width: '30%', height: '30%', top: '10%', left: '10%', borderRadius: '12px', background: 'rgba(35, 150, 239, 0.41)' }}
