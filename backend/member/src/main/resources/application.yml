@@ -61,7 +61,8 @@ cloud:
       secretKey: ${AWS_SECRET_ACCESS_KEY}
     s3:
       bucket: eefy-bucket
-      dir: profile-images
+      profileDir: profile-images
+      lectureDir: study-class-lecture
     region:
       static: ap-northeast-2
     stack:

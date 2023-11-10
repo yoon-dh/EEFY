@@ -80,4 +80,14 @@ public class MemberValidator {
                     .build();
         }
     }
+
+    public Member checkMemberRole(Member member) {
+        if(member == null || !member.getRole().equals(MemberRole.TEACHER)) throw CustomException.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .code(MemberEnum.UNAUTHORIZED_MAKE_LECTURE.getCode())
+                .message(MemberEnum.UNAUTHORIZED_MAKE_LECTURE.getMessage())
+                .build();
+
+        return member;
+    }
 }
