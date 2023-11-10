@@ -4,10 +4,7 @@ import com.eefy.studyclass.domain.member.exception.validator.MemberValidator;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
-import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
+import com.eefy.studyclass.domain.studyclass.dto.response.*;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.ClassHomework;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Notice;
@@ -182,8 +179,12 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void getNoticeInfo(Integer noticeId) {
+    public NoticeResponse getNoticeInfo(Integer noticeId) {
+        Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeId));
 
+        noticeRepository.updateHit(noticeId);
+
+        return new NoticeResponse(notice);
     }
 
     @Override

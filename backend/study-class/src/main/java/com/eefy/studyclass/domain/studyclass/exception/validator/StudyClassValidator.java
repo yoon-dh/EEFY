@@ -3,9 +3,9 @@ package com.eefy.studyclass.domain.studyclass.exception.validator;
 import com.eefy.studyclass.domain.member.exception.message.MemberEnum;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.studyclass.exception.message.StudyClassEnum;
+import com.eefy.studyclass.domain.studyclass.persistence.entity.Notice;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
-import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import com.eefy.studyclass.global.exception.CustomException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -23,14 +23,6 @@ public class StudyClassValidator {
                 .code(MemberEnum.UNAUTHORIZED_ABOUT_CREATE_CLASS.getCode())
                 .message(MemberEnum.UNAUTHORIZED_ABOUT_CREATE_CLASS.getMessage()).build();
     }
-
-//    public void existsStudyClassByClassId(StudyClassRepository studyClassRepository, Integer studyClassId) {
-//        if(!studyClassRepository.existsById(studyClassId)) throw CustomException.builder()
-//                .status(HttpStatus.BAD_REQUEST)
-//                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getCode())
-//                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getMessage())
-//                .build();
-//    }
 
     public StudyClass existsStudyClassByClassId(Optional<StudyClass> optionalStudyClass) {
         if(optionalStudyClass.isEmpty()) throw CustomException.builder()
@@ -73,5 +65,15 @@ public class StudyClassValidator {
                 .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getCode())
                 .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getMessage())
                 .build();
+    }
+
+    public Notice existNoticeById(Optional<Notice> optionalNotice) {
+        if(optionalNotice.isEmpty()) throw CustomException.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getCode())
+                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getMessage())
+                .build();
+
+        return optionalNotice.get();
     }
 }

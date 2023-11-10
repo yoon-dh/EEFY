@@ -2,6 +2,7 @@ package com.eefy.studyclass.domain.studyclass.service;
 
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
 import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
+import com.eefy.studyclass.domain.studyclass.dto.response.NoticeResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
@@ -20,6 +21,6 @@ public interface StudyClassService {
     void enrollHomework(Integer teacherId, EnrollHomeworkRequest enrollHomeworkRequest);
     void createNotice(Integer teacherId, NoticeRequest noticeCreateRequest);
     List<NoticeListResponse> getNoticeList(Integer classId);
-    void getNoticeInfo(Integer noticeId);
+    NoticeResponse getNoticeInfo(Integer noticeId);
     void modifyNotice(Integer teacherId, NoticeRequest noticeModifyRequest);
 }
