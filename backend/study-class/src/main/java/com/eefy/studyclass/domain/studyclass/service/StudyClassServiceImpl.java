@@ -81,7 +81,6 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public List<SearchStudentResponse> searchStudentList(Integer teacherId, Integer classId) {
-        System.out.println("teacherId: " + teacherId + ", classId: " + classId);
 
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(classId));
 
@@ -189,6 +188,16 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void modifyNotice(Integer teacherId, NoticeRequest noticeModifyRequest) {
+        Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeModifyRequest.getClassId()));
+        studyClassValidator.checkAuthorityNotice(notice, teacherId);
 
+        notice.updateNoticeInfo(noticeModifyRequest);
+    }
+
+    @Override
+    public void deleteNotice(Integer teacherId, Integer noticeId) {
+        Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeId));
+
+        noticeRepository.delete(notice);
     }
 }

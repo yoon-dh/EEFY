@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.persistence.entity;
 
+import com.eefy.studyclass.domain.studyclass.dto.request.NoticeRequest;
 import com.eefy.studyclass.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,5 +41,10 @@ public class Notice extends BaseEntity {
         this.title = title;
         this.content = content;
         this.hit = hit;
+    }
+
+    public void updateNoticeInfo(NoticeRequest noticeModifyRequest) {
+        this.title = noticeModifyRequest.getTitle();
+        this.content = noticeModifyRequest.getContent();
     }
 }

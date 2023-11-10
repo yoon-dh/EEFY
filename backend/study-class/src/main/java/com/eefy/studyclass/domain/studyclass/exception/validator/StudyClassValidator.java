@@ -76,4 +76,12 @@ public class StudyClassValidator {
 
         return optionalNotice.get();
     }
+
+    public void checkAuthorityNotice(Notice notice, Integer teacherId) {
+        if(notice.getMemberId() != teacherId) throw CustomException.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .code(StudyClassEnum.UNAUTHORIZED_AOUT_DELETE_NOTICE.getCode())
+                .message(StudyClassEnum.UNAUTHORIZED_AOUT_DELETE_NOTICE.getMessage())
+                .build();
+    }
 }

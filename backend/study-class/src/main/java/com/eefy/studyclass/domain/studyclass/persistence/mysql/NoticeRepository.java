@@ -13,4 +13,5 @@ public interface NoticeRepository extends JpaRepository<Notice, Integer> {
     @Modifying
     @Query("UPDATE Notice n set n.hit = n.hit + 1 WHERE n.id = :noticeId")
     void updateHit(Integer noticeId);
+
 }
