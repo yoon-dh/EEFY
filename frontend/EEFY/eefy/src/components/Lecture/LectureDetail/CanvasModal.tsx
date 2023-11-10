@@ -65,6 +65,8 @@ function CanvasModal() {
     if(varData.clear){
       const clearCanvas = canvasRef.current?.clearCanvas;
       if (clearCanvas) {
+        console.log('clearCanvas 실행')
+        handleSketchData
         clearCanvas();
         setVarData({...varData,clear:false})
       }
@@ -94,6 +96,7 @@ function CanvasModal() {
         clearCanvas()
       }
       if (canvasRef.current) {
+        console.log(page.pageNumber,'before')
         if(data[page.pageNumber]){
           // setTimeout(function(){
             const jsonData = JSON.parse(data[page.pageNumber]);
@@ -110,6 +113,7 @@ function CanvasModal() {
       }
       if (canvasRef.current) {
         console.log(data[page.pageNumber], page.pageNumber)
+        console.log(page.pageNumber,'next')
         if(data[page.pageNumber]){
           // setTimeout(function(){
             const jsonData = JSON.parse(data[page.pageNumber]);
@@ -125,13 +129,18 @@ function CanvasModal() {
     if (canvasRef.current) {
       console.log(pageNumber,'데이터 저장하기')
       const sketchData = await canvasRef.current.exportPaths();
-      console.log(sketchData, 'sketchData')
+      console.log(sketchData.length, 'sketchData')
       if(sketchData.length > 0){
         const sketchDataJSON = JSON.stringify(sketchData);
           const newdata = {
             ...data, [pageNumber]:sketchDataJSON
           }
           setData(newdata);
+      } else if(sketchData.length === 0){
+        const newdata = {
+          ...data, [pageNumber]:''
+        }
+        setData(newdata);
       }
       // const newdata = {
       //   ...data,
@@ -168,6 +177,14 @@ function CanvasModal() {
     };
     await pages.render(renderContext).promise;
     const imageData = canvas.toDataURL('image/jpeg');
+    // const img = new Image();
+    //   img.src = imageData;
+    //   img.onload = function () {
+    //     const imageHeight = img.naturalHeight;
+    //     setImageHeight(imageHeight);
+    //     const imgWidth = img.naturalWidth;
+    //     setImgWidth(imgWidth);
+    //   };
     setPageImage(imageData);
   };
 
@@ -217,10 +234,10 @@ function CanvasModal() {
                       ref={canvasRef}
                       strokeColor={varData.color}
                       style={styles}
-                      // width={`${imgWidth}px`}
-                      width={`${'90%'}`}  
-                      // height={`${imageHeight}px`}
-                      height={`${1118}px`}
+                      width={`${210*1.1}mm`}
+                      // width={`${'90%'}`}  
+                      height={`${210*1.414*1.1}mm`}
+                      // height={`${1118}px`}
                       strokeWidth={varData.penSize}
                       eraserWidth={50}
                       // backgroundImage={ocr.imgUrl}

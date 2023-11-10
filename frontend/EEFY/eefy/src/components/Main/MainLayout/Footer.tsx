@@ -11,8 +11,11 @@ import { initializeApp } from 'firebase/app';
 import { getMessaging, onMessage, getToken } from 'firebase/messaging';
 import './Footer.css';
 import { MessageModalOpen } from '@/recoil/PushNotification';
+import { deleteLogout } from '@/api/Auth/login';
+import { useRouter } from 'next/navigation';
 
 export default function Footer() {
+  const router = useRouter();
   const [darkModeIsAcitive, setdarkModeIsAcitive] = useState(false);
   const [thema, setThema] = useRecoilState(Thema);
   const checkHandler = () => {
@@ -86,11 +89,19 @@ export default function Footer() {
     onMessageFCM();
   }, []);
 
+  const handleLogout = async () =>{
+    const res = await deleteLogout()
+    console.log(res, '로그아웃 풋터')
+    if(res?.status===200){
+      router.push("/login")
+    }
+  }
+
   return (
     <div className='w-full h-full flex justify-center items-center'>
       <div className='flex justify-between items-center ' style={{ width: '96%' }}>
         {/* 왼쪽 */}
-        <div className='flex items-center' style={{ marginLeft: '1rem' }}>
+        <div className='flex items-center' style={{ marginLeft: '1rem' }} onClick={handleLogout}>
           <svg xmlns='http://www.w3.org/2000/svg' className='w-8 h-8' viewBox='0 0 37 37' fill='none'>
             <path
               d='M21.6079 22.8847C22.2141 22.8847 22.7062 23.3394 22.7062 23.8997V25.1401C22.7062 28.3643 19.8677 30.9875 16.3773 30.9875H9.42501C5.92891 30.9875 3.08325 28.3577 3.08325 25.1256C3.08325 24.5653 3.57536 24.1119 4.18158 24.1119C4.7878 24.1119 5.2799 24.5653 5.2799 25.1256C5.2799 27.2399 7.13992 28.9575 9.42501 28.9575H16.3773C18.6566 28.9575 20.5095 27.2452 20.5095 25.1401V23.8997C20.5095 23.3394 21.0016 22.8847 21.6079 22.8847ZM31.2763 16.7902C31.7213 16.7902 32.1221 17.038 32.2919 17.419C32.4616 17.7986 32.366 18.2362 32.0522 18.5262L27.8843 22.3608C27.6689 22.5572 27.3893 22.6574 27.1083 22.6574C26.8273 22.6574 26.5449 22.5572 26.3309 22.3582C25.903 21.9601 25.903 21.3181 26.3338 20.9227L28.6175 18.8215H14.1395C13.5333 18.8215 13.0398 18.3667 13.0398 17.8065C13.0398 17.2463 13.5333 16.7902 14.1395 16.7902H31.2763ZM16.3633 4.625C19.8608 4.625 22.7065 7.25476 22.7065 10.4869V11.7142C22.7065 12.2731 22.2144 12.7278 21.6081 12.7278C21.0019 12.7278 20.5098 12.2731 20.5098 11.7142V10.4869C20.5098 8.37258 18.6498 6.65499 16.3633 6.65499H9.41246C7.13308 6.65499 5.28019 8.36862 5.28019 10.4724V20.5104C5.28019 21.0706 4.78808 21.5254 4.18186 21.5254C3.57564 21.5254 3.08354 21.0706 3.08354 20.5104V10.4724C3.08354 7.24817 5.92207 4.625 9.41246 4.625H16.3633ZM26.3281 13.2589C26.756 12.8582 27.4492 12.8556 27.8814 13.251L28.9313 14.2107C29.3635 14.6061 29.3663 15.2481 28.9398 15.6462C28.7244 15.8465 28.442 15.948 28.1596 15.948C27.88 15.948 27.6004 15.8492 27.3865 15.6541L26.3352 14.6931C25.9045 14.299 25.9016 13.6557 26.3281 13.2589Z'

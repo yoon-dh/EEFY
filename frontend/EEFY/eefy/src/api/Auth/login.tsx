@@ -1,5 +1,5 @@
 "use client"
-import { publicApi, setLocalStorage} from "..";
+import { publicApi, privateApi, setLocalStorage, removeLocalStorage} from "..";
 
 interface loginData {
   email: string,
@@ -14,6 +14,19 @@ export const postLogin = async (data:loginData) => {
     console.log('로그인 성공', response);
     setLocalStorage("access_token", response.headers.authorization);
     setLocalStorage("refresh_token", response.headers["authorization-refresh"]);
+    return response;
+  }catch(error){
+      console.log('로그인 실패',error)
+  }
+};
+
+// 로그아웃 api
+export const deleteLogout = async () => {
+  try{
+    console.log('로그아웃 진입');
+    const response = await privateApi.delete("/auth");
+    console.log('로그아웃 성공', response);
+    removeLocalStorage
     return response;
   }catch(error){
       console.log('로그인 실패',error)

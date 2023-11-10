@@ -31,72 +31,72 @@ export default function StudentSignUp() {
   const code: string = watch('code');
   const phoneNumber: String = watch('phoneNumber');
 
-  const userData = {
-    email: email,
-    password: password,
-    checkedPassword: password,
-    nickname: null,
-    phoneNumber: phoneNumber,
-    name: name,
-    role: 'STUDENT',
-  };
-
-  const authMail = {
-    email: email,
-    code: code,
-  };
-  const enterEmail = {
-    email: email,
-  };
-
-  // 회원가입
-  const onSubmit = async () => {
-    if (!checkCode) {
-      Swal.fire({
-        icon: 'error',
-        text: '이메일 인증을 해주세요!',
-        showConfirmButton: false,
-        timer: 1000,
-      });
-    }
-    const res = await postJoin(userData);
-    console.log(res);
-    if (res?.status === 200) {
-      router.push('/login');
-    }
-  };
-
-  // 이메일 인증
-  const handleMailSend = async () => {
-    const res = await postEmail(enterEmail);
-    console.log(res);
-    if (res?.status === 200) {
-      setShowCode(true);
-    }
-  };
-
-  // 인증 확인
-  const handleAuthMail = async () => {
-    console.log('코드다', authMail);
-    const res = await postCheckEmail(authMail);
-    console.log(res);
-    if (res?.status === 200) {
-      Swal.fire({
-        icon: 'success',
-        text: '인증이 되었습니다!',
-        showConfirmButton: false,
-        timer: 1000,
-      });
-      setCheckCode(true);
-    } else {
-      Swal.fire({
-        icon: 'error',
-        text: '인증코드가 잘못되었습니다!',
-        showConfirmButton: false,
-        timer: 1000,
-      });
-    }
-  };
+    const userData = {
+        email: email,
+        password: password,
+        checkedPassword: password,
+        nickname: null,
+        phoneNumber: phoneNumber,
+        name: name,
+        role: 'STUDENT',
+    };
+  
+    const authMail = {
+        email: email,
+        code: code,
+    };
+    const enterEmail = {
+        email: email,   
+    };
+  
+    // 회원가입
+    const onSubmit = async () => {
+      if(!checkCode){
+        Swal.fire({
+          icon: 'error',
+          text: '이메일 인증을 해주세요!',
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+      const res = await postJoin(userData);
+      console.log(res);
+      if (res?.status === 200) {
+        router.push('/login');
+      }
+    };
+  
+    // 이메일 인증
+    const handleMailSend = async () => {
+        const res = await postEmail(enterEmail);
+        console.log(res);
+        if (res?.status === 200) {
+          setShowCode(true);
+        }
+    };
+  
+    // 인증 확인
+    const handleAuthMail = async () => {
+        console.log('코드다', authMail);
+        const res = await postCheckEmail(authMail);
+        console.log(res);
+        if (res?.status === 200) {
+          Swal.fire({
+            icon: 'success',
+            text: '인증이 되었습니다!',
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          setCheckCode(true)
+        } else {
+          Swal.fire({
+            icon: 'error',
+            text: '인증코드가 잘못되었습니다!',
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        }
+      };
 
   return (
     <>

@@ -21,7 +21,9 @@ import {
     TeacherSignUpBox,
     BackIcon,
     StudentSignUpBox,
-    LoginBtn
+    LoginBtn,
+    LoginBtnBox,
+    LoginText
 } from './SignUp.style'
 import './styles.css'
 import TeacherSignUp from './TeacherSignUp';
@@ -194,15 +196,18 @@ function SignUp() {
         )}
         {student || teacher || login && (
             <>
-            <LoginBtn onClick={()=>{
-                setStudent(true)
-                setTeacher(true)
-                setLogin(false)
-                setTimeout(function() {
-                    router.push('/login');
-                  }, 1500);
-            }}
-            >Login</LoginBtn>
+            <LoginBtnBox>
+                <LoginText>Do you have an account?</LoginText>
+                <LoginBtn onClick={()=>{
+                    setStudent(true)
+                    setTeacher(true)
+                    setLogin(false)
+                    setTimeout(function() {
+                        router.push('/login');
+                    }, 1500);
+                }}
+                >Login</LoginBtn>
+            </LoginBtnBox>
             </>
         )}
     </div>

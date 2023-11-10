@@ -3,6 +3,8 @@ import styled from "styled-components";
 export const Title = styled.div`
 font-size: 80px;
 font-weight: bold;
+text-transform: uppercase;
+letter-spacing: 2px;
 @media(max-width:1340px){
   font-size: 60px;
 }
@@ -33,6 +35,8 @@ line-height: 24px;
 color: #FFFFFF;
 margin: 40px 0px 0px 0px;
 cursor: pointer;
+text-transform: uppercase;
+letter-spacing: 2px;
 @media(max-width:1340px){
   width: 350px;
 }
@@ -64,4 +68,6 @@ font-size: 16px;
 line-height: 24px;
 color: #FFFFFF;
 cursor: pointer;
+text-transform: uppercase;
+letter-spacing: 2px;
 `
