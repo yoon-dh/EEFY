@@ -4,23 +4,25 @@ import com.eefy.studyclass.domain.member.exception.validator.MemberValidator;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
-import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassResponse;
+import com.eefy.studyclass.domain.studyclass.dto.response.*;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.ClassHomework;
+import com.eefy.studyclass.domain.studyclass.persistence.entity.Notice;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ClassHomeworkRepository;
+import com.eefy.studyclass.domain.studyclass.persistence.mysql.NoticeRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     private final StudyClassRepository studyClassRepository;
     private final ParticipateRepository participateRepository;
     private final ClassHomeworkRepository classHomeworkRepository;
-
+    private final NoticeRepository noticeRepository;
     private final MemberServiceImpl memberService;
     private final StudyClassValidator studyClassValidator;
     private final MemberValidator memberValidator;
@@ -59,6 +61,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     @Override
     public void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest) {
 
+        log.info("==================== create study class ==================== ");
         studyClassValidator.checkUserRoleCreateStudyClass(memberService.getMemberInfo(memberId, memberId));
 
         StudyClass studyClass = StudyClass.builder()
@@ -74,15 +77,13 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void modifyStudyClass(StudyClassModifyRequest studyClassModifyRequest) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, studyClassModifyRequest.getId());
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(studyClassModifyRequest.getId()));
 
-        StudyClass studyClass = studyClassRepository.findById(studyClassModifyRequest.getId()).get();
         studyClass.updateStudyClassInfo(studyClassModifyRequest);
     }
 
     @Override
     public List<SearchStudentResponse> searchStudentList(Integer teacherId, Integer classId) {
-        System.out.println("teacherId: " + teacherId + ", classId: " + classId);
 
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(classId));
 
@@ -113,13 +114,10 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, inviteMemberRequest.getClassId());
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(inviteMemberRequest.getClassId()));
 
         memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
                 studyClassRepository.findByIdAndMemberId(inviteMemberRequest.getClassId(), memberId));
-
-
-        StudyClass studyClass = studyClassRepository.findById(inviteMemberRequest.getClassId()).get();
 
         for (StudyClassStudentRequest studentRequest: inviteMemberRequest.getMemberList()) {
 
@@ -134,10 +132,10 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, disInviteMemberRequest.getClassId());
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(disInviteMemberRequest.getClassId()));
 
         memberValidator.checkUserRoleInviteOrDisinviteMember(memberService.getMemberInfo(memberId, memberId),
-                studyClassRepository.findByIdAndMemberId(disInviteMemberRequest.getClassId(), memberId));
+                studyClassRepository.findByIdAndMemberId(studyClass.getId(), memberId));
 
         for (StudyClassStudentRequest studentRequest: disInviteMemberRequest.getMemberList()) {
 
@@ -149,9 +147,7 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void enrollHomework(Integer teacherId, EnrollHomeworkRequest enrollHomeworkRequest) {
-        studyClassValidator.existsStudyClassByClassId(studyClassRepository, enrollHomeworkRequest.getClassId());
-
-        StudyClass studyClass = studyClassRepository.findById(enrollHomeworkRequest.getClassId()).get();
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(enrollHomeworkRequest.getClassId()));
 
         studyClassValidator.checkUserRoleEnrollHomework(teacherId, studyClass);
 
@@ -160,5 +156,55 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .studyClass(studyClass).build();
 
         classHomeworkRepository.save(classHomework);
+    }
+
+    @Override
+    public void createNotice(Integer teacherId, NoticeCreateRequest noticeRequest) {
+        studyClassValidator.checkUserRole(memberService.getMemberInfo(teacherId, teacherId));
+
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(noticeRequest.getClassId()));
+
+        studyClassValidator.checkAuthorityStudyClass(studyClass, teacherId);
+
+        Notice notice = Notice.builder()
+                .memberId(teacherId)
+                .studyClass(studyClass)
+                .title(noticeRequest.getTitle())
+                .content(noticeRequest.getContent())
+                .hit(0)
+                .build();
+
+        noticeRepository.save(notice);
+    }
+
+    @Override
+    public List<NoticeListResponse> getNoticeList(Integer classId) {
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(classId));
+
+        return noticeRepository.findByStudyClassId(studyClass.getId()).stream().map(notice -> new NoticeListResponse(notice)).collect(Collectors.toList());
+    }
+
+    @Override
+    public NoticeResponse getNoticeInfo(Integer noticeId) {
+        Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeId));
+
+        noticeRepository.updateHit(noticeId);
+
+        return new NoticeResponse(notice);
+    }
+
+    @Override
+    public void modifyNotice(Integer teacherId, NoticeModifyRequest noticeModifyRequest) {
+        Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeModifyRequest.getId()));
+        studyClassValidator.checkAuthorityNotice(notice, teacherId);
+
+        notice.updateNoticeInfo(noticeModifyRequest);
+    }
+
+    @Override
+    public void deleteNotice(Integer teacherId, Integer noticeId) {
+        Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeId));
+
+        noticeRepository.delete(notice);
     }
 }

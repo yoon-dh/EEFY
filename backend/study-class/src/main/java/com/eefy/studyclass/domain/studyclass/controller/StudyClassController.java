@@ -1,9 +1,8 @@
 package com.eefy.studyclass.domain.studyclass.controller;
 
-import com.eefy.studyclass.domain.studyclass.dto.request.EnrollHomeworkRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.InviteMemberRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassCreateRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.StudyClassModifyRequest;
+import com.eefy.studyclass.domain.studyclass.dto.request.*;
+import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
+import com.eefy.studyclass.domain.studyclass.dto.response.NoticeResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;
@@ -85,5 +84,32 @@ public class StudyClassController {
 
         studyClassService.enrollHomework(teacherId, enrollHomeworkRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/notice")
+    public ResponseEntity<List<NoticeListResponse>> getNoticeLIst(@RequestHeader("Member-Id") Integer memberId,
+                                                                  @RequestParam("classId") Integer classId) {
+        return ResponseEntity.ok(studyClassService.getNoticeList(classId));
+    }
+
+
+    @PostMapping("/tutor/notice")
+    public ResponseEntity<Void> createNotice(@RequestHeader("Member-Id") Integer teacherId,
+                                             @RequestBody NoticeCreateRequest noticeRequest) {
+        studyClassService.createNotice(teacherId, noticeRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/tutor/notice")
+    public ResponseEntity<Void> modifyNotice(@RequestHeader("Member-Id") Integer teacherId,
+                                             @RequestBody NoticeModifyRequest noticeRequest) {
+        studyClassService.modifyNotice(teacherId, noticeRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/notice/{noticeId}")
+    public ResponseEntity<NoticeResponse> getNotice(@RequestHeader("Member-Id") Integer memberId,
+                                                    @PathVariable Integer noticeId) {
+        return ResponseEntity.ok(studyClassService.getNoticeInfo(noticeId));
     }
 }
