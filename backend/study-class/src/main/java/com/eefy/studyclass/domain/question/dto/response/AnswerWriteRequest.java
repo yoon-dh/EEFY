@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class AnswerWriteResponse {
+public class AnswerWriteRequest {
     private int questionAnswerId;
     private int memberId;
     private String name;

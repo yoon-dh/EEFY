@@ -1,12 +1,15 @@
 package com.eefy.studyclass.domain.question.persistence.entity;
 
+import com.eefy.studyclass.domain.question.dto.request.AnswerModifyRequest;
 import com.eefy.studyclass.global.entity.BaseEntity;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class QnaAnswer extends BaseEntity {
     @Id
@@ -30,6 +33,10 @@ public class QnaAnswer extends BaseEntity {
         this.question = question;
         this.memberId = memberId;
         this.content = content;
+    }
+
+    public void updateQnaAnswerInfo(AnswerModifyRequest request) {
+        this.content = request.getContent();
     }
 }
 
