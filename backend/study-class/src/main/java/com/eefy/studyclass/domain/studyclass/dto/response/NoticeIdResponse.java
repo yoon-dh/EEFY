@@ -1,7 +1,9 @@
 package com.eefy.studyclass.domain.studyclass.dto.response;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class NoticeIdResponse {
     private Integer id;
 
