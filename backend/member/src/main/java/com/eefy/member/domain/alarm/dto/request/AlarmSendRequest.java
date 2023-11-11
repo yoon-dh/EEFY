@@ -6,7 +6,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class AlarmSendRequest {
+    private int classId;
     private String title;
     private String body;
-    private String targetToken;
 }
