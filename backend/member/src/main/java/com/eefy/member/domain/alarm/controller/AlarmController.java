@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,12 +25,12 @@ public class AlarmController {
 
     @Operation(summary = "푸시 알림 전송", description = "client에 푸시 알림을 전송하는 API")
     @PostMapping
-    public ResponseEntity<String> pushMessage(@RequestBody AlarmSendRequest alarmSendRequest) {
-        alarmService.sendMessageTo(
-                alarmSendRequest.getTargetToken(),
-                alarmSendRequest.getTitle(),
-                alarmSendRequest.getBody());
-        return ResponseEntity.ok().body("SUCCESS");
+    public ResponseEntity<String> pushMessage(@RequestHeader("Member-Id") int memberId,
+                                              @RequestBody AlarmSendRequest alarmSendRequest) {
+
+        return ResponseEntity.ok().body(alarmService.sendMessageTo(
+                memberId, alarmSendRequest.getClassId(),
+                alarmSendRequest.getTitle(), alarmSendRequest.getBody()));
     }
 
     @Operation(summary = "클래스에 대한 토픽 구독",

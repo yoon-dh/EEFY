@@ -12,6 +12,7 @@ import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.global.feign.FirebaseClient;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.TopicManagementResponse;
 import feign.FeignException;
 import feign.Response;
@@ -35,18 +36,24 @@ public class AlarmServiceImpl implements AlarmService {
     private final AlarmRepository alarmRepository;
 
     @Override
-    public void sendMessageTo(String targetToken, String title, String body) {
-        FcmMessage fcmMessage = FcmUtil.makeMessage(targetToken, title, body);
-        try {
-            String accessToken = "Bearer " + FcmUtil.getAccessToken();
-            Response response = firebaseClient.sendMessageTo(accessToken, fcmMessage);
-            log.info(response.body().toString());
-        } catch (FeignException e) {
-            AlarmValidator.throwSendMessageClientError(e);
-        } catch (IOException e) {
-            AlarmValidator.throwSendMessageServerError(e);
+    public String sendMessageTo(int memberId, int classId, String title, String body) {
+        String topic = alarmRepository.findByClassId(classId).get().getTopic();
 
+        Message message = Message.builder()
+                .putData("title", title)
+                .putData("content", body)
+                .setTopic(topic)
+                .build();
+
+        String response = null;
+        try {
+            response = FirebaseMessaging.getInstance().send(message);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException("알림 전송 실패: " + e);
         }
+
+        System.out.println("Successfully sent message: " + response);
+        return response;
     }
 
     @Override
