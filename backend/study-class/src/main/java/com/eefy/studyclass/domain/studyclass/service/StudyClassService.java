@@ -26,8 +26,4 @@ public interface StudyClassService {
     NoticeResponse getNoticeInfo(Integer noticeId);
     void modifyNotice(Integer teacherId, NoticeModifyRequest noticeModifyRequest);
     void deleteNotice(Integer teacherId, Integer noticeId);
-    void makeLectureNote(Integer teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException;
-    List<LectureNoteListResponse> getLectureNoteList(int classId);
-    LectureResponse getLecture(int lectureId);
-
 }

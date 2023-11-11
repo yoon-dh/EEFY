@@ -5,6 +5,7 @@ import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.NoticeResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
+import com.eefy.studyclass.domain.studyclass.service.LectureService;
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.List;
 public class StudyClassController {
 
     private final StudyClassService studyClassService;
+    private final LectureService lectureService;
 
     @Operation(summary = "강의 목록 조회", description = "강사: 자신이 생성한 강의 목록 조회 \n 학생: 자신이 수강하는 강의 목록 조회")
     @GetMapping("")
@@ -127,7 +129,7 @@ public class StudyClassController {
                                             @RequestPart(name = "request") LectureNoteRequest lectureNoteRequest,
                                             @RequestPart(name = "file") MultipartFile filePath) throws IOException {
 
-        studyClassService.makeLectureNote(teacherId, lectureNoteRequest, filePath);
+        lectureService.makeLectureNote(teacherId, lectureNoteRequest, filePath);
         return ResponseEntity.ok().build();
     }
 
@@ -135,12 +137,12 @@ public class StudyClassController {
     public ResponseEntity<List<LectureNoteListResponse>> getLectureNoteList(@RequestHeader("Member-Id") Integer memberId,
                                                                             @PathVariable Integer classId) {
 
-        return ResponseEntity.ok(studyClassService.getLectureNoteList(classId));
+        return ResponseEntity.ok(lectureService.getLectureNoteList(classId));
     }
 
     @GetMapping("/lecture/{lectureId}")
     public ResponseEntity<LectureResponse> getLecture(@RequestHeader("Member-Id") Integer memberId,
                                                       @PathVariable Integer lectureId) {
-        return ResponseEntity.ok(studyClassService.getLecture(lectureId));
+        return ResponseEntity.ok(lectureService.getLecture(lectureId));
     }
 }
