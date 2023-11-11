@@ -25,7 +25,7 @@ public class AlarmController {
     private final AlarmService alarmService;
 
     @Operation(summary = "학생 개인 또는 강사에게 푸시 알림 전송", description = "학생 또는 강사 개인에게 푸시 알림을 전송하는 API")
-    @PostMapping
+    @PostMapping("/personal")
     public ResponseEntity<String> pushMessagePersonal(@RequestHeader("Member-Id") int memberId,
                                                       @RequestBody PersonalAlarmSendRequest request) {
         return ResponseEntity.ok().body(alarmService.sendMessageToPersonal(memberId, request));
