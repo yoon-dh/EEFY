@@ -35,6 +35,20 @@ eureka:
   instance:
     hostname: ${HOST_NAME}
 
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: eefy-bucket
+      profileDir: profile-images
+      lectureDir: study-class-lecture
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
 springdoc:
   swagger-ui:
     path: /api/study-class/swagger-ui

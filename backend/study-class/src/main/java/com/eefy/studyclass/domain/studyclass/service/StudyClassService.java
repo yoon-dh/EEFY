@@ -7,7 +7,9 @@ import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface StudyClassService {
@@ -24,4 +26,8 @@ public interface StudyClassService {
     NoticeResponse getNoticeInfo(Integer noticeId);
     void modifyNotice(Integer teacherId, NoticeModifyRequest noticeModifyRequest);
     void deleteNotice(Integer teacherId, Integer noticeId);
+    void makeLectureNote(Integer teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException;
+    List<LectureNoteListResponse> getLectureNoteList(int classId);
+    LectureResponse getLecture(int lectureId);
+
 }

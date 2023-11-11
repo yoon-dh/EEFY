@@ -11,9 +11,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -111,5 +114,27 @@ public class StudyClassController {
     public ResponseEntity<NoticeResponse> getNotice(@RequestHeader("Member-Id") Integer memberId,
                                                     @PathVariable Integer noticeId) {
         return ResponseEntity.ok(studyClassService.getNoticeInfo(noticeId));
+    }
+
+    @PostMapping(value = "/tutor/lecture",  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Void> makeLecture(@RequestHeader("Member-Id") Integer teacherId,
+                                            @RequestPart(name = "request") LectureNoteRequest lectureNoteRequest,
+                                            @RequestPart(name = "file") MultipartFile filePath) throws IOException {
+
+        studyClassService.makeLectureNote(teacherId, lectureNoteRequest, filePath);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/list/{classId}")
+    public ResponseEntity<List<LectureNoteListResponse>> getLectureNoteList(@RequestHeader("Member-Id") Integer memberId,
+                                                                            @PathVariable Integer classId) {
+
+        return ResponseEntity.ok(studyClassService.getLectureNoteList(classId));
+    }
+
+    @GetMapping("/{lectureId}")
+    public ResponseEntity<LectureResponse> getLecture(@RequestHeader("Member-Id") Integer memberId,
+                                                      @PathVariable Integer lectureId) {
+        return ResponseEntity.ok(studyClassService.getLecture(lectureId));
     }
 }
