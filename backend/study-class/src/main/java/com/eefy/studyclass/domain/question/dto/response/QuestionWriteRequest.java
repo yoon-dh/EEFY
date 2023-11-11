@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @Builder
-public class QuestionWriteResponse {
+public class QuestionWriteRequest {
     private int questionId;
     private String title;
     private String content;

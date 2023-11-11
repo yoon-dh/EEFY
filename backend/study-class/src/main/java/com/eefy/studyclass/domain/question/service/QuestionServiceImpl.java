@@ -2,12 +2,12 @@ package com.eefy.studyclass.domain.question.service;
 
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberService;
-import com.eefy.studyclass.domain.question.dto.request.AnswerWriteRequest;
-import com.eefy.studyclass.domain.question.dto.request.QuestionWriteRequest;
-import com.eefy.studyclass.domain.question.dto.response.AnswerWriteResponse;
+import com.eefy.studyclass.domain.question.dto.request.AnswerModifyRequest;
+import com.eefy.studyclass.domain.question.dto.request.QuestionModifyRequest;
+import com.eefy.studyclass.domain.question.dto.response.AnswerListResponse;
 import com.eefy.studyclass.domain.question.dto.response.QuestionDetailResponse;
 import com.eefy.studyclass.domain.question.dto.response.QuestionListResponse;
-import com.eefy.studyclass.domain.question.dto.response.QuestionWriteResponse;
+import com.eefy.studyclass.domain.question.dto.response.QuestionWriteRequest;
 import com.eefy.studyclass.domain.question.exception.validator.QnaValidator;
 import com.eefy.studyclass.domain.question.persistence.entity.QnaAnswer;
 import com.eefy.studyclass.domain.question.persistence.entity.QnaQuestion;
@@ -40,6 +40,8 @@ public class QuestionServiceImpl implements QuestionService {
     public List<QuestionListResponse> getQuestionList(int memberId, int classId) {
         Member member = memberService.getMemberInfo(memberId, memberId);
 
+        log.info("===============" + member.getRole() + "===============");
+
         if (member.getRole().equals("TEACHER")) {
             return makeQuestionListResponse(classId);
         }
@@ -47,30 +49,41 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDetailResponse getQuestionDetail(int questionId) {
-//        QnaQuestion question = qnaQuestionRepository.findByIdWithMember(questionId)
-//                .orElseThrow(() -> new IllegalArgumentException("QnA 조회 실패: 등록된 QnA가 존재하지 않습니다."));
-//        return new QuestionDetailResponse(question);
-        return null;
+    public QuestionDetailResponse getQuestionDetail(int memberId, int questionId) {
+        QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(questionId));
+
+        Member member = memberService.getMemberInfo(memberId, memberId);
+        qnaValidator.checkAuthorizationQuestion(qnaQuestion, member);
+
+        return new QuestionDetailResponse(qnaQuestion, member);
     }
 
     @Override
-    public void updateQuestion(int questionId) {
+    public void updateQuestion(int memberId, QuestionModifyRequest request) {
+        QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(request.getId()));
 
+        qnaValidator.checkEqualQuestionWriter(qnaQuestion, memberId);
+        qnaQuestion.updateQnaQuestion(request);
     }
 
     @Override
-    public void deleteQuestion(int questionId) {
+    public void deleteAnswer(int memberId, int commentId) {
+        QnaAnswer qnaAnswer = qnaValidator.checkExistAnswer(qnaAnswerRepository.findById(commentId));
+        qnaValidator.checkEqualAnswerWriter(qnaAnswer, memberId);
 
+        qnaAnswerRepository.delete(qnaAnswer);
     }
 
     @Override
-    public void updateAnswer(int answerId) {
+    public void deleteQuestion(int memberId, int questionId) {
+        QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(questionId));
+        qnaValidator.checkEqualQuestionWriter(qnaQuestion, memberId);
 
+        qnaQuestionRepository.delete(qnaQuestion);
     }
 
     @Override
-    public QuestionWriteResponse writeQuestion(int memberId, QuestionWriteRequest request) {
+    public void writeQuestion(int memberId, com.eefy.studyclass.domain.question.dto.request.QuestionWriteRequest request) {
         Member member = memberService.getMemberInfo(memberId, memberId);
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(request.getClassId()));
 
@@ -82,12 +95,23 @@ public class QuestionServiceImpl implements QuestionService {
                 .build();
 
         qnaQuestionRepository.save(question);
-
-        return makeQuestionWriteResponse(question);
     }
 
     @Override
-    public AnswerWriteResponse writeAnswer(int memberId, AnswerWriteRequest request) {
+    public List<AnswerListResponse> getAnswerlist(int memberId, int questionId) {
+        QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(questionId));
+
+        Member member = memberService.getMemberInfo(memberId, memberId);
+        qnaValidator.checkAuthorizationQuestion(qnaQuestion, member);
+
+        List<QnaAnswer> qnaAnswerList = qnaAnswerRepository.findByQuestionIdOrderByCreatedAtDesc(questionId);
+
+        return qnaAnswerList.stream().map(qnaAnswer ->
+            new AnswerListResponse(qnaAnswer, memberService.getMemberInfo(memberId, memberId))).collect(Collectors.toList());
+    }
+
+    @Override
+    public void writeAnswer(int memberId, com.eefy.studyclass.domain.question.dto.request.AnswerWriteRequest request) {
         QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(request.getQuestionId()));
 
         QnaAnswer answer = QnaAnswer.builder()
@@ -96,8 +120,15 @@ public class QuestionServiceImpl implements QuestionService {
                 .content(request.getContent()).build();
 
         qnaAnswerRepository.save(answer);
+    }
 
-        return null;
+    @Override
+    public void updateAnswer(int memberId, AnswerModifyRequest request) {
+        QnaAnswer qnaAnswer = qnaValidator.checkExistAnswer(qnaAnswerRepository.findById(request.getId()));
+
+        qnaValidator.checkEqualAnswerWriter(qnaAnswer, memberId);
+
+        qnaAnswer.updateQnaAnswerInfo(request);
     }
 
     private List<QuestionListResponse> makeQuestionListResponse(int classId) {
@@ -106,12 +137,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private List<QuestionListResponse> makeQuestionListResponse(Member member, int classId) {
-        List<QnaQuestion> questions = qnaQuestionRepository.findByMemberIdAndStudyClassId(member, classId);
+        List<QnaQuestion> questions = qnaQuestionRepository.findByMemberIdAndStudyClassId(member.getMemberId(), classId);
         return questions.stream().map(QuestionListResponse::new).collect(Collectors.toList());
     }
 
-    private QuestionWriteResponse makeQuestionWriteResponse(QnaQuestion question) {
-        return QuestionWriteResponse.builder()
+    private QuestionWriteRequest makeQuestionWriteResponse(QnaQuestion question) {
+        return QuestionWriteRequest.builder()
                 .questionId(question.getId())
                 .title(question.getTitle())
                 .content(question.getContent())

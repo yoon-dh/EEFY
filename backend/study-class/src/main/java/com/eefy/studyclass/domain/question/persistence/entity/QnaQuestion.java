@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.question.persistence.entity;
 
+import com.eefy.studyclass.domain.question.dto.request.QuestionModifyRequest;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.global.entity.BaseEntity;
 import lombok.AccessLevel;
@@ -46,5 +47,10 @@ public class QnaQuestion extends BaseEntity {
         this.title = title;
         this.content = content;
         this.waitStatus = waitStatus;
+    }
+
+    public void updateQnaQuestion(QuestionModifyRequest request) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
     }
 }
