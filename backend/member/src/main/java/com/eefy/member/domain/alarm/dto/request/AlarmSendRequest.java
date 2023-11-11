@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class AlarmSendRequest {
     private int classId;
+    private String className;
     private String title;
-    private String body;
+    private String content;
 }

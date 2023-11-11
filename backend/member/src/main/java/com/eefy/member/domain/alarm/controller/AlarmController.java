@@ -28,9 +28,7 @@ public class AlarmController {
     public ResponseEntity<String> pushMessage(@RequestHeader("Member-Id") int memberId,
                                               @RequestBody AlarmSendRequest alarmSendRequest) {
 
-        return ResponseEntity.ok().body(alarmService.sendMessageTo(
-                memberId, alarmSendRequest.getClassId(),
-                alarmSendRequest.getTitle(), alarmSendRequest.getBody()));
+        return ResponseEntity.ok().body(alarmService.sendMessageTo(memberId, alarmSendRequest));
     }
 
     @Operation(summary = "클래스에 대한 토픽 구독",

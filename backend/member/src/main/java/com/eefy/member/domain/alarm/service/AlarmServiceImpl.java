@@ -1,5 +1,6 @@
 package com.eefy.member.domain.alarm.service;
 
+import com.eefy.member.domain.alarm.dto.request.AlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
 import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.exception.validator.AlarmValidator;
@@ -11,7 +12,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
 import com.google.firebase.messaging.TopicManagementResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,13 +32,15 @@ public class AlarmServiceImpl implements AlarmService {
     private final AlarmRepository alarmRepository;
 
     @Override
-    public String sendMessageTo(int memberId, int classId, String title, String body) {
+    public String sendMessageTo(int memberId, AlarmSendRequest alarmSendRequest) {
+        int classId = alarmSendRequest.getClassId();
         String topic = alarmRepository.findByClassId(classId).get().getTopic();
         log.info("클래스 아이디: {}, topic: {}", classId, topic);
 
         Message message = Message.builder()
-                .putData("title", title)
-                .putData("content", body)
+                .putData("className", alarmSendRequest.getClassName())
+                .putData("title", alarmSendRequest.getTitle())
+                .putData("content", alarmSendRequest.getContent())
                 .setTopic(topic)
                 .build();
 
@@ -89,11 +91,10 @@ public class AlarmServiceImpl implements AlarmService {
             response = FirebaseMessaging.getInstance(firebaseApp).subscribeToTopic(registrationTokens, topic);
         } catch (FirebaseMessagingException e) {
             AlarmValidator.throwFirebaseMessagingError(e);
-            throw new IllegalArgumentException("토큰 구독 실패");
+            throw new IllegalArgumentException("토큰 구독 실패: " + e);
         }
-        log.info(response.getSuccessCount() + "개의 토큰 구독 성공");
-        log.info(response.getFailureCount() + "개의 토큰 구독 실패");
-        log.info(response.getErrors().toString());
+        log.info("{}개의 토큰 구독 성공, {}개의 토큰 구독 실패", response.getSuccessCount(), response.getFailureCount());
+        log.info("발생한 에러 수: {}", response.getErrors().size());
         response.getErrors().forEach(e -> log.info(e.getIndex() + " " + e.getReason()));
     }
 }
