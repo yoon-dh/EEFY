@@ -95,5 +95,6 @@ public class AlarmServiceImpl implements AlarmService {
             throw new IllegalArgumentException("토큰 구독 실패");
         }
         log.info(response.getSuccessCount() + "개의 토큰 구독 성공");
+        log.info(response.getFailureCount() + "개의 토큰 구독 실패");
     }
 }
