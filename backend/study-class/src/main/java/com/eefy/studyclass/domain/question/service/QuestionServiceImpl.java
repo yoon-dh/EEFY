@@ -87,7 +87,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public AnswerWriteResponse writeAnswer(int memberId, int questionId, AnswerWriteRequest request) {
+    public AnswerWriteResponse writeAnswer(int memberId, AnswerWriteRequest request) {
         QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(request.getQuestionId()));
 
         QnaAnswer answer = QnaAnswer.builder()

@@ -44,10 +44,9 @@ public class QuestionController {
     }
 
     @Operation(summary = "질의응답 등록", description = "학생 및 강사가 답변을 등록하는 API")
-    @PostMapping("/answer/{questionId}")
+    @PostMapping("/comment")
     AnswerWriteResponse writeQuestion(@RequestHeader("Member-Id") int memberId,
-                                      @PathVariable int questionId,
                                       @RequestBody AnswerWriteRequest request) {
-        return questionService.writeAnswer(memberId, questionId, request);
+        return questionService.writeAnswer(memberId, request);
     }
 }

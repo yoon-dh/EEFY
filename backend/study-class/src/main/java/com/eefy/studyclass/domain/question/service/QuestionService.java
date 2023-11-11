@@ -18,6 +18,6 @@ public interface QuestionService {
     void updateAnswer(int answerId);
 
     QuestionWriteResponse writeQuestion(int memberId, QuestionWriteRequest request);
-    AnswerWriteResponse writeAnswer(int memberId, int questionId, AnswerWriteRequest request);
+    AnswerWriteResponse writeAnswer(int memberId, AnswerWriteRequest request);
 }
 

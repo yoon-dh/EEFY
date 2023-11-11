@@ -30,8 +30,8 @@ public class StudyClassValidator {
         log.info("===============existsStudyClassByClassId 진입===============");
         if(optionalStudyClass.isEmpty()) throw CustomException.builder()
                 .status(HttpStatus.BAD_REQUEST)
-                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getCode())
-                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getMessage())
+                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getCode())
+                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getMessage())
                 .build();
 
         return optionalStudyClass.get();
