@@ -26,7 +26,7 @@ messaging.onBackgroundMessage(payload => {
     // };
     const dataTitle = payload.data.title;
     const datacontent = {
-        body: payload.data.content,
+        content: payload.data.content,
         icon: '/icon-192x192.png',
     };
 
