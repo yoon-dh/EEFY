@@ -37,7 +37,8 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     public String sendMessageTo(int memberId, int classId, String title, String body) {
-        String topic = alarmRepository.findByClassId(classId).get().getTopic();
+//        String topic = alarmRepository.findByClassId(classId).get().getTopic();
+        String topic = "dfdsfdsfdsfsdfs";
 
         Message message = Message.builder()
                 .putData("title", title)
@@ -68,6 +69,7 @@ public class AlarmServiceImpl implements AlarmService {
         else topic = alarmOptional.get().getTopic();
         List<String> tokens = getStudentTokens(request.getStudentIds());
         sendSubscribe(tokens, topic);
+        log.info("Successfully subscribe topic: 구독 성공 - {}" + topic);
         return new SubscribeClassTopicResponse(topic);
     }
 
