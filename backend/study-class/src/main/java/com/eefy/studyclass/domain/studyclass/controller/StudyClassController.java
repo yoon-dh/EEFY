@@ -131,14 +131,14 @@ public class StudyClassController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/list/{classId}")
+    @GetMapping("/lecture/list/{classId}")
     public ResponseEntity<List<LectureNoteListResponse>> getLectureNoteList(@RequestHeader("Member-Id") Integer memberId,
                                                                             @PathVariable Integer classId) {
 
         return ResponseEntity.ok(studyClassService.getLectureNoteList(classId));
     }
 
-    @GetMapping("/{lectureId}")
+    @GetMapping("/lecture/{lectureId}")
     public ResponseEntity<LectureResponse> getLecture(@RequestHeader("Member-Id") Integer memberId,
                                                       @PathVariable Integer lectureId) {
         return ResponseEntity.ok(studyClassService.getLecture(lectureId));

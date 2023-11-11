@@ -220,13 +220,16 @@ public class StudyClassServiceImpl implements StudyClassService {
     @Override
     public void makeLectureNote(Integer teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException {
         Member member = memberService.getMemberInfo(teacherId, teacherId);
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(lectureNoteRequest.getClassId()));
 
         log.info(">>> 강의자료 s3Uploader 실행 이전");
         String filename = s3Uploader.upload(filePath, dir);
 
+        log.info(">>>>>>>>>>>>>>>> study class title" + studyClass.getTitle());
         log.info(">>> 강의자료 s3Uploader 실행 이후");
         Lecture lecture = Lecture.builder()
                 .memberId(member.getMemberId())
+                .studyClass(studyClass)
                 .filePath(filename)
                 .title(lectureNoteRequest.getTitle())
                 .content(lectureNoteRequest.getContent())
