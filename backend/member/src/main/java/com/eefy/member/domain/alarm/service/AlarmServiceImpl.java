@@ -38,32 +38,11 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     public String sendMessageToPersonal(int memberId, PersonalAlarmSendRequest request) {
-        int classId = request.getClassId();
         Member member = memberValidator.getValidMember(memberRepository.findById(request.getTargetMemberId()));
-        String token = member.getToken();
-        log.info("클래스 아이디: {}, token: {}", classId, token);
+        log.info("클래스 아이디: {}, token: {}", request.getClassId(), member.getToken());
 
-        Message message = Message.builder()
-                .setWebpushConfig(WebpushConfig.builder()
-                        .setFcmOptions(WebpushFcmOptions.builder()
-                                .setLink(request.getLink())
-                                .build())
-                        .build())
-                .putData("className", request.getClassName())
-                .putData("title", request.getTitle())
-                .putData("content", request.getContent())
-                .setToken(token)
-                .build();
-
-        String response = null;
-        try {
-            response = FirebaseMessaging.getInstance().send(message);
-        } catch (FirebaseMessagingException e) {
-            throw new RuntimeException("알림 전송 실패: " + e);
-        }
-
-        System.out.println("Successfully sent message: " + response);
-        return null;
+        Message message = makePersonalMessage(request, member.getToken());
+        return sendMessage(message);
     }
 
     @Override
@@ -72,27 +51,8 @@ public class AlarmServiceImpl implements AlarmService {
         String topic = alarmRepository.findByClassId(classId).get().getTopic();
         log.info("클래스 아이디: {}, topic: {}", classId, topic);
 
-        Message message = Message.builder()
-                .setWebpushConfig(WebpushConfig.builder()
-                        .setFcmOptions(WebpushFcmOptions.builder()
-                                .setLink("https://k9b306.p.ssafy.io/api/member/swagger-ui/index.html")
-                                .build())
-                        .build())
-                .putData("className", alarmSendRequest.getClassName())
-                .putData("title", alarmSendRequest.getTitle())
-                .putData("content", alarmSendRequest.getContent())
-                .setTopic(topic)
-                .build();
-
-        String response = null;
-        try {
-            response = FirebaseMessaging.getInstance().send(message);
-        } catch (FirebaseMessagingException e) {
-            throw new RuntimeException("알림 전송 실패: " + e);
-        }
-
-        System.out.println("Successfully sent message: " + response);
-        return response;
+        Message message = makeGroupMessage(alarmSendRequest, topic);
+        return sendMessage(message);
     }
 
     @Override
@@ -108,6 +68,45 @@ public class AlarmServiceImpl implements AlarmService {
         sendSubscribe(tokens, topic);
         log.info("Successfully subscribe topic: 구독 성공 - {}", topic);
         return new SubscribeClassTopicResponse(topic);
+    }
+
+    private Message makePersonalMessage(PersonalAlarmSendRequest request, String token) {
+        return Message.builder()
+                .setWebpushConfig(WebpushConfig.builder()
+                        .setFcmOptions(WebpushFcmOptions.builder()
+                                .setLink(request.getLink())
+                                .build())
+                        .build())
+                .putData("className", request.getClassName())
+                .putData("title", request.getTitle())
+                .putData("content", request.getContent())
+                .setToken(token)
+                .build();
+    }
+
+    private Message makeGroupMessage(AlarmSendRequest alarmSendRequest, String topic) {
+        return Message.builder()
+                .setWebpushConfig(WebpushConfig.builder()
+                        .setFcmOptions(WebpushFcmOptions.builder()
+                                .setLink("https://k9b306.p.ssafy.io/api/member/swagger-ui/index.html")
+                                .build())
+                        .build())
+                .putData("className", alarmSendRequest.getClassName())
+                .putData("title", alarmSendRequest.getTitle())
+                .putData("content", alarmSendRequest.getContent())
+                .setTopic(topic)
+                .build();
+    }
+
+    private String sendMessage(Message message) {
+        String response = null;
+        try {
+            response = FirebaseMessaging.getInstance().send(message);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException("알림 전송 실패: " + e);
+        }
+        log.info("Successfully sent message: {}", response);
+        return response;
     }
 
     private List<String> getStudentTokens(List<Integer> studentIds) {

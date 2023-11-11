@@ -1,10 +1,10 @@
 package com.eefy.member.domain.alarm.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 @AllArgsConstructor
-@Data
+@Getter
 public class AlarmSendRequest {
     private int classId;
     private String link;
