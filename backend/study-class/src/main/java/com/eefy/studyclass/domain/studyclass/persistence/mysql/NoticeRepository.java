@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface NoticeRepository extends JpaRepository<Notice, Integer> {
-    List<Notice> findByStudyClassId(Integer classId);
+    List<Notice> findByStudyClassIdOrderByCreatedAtDesc(Integer classId);
 
     @Modifying
     @Query("UPDATE Notice n set n.hit = n.hit + 1 WHERE n.id = :noticeId")

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class NoticeResponse {
     private Integer id;
+    private Integer memberId;
     private String name;
     private String nickname;
     private String profileImagePath;
@@ -20,6 +21,7 @@ public class NoticeResponse {
 
     public NoticeResponse(Notice notice, Member member) {
         this.id = notice.getId();
+        this.memberId = member.getMemberId();
         this.name = member.getName();
         this.nickname = member.getNickname();
         this.profileImagePath = member.getProfileImagePath();

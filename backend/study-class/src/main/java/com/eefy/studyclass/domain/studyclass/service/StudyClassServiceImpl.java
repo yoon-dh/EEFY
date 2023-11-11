@@ -177,7 +177,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     public List<NoticeListResponse> getNoticeList(Integer classId) {
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(classId));
 
-        return noticeRepository.findByStudyClassId(studyClass.getId()).stream().map(notice -> new NoticeListResponse(notice)).collect(Collectors.toList());
+        return noticeRepository.findByStudyClassIdOrderByCreatedAtDesc(studyClass.getId()).stream().map(notice -> new NoticeListResponse(notice)).collect(Collectors.toList());
     }
 
     @Override
