@@ -37,10 +37,6 @@ public class AlarmServiceImpl implements AlarmService {
         log.info("클래스 아이디: {}, topic: {}", classId, topic);
 
         Message message = Message.builder()
-                .setNotification(Notification.builder()
-                        .setTitle(title)
-                        .setBody(body)
-                        .build())
                 .putData("title", title)
                 .putData("content", body)
                 .setTopic(topic)
