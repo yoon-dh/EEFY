@@ -18,6 +18,8 @@ import { pushTest } from '@/api/Push/test';
 
 import * as style from '../../../styles/MainStyle.style';
 
+import { EnterClassNumber } from '@/recoil/ClassCreate';
+
 type Class = {
     id: number;
     title: string;
@@ -32,10 +34,12 @@ function ClassList() {
     const [myClassArr, setMyClassArr] = useState<Class[]>([]);
     const [classCnt, setClassCnt] = useState(null);
 
+    const CLASS_ID = useRecoilValue(EnterClassNumber);
+
     // FIXME:
     const alarmTest = async () => {
         const data = {
-            classId: 25,
+            classId: CLASS_ID,
             title: 'push test',
             body: 'push test',
         };

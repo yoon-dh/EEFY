@@ -72,9 +72,7 @@ function StudentTable() {
                 <div className='text-4xl' style={{ opacity: '0' }}>
                     <IoMdArrowBack onClick={() => setSearchState(false)} />
                 </div>
-                <div className='text-2xl' onClick={alarmTest}>
-                    수강생 목록
-                </div>
+                <div className='text-2xl'>수강생 목록</div>
                 <div className='text-primary text-2xl' style={{ opacity: '0' }}>
                     완료(0)
                 </div>
