@@ -4,7 +4,7 @@ import { privateApi } from '..';
 interface pushdata {
     classId: number;
     title: string;
-    body: string;
+    content: string;
 }
 
 // 클래스 생성
