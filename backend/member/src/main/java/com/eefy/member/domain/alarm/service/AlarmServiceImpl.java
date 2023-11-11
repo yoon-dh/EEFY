@@ -1,28 +1,22 @@
 package com.eefy.member.domain.alarm.service;
 
-import com.eefy.member.domain.alarm.dto.FcmMessage;
 import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
 import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.exception.validator.AlarmValidator;
 import com.eefy.member.domain.alarm.persistence.AlarmRepository;
 import com.eefy.member.domain.alarm.persistence.entity.Alarm;
-import com.eefy.member.domain.alarm.util.FcmUtil;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
-import com.eefy.member.global.feign.FirebaseClient;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.TopicManagementResponse;
-import feign.FeignException;
-import feign.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,8 +93,6 @@ public class AlarmServiceImpl implements AlarmService {
         log.info(response.getSuccessCount() + "개의 토큰 구독 성공");
         log.info(response.getFailureCount() + "개의 토큰 구독 실패");
         log.info(response.getErrors().toString());
-        response.getErrors().forEach(e -> {
-            log.info(e.getIndex() + " " + e.getReason());
-        });
+        response.getErrors().forEach(e -> log.info(e.getIndex() + " " + e.getReason()));
     }
 }
