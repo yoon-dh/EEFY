@@ -41,7 +41,7 @@ function ClassList() {
         const data = {
             classId: CLASS_ID,
             title: 'push test',
-            body: 'push test',
+            content: 'push test',
         };
         const res = await pushTest(data);
         console.log(res);
