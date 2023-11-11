@@ -92,6 +92,7 @@ public class AlarmServiceImpl implements AlarmService {
             response = FirebaseMessaging.getInstance().subscribeToTopic(registrationTokens, topic);
         } catch (FirebaseMessagingException e) {
             AlarmValidator.throwFirebaseMessagingError(e);
+            throw new IllegalArgumentException("토큰 구독 실패");
         }
         log.info(response.getSuccessCount() + "개의 토큰 구독 성공");
     }
