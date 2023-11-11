@@ -1,10 +1,7 @@
 package com.eefy.studyclass.domain.studyclass.controller;
 
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
-import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.NoticeResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
+import com.eefy.studyclass.domain.studyclass.dto.response.*;
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -94,16 +91,15 @@ public class StudyClassController {
 
     @DeleteMapping("/tutor/notice/{noticeId}")
     public ResponseEntity<Void> deleteNotice(@RequestHeader("Member-Id") Integer memberId,
-                                             @RequestParam("noticeId") Integer noticeId) {
+                                             @PathVariable Integer noticeId) {
         studyClassService.deleteNotice(memberId, noticeId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/tutor/notice")
-    public ResponseEntity<Void> createNotice(@RequestHeader("Member-Id") Integer teacherId,
-                                             @RequestBody NoticeCreateRequest noticeRequest) {
-        studyClassService.createNotice(teacherId, noticeRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<NoticeIdResponse> createNotice(@RequestHeader("Member-Id") Integer teacherId,
+                                                         @RequestBody NoticeCreateRequest noticeRequest) {
+        return ResponseEntity.ok(studyClassService.createNotice(teacherId, noticeRequest));
     }
 
     @PutMapping("/tutor/notice")

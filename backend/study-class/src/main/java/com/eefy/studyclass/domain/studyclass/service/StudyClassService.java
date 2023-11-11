@@ -1,15 +1,10 @@
 package com.eefy.studyclass.domain.studyclass.service;
 
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
-import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.NoticeResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
-import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
+import com.eefy.studyclass.domain.studyclass.dto.response.*;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface StudyClassService {
@@ -21,7 +16,7 @@ public interface StudyClassService {
     void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest);
     void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest);
     void enrollHomework(Integer teacherId, EnrollHomeworkRequest enrollHomeworkRequest);
-    void createNotice(Integer teacherId, NoticeCreateRequest noticeCreateRequest);
+    NoticeIdResponse createNotice(Integer teacherId, NoticeCreateRequest noticeCreateRequest);
     List<NoticeListResponse> getNoticeList(Integer classId);
     NoticeResponse getNoticeInfo(Integer noticeId);
     void modifyNotice(Integer teacherId, NoticeModifyRequest noticeModifyRequest);
