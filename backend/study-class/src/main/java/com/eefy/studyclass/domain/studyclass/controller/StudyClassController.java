@@ -87,11 +87,17 @@ public class StudyClassController {
     }
 
     @GetMapping("/notice")
-    public ResponseEntity<List<NoticeListResponse>> getNoticeLIst(@RequestHeader("Member-Id") Integer memberId,
+    public ResponseEntity<List<NoticeListResponse>> getNoticeList(@RequestHeader("Member-Id") Integer memberId,
                                                                   @RequestParam("classId") Integer classId) {
         return ResponseEntity.ok(studyClassService.getNoticeList(classId));
     }
 
+    @DeleteMapping("/tutor/notice/{noticeId}")
+    public ResponseEntity<Void> deleteNotice(@RequestHeader("Member-Id") Integer memberId,
+                                             @RequestParam("noticeId") Integer noticeId) {
+        studyClassService.deleteNotice(memberId, noticeId);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/tutor/notice")
     public ResponseEntity<Void> createNotice(@RequestHeader("Member-Id") Integer teacherId,

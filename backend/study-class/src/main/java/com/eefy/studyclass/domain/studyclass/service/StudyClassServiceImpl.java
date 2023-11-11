@@ -6,19 +6,14 @@ import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
 import com.eefy.studyclass.domain.studyclass.dto.response.*;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
-import com.eefy.studyclass.domain.studyclass.persistence.entity.ClassHomework;
-import com.eefy.studyclass.domain.studyclass.persistence.entity.Notice;
-import com.eefy.studyclass.domain.studyclass.persistence.entity.Participate;
-import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
-import com.eefy.studyclass.domain.studyclass.persistence.mysql.ClassHomeworkRepository;
-import com.eefy.studyclass.domain.studyclass.persistence.mysql.NoticeRepository;
-import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
-import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
+import com.eefy.studyclass.domain.studyclass.persistence.entity.*;
+import com.eefy.studyclass.domain.studyclass.persistence.mysql.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -203,8 +198,10 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void deleteNotice(Integer teacherId, Integer noticeId) {
+        Member member = memberService.getMemberInfo(teacherId, teacherId);
         Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeId));
 
+        studyClassValidator.checkAuthorityNotice(notice, member.getMemberId());
         noticeRepository.delete(notice);
     }
 }
