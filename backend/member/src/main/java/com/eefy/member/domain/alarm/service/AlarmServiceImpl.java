@@ -83,7 +83,7 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     private String makeClassTopic(int classId) {
-        return UUID.randomUUID() + "-" + classId;
+        return "/topics/" + UUID.randomUUID() + "-" + classId;
     }
 
     private void sendSubscribe(List<String> registrationTokens, String topic) {
