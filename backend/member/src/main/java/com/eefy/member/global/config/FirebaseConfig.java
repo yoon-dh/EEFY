@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Configuration
 public class FirebaseConfig {
@@ -19,13 +20,12 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseMessaging initFirebaseMessaging() throws IOException {
-        String file = FirebaseConfig.class.getClassLoader().getResource(firebaseSdkPath).getFile();
-        FileInputStream serviceAccount = new FileInputStream(file);
+        InputStream file = FirebaseConfig.class.getClassLoader().getResourceAsStream(firebaseSdkPath);
 
         FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setCredentials(GoogleCredentials.fromStream(file))
                 .build();
-
+        file.close();
         return FirebaseMessaging.getInstance(FirebaseApp.initializeApp(options));
     }
 }
