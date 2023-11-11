@@ -4,6 +4,7 @@ import com.eefy.homework.domain.homework.AiServerRestClient;
 import com.eefy.homework.domain.homework.ClassServiceFeignClient;
 import com.eefy.homework.domain.homework.dto.ChoiceDto;
 import com.eefy.homework.domain.homework.dto.ClassStudentDto;
+import com.eefy.homework.domain.homework.dto.HomeworkDto;
 import com.eefy.homework.domain.homework.dto.HomeworkQuestionDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentQuestionDto;
@@ -92,10 +93,13 @@ public class HomeworkServiceImpl implements HomeworkService {
         MakeHomeworkQuestionRequest makeHomeworkQuestionRequest, Integer memberId,
         MultipartFile voiceFile) throws IOException {
 
-        // todo: 강사가 유효한 사용자인지 검증
-
         Homework homework = validateHomework(makeHomeworkQuestionRequest.getHomeworkId());
-        String filePath = s3Uploader.upload(voiceFile, voicePath);
+
+        // todo: 강사가 유효한 사용자인지 검증
+        String filePath = null;
+        if (voiceFile == null) {
+            filePath = s3Uploader.upload(voiceFile, voicePath);
+        }
         HomeworkQuestion homeworkQuestion = saveHomeworkQuestion(makeHomeworkQuestionRequest,
             homework, filePath);
         saveChoice(makeHomeworkQuestionRequest, homeworkQuestion);
@@ -124,7 +128,8 @@ public class HomeworkServiceImpl implements HomeworkService {
         log.info(classStudents.toString());
 
         for (ClassStudentDto classStudentDto : classStudents) {
-            homeworkStudentRepository.save(HomeworkStudent.from(classStudentDto.getMemberId(), classHomework));
+            homeworkStudentRepository.save(
+                HomeworkStudent.from(classStudentDto.getMemberId(), classHomework));
         }
 
         return new AssignHomeworkToClassResponse(classHomework.getId());
@@ -236,6 +241,18 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         homeworkStudent.updateDoneDate();
         return new SolveHomeworkResponse(homeworkStudentId);
+    }
+
+    @Override
+    public List<HomeworkDto> getHomeworkByTeacherId(Integer memberId) {
+        List<Homework> byMemberId = homeworkRepository.findByMemberId(memberId);
+        List<HomeworkDto> homeworkDtos = new ArrayList<>();
+
+        for (Homework homework : byMemberId) {
+            homeworkDtos.add(modelMapper.map(homework, HomeworkDto.class));
+        }
+
+        return homeworkDtos;
     }
 
     private void updateChoiceAndWriteProblemScore(HomeworkQuestion homeworkQuestion,
