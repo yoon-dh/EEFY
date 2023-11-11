@@ -60,15 +60,17 @@ public class AlarmServiceImpl implements AlarmService {
         }
         else topic = alarmOptional.get().getTopic();
         List<String> tokens = getStudentTokens(request.getStudentIds());
-        log.info(tokens.toString());
         sendSubscribe(tokens, topic);
         return new SubscribeClassTopicResponse(topic);
     }
 
     private List<String> getStudentTokens(List<Integer> studentIds) {
-        return memberRepository.findAllById(studentIds).stream()
+        log.info("받은 아이디: " + studentIds.toString());
+        List<String> tokens = memberRepository.findAllById(studentIds).stream()
                 .map(Member::getToken)
                 .collect(Collectors.toList());
+        log.info("조회된 토큰: " + tokens);
+        return tokens;
     }
 
     private String makeClassTopic(int classId) {
