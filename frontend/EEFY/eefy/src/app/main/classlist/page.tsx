@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, onMessage, getToken } from 'firebase/messaging';
 
+import * as style from '../../../styles/MainStyle.style';
+
 type Class = {
   id: number;
   title: string;

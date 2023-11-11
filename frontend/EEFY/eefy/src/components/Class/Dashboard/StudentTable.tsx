@@ -2,11 +2,16 @@
 
 import Image from 'next/image';
 import StudentTableItem from './StudentTableItem';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { isSearchState } from '@/recoil/TeacherClass';
+import { useEffect, useState } from 'react';
+import { EnterClassNumber } from '@/recoil/ClassCreate';
+import { classInsideStudent } from '@/api/Class/classInside';
 
 function StudentTable() {
   const [searchState, setSearchState] = useRecoilState(isSearchState);
+  const CLASS_ID = useRecoilValue(EnterClassNumber);
+  const [classInsideStudentArr, setClassInsideStudentArr] = useState([]);
 
   // 학생 프로필, 이름,  과제, 질의응답
   // 상세 : 이메일, 과제, 시험, 최근 접속 이력
@@ -60,6 +65,16 @@ function StudentTable() {
       phone: '010-7748-8173',
     },
   ];
+
+  useEffect(() => {
+    const ClassStudentResult = async () => {
+      const res = await classInsideStudent(CLASS_ID);
+      console.log(res?.data);
+      setClassInsideStudentArr(res?.data);
+    };
+
+    ClassStudentResult();
+  }, []);
   // <img style={{ margin: 'auto', filter: 'drop-shadow(3px 3px 3px #808080)' }} src={`/logo.png`} />;
   const ImgUrl = '/logo.png';
   return (
