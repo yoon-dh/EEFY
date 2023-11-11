@@ -19,7 +19,8 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseMessaging initFirebaseMessaging() throws IOException {
-        FileInputStream serviceAccount = new FileInputStream(firebaseSdkPath);
+        String file = FirebaseConfig.class.getClassLoader().getResource(firebaseSdkPath).getFile();
+        FileInputStream serviceAccount = new FileInputStream(file);
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
