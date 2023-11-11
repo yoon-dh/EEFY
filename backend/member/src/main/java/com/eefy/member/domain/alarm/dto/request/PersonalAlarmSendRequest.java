@@ -5,7 +5,8 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class AlarmSendRequest {
+public class PersonalAlarmSendRequest {
+    private int targetMemberId;
     private int classId;
     private String link;
     private String className;
