@@ -98,5 +98,9 @@ public class AlarmServiceImpl implements AlarmService {
         }
         log.info(response.getSuccessCount() + "개의 토큰 구독 성공");
         log.info(response.getFailureCount() + "개의 토큰 구독 실패");
+        log.info(response.getErrors().toString());
+        response.getErrors().forEach(e -> {
+            log.info(e.getIndex() + " " + e.getReason());
+        });
     }
 }
