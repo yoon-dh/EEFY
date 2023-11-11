@@ -154,7 +154,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void createNotice(Integer teacherId, NoticeCreateRequest noticeRequest) {
+    public NoticeIdResponse createNotice(Integer teacherId, NoticeCreateRequest noticeRequest) {
         studyClassValidator.checkUserRole(memberService.getMemberInfo(teacherId, teacherId));
 
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(noticeRequest.getClassId()));
@@ -169,7 +169,8 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .hit(0)
                 .build();
 
-        noticeRepository.save(notice);
+        return NoticeIdResponse.builder()
+                .id(noticeRepository.save(notice).getId()).build();
     }
 
     @Override
@@ -183,9 +184,11 @@ public class StudyClassServiceImpl implements StudyClassService {
     public NoticeResponse getNoticeInfo(Integer noticeId) {
         Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeId));
 
+        Member member = memberService.getMemberInfo(notice.getMemberId(), notice.getMemberId());
+
         noticeRepository.updateHit(noticeId);
 
-        return new NoticeResponse(notice);
+        return new NoticeResponse(notice, member);
     }
 
     @Override
