@@ -32,7 +32,7 @@ spring:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/api/member/**, /api/auth/**, /api/alarm/**, /api/lecture/**, /api/question/**
+            - Path=/api/member/**, /api/auth/**, /api/alarm/**
         - id: homework-service
           uri: lb://HOMEWORK-SERVICE
           predicates:
@@ -40,7 +40,7 @@ spring:
         - id: study-class-service
           uri: lb://STUDY-CLASS-SERVICE
           predicates:
-            - Path=/api/study-class/**
+            - Path=/api/study-class/**, /api/lecture/**, /api/question/**
         - id: ai-service
           uri: lb://AI-SERVICE
           predicates:
