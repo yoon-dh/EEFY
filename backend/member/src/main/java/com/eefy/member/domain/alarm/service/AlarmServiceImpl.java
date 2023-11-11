@@ -1,11 +1,13 @@
 package com.eefy.member.domain.alarm.service;
 
 import com.eefy.member.domain.alarm.dto.request.AlarmSendRequest;
+import com.eefy.member.domain.alarm.dto.request.PersonalAlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
 import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.exception.validator.AlarmValidator;
 import com.eefy.member.domain.alarm.persistence.AlarmRepository;
 import com.eefy.member.domain.alarm.persistence.entity.Alarm;
+import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
 import com.google.firebase.FirebaseApp;
@@ -13,6 +15,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.TopicManagementResponse;
+import com.google.firebase.messaging.WebpushConfig;
+import com.google.firebase.messaging.WebpushFcmOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,16 +32,52 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AlarmServiceImpl implements AlarmService {
     private final FirebaseApp firebaseApp;
+    private final MemberValidator memberValidator;
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
 
     @Override
-    public String sendMessageTo(int memberId, AlarmSendRequest alarmSendRequest) {
+    public String sendMessageToPersonal(int memberId, PersonalAlarmSendRequest request) {
+        int classId = request.getClassId();
+        Member member = memberValidator.getValidMember(memberRepository.findById(request.getTargetMemberId()));
+        String token = member.getToken();
+        log.info("클래스 아이디: {}, token: {}", classId, token);
+
+        Message message = Message.builder()
+                .setWebpushConfig(WebpushConfig.builder()
+                        .setFcmOptions(WebpushFcmOptions.builder()
+                                .setLink(request.getLink())
+                                .build())
+                        .build())
+                .putData("className", request.getClassName())
+                .putData("title", request.getTitle())
+                .putData("content", request.getContent())
+                .setToken(token)
+                .build();
+
+        String response = null;
+        try {
+            response = FirebaseMessaging.getInstance().send(message);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException("알림 전송 실패: " + e);
+        }
+
+        System.out.println("Successfully sent message: " + response);
+        return null;
+    }
+
+    @Override
+    public String sendMessageToGroup(int memberId, AlarmSendRequest alarmSendRequest) {
         int classId = alarmSendRequest.getClassId();
         String topic = alarmRepository.findByClassId(classId).get().getTopic();
         log.info("클래스 아이디: {}, topic: {}", classId, topic);
 
         Message message = Message.builder()
+                .setWebpushConfig(WebpushConfig.builder()
+                        .setFcmOptions(WebpushFcmOptions.builder()
+                                .setLink("https://k9b306.p.ssafy.io/api/member/swagger-ui/index.html")
+                                .build())
+                        .build())
                 .putData("className", alarmSendRequest.getClassName())
                 .putData("title", alarmSendRequest.getTitle())
                 .putData("content", alarmSendRequest.getContent())
@@ -63,8 +103,7 @@ public class AlarmServiceImpl implements AlarmService {
         if (alarmOptional.isEmpty()) {
             topic = makeClassTopic(classId);
             alarmRepository.save(new Alarm(classId, topic));
-        }
-        else topic = alarmOptional.get().getTopic();
+        } else topic = alarmOptional.get().getTopic();
         List<String> tokens = getStudentTokens(request.getStudentIds());
         sendSubscribe(tokens, topic);
         log.info("Successfully subscribe topic: 구독 성공 - {}", topic);

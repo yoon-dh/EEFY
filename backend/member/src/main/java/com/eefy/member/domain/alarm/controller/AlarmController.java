@@ -1,6 +1,7 @@
 package com.eefy.member.domain.alarm.controller;
 
 import com.eefy.member.domain.alarm.dto.request.AlarmSendRequest;
+import com.eefy.member.domain.alarm.dto.request.PersonalAlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
 import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.service.AlarmService;
@@ -23,12 +24,19 @@ public class AlarmController {
 
     private final AlarmService alarmService;
 
-    @Operation(summary = "푸시 알림 전송", description = "client에 푸시 알림을 전송하는 API")
+    @Operation(summary = "학생 개인 또는 강사에게 푸시 알림 전송", description = "학생 또는 강사 개인에게 푸시 알림을 전송하는 API")
     @PostMapping
-    public ResponseEntity<String> pushMessage(@RequestHeader("Member-Id") int memberId,
+    public ResponseEntity<String> pushMessagePersonal(@RequestHeader("Member-Id") int memberId,
+                                                      @RequestBody PersonalAlarmSendRequest request) {
+        return ResponseEntity.ok().body(alarmService.sendMessageToPersonal(memberId, request));
+    }
+
+    @Operation(summary = "클래스 내 학생들에게 푸시 알림 전송", description = "클래스 내 학생들에게 푸시 알림을 전송하는 API")
+    @PostMapping
+    public ResponseEntity<String> pushMessageGroup(@RequestHeader("Member-Id") int memberId,
                                               @RequestBody AlarmSendRequest alarmSendRequest) {
 
-        return ResponseEntity.ok().body(alarmService.sendMessageTo(memberId, alarmSendRequest));
+        return ResponseEntity.ok().body(alarmService.sendMessageToGroup(memberId, alarmSendRequest));
     }
 
     @Operation(summary = "클래스에 대한 토픽 구독",
