@@ -13,7 +13,7 @@ public enum StudyClassEnum {
     ALREADY_UNPARTICIPATE_STUDY_CLASS(2204, "이미 클래스에 참여하고 있지 않습니다."),
     UNAUTHORIZED_ABOUT_ENROLL_HOMEWORK(2205, "해당 과제에 대한 생성 권한이 없습니다."),
     NO_EXIST_NOTICE(2206, "해당 ID의 공지사항이 없습니다."),
-    UNAUTHORIZED_ABOUT_DELETE_NOTICE(2206, "공지사항 작성자와 삭제하려는 대상자가 다릅니다.");
+    UNAUTHORIZED_ABOUT_NOTICE(2206, "공지사항 삭제, 수정 권한이 없습니다.");
 
     private final Integer code;
     private final String message;

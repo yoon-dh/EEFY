@@ -210,8 +210,10 @@ public class StudyClassServiceImpl implements StudyClassService {
 
     @Override
     public void deleteNotice(Integer teacherId, Integer noticeId) {
+        Member member = memberService.getMemberInfo(teacherId, teacherId);
         Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeId));
 
+        studyClassValidator.checkAuthorityNotice(notice, member.getMemberId());
         noticeRepository.delete(notice);
     }
 
