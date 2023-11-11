@@ -1,5 +1,6 @@
-package com.eefy.studyclass.domain.studyclass.persistence.entity;
+package com.eefy.studyclass.domain.lecture.persistence.entity;
 
+import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;

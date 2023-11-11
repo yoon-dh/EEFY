@@ -1,7 +1,7 @@
-package com.eefy.studyclass.domain.studyclass.persistence.mysql;
+package com.eefy.studyclass.domain.lecture.persistence.mysql;
 
 
-import com.eefy.studyclass.domain.studyclass.persistence.entity.Lecture;
+import com.eefy.studyclass.domain.lecture.persistence.entity.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

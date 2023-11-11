@@ -1,15 +1,15 @@
-package com.eefy.studyclass.domain.studyclass.service;
+package com.eefy.studyclass.domain.lecture.service;
 
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
-import com.eefy.studyclass.domain.studyclass.dto.request.LectureNoteListResponse;
-import com.eefy.studyclass.domain.studyclass.dto.request.LectureNoteRequest;
-import com.eefy.studyclass.domain.studyclass.dto.request.LectureResponse;
-import com.eefy.studyclass.domain.studyclass.exception.validator.LectureValidator;
+import com.eefy.studyclass.domain.lecture.dto.response.LectureNoteListResponse;
+import com.eefy.studyclass.domain.lecture.dto.request.LectureNoteRequest;
+import com.eefy.studyclass.domain.lecture.dto.response.LectureResponse;
+import com.eefy.studyclass.domain.lecture.exception.validator.LectureValidator;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
-import com.eefy.studyclass.domain.studyclass.persistence.entity.Lecture;
+import com.eefy.studyclass.domain.lecture.persistence.entity.Lecture;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
-import com.eefy.studyclass.domain.studyclass.persistence.mysql.LectureRepository;
+import com.eefy.studyclass.domain.lecture.persistence.mysql.LectureRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

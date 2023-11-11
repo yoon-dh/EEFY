@@ -1,4 +1,4 @@
-package com.eefy.studyclass.domain.studyclass.service;
+package com.eefy.studyclass.domain.lecture.service;
 
 
 import com.amazonaws.services.s3.AmazonS3;

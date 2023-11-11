@@ -5,7 +5,6 @@ import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
 import com.eefy.studyclass.domain.studyclass.dto.response.*;
-import com.eefy.studyclass.domain.studyclass.exception.validator.LectureValidator;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.*;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.*;

@@ -5,19 +5,15 @@ import com.eefy.studyclass.domain.studyclass.dto.response.NoticeListResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.NoticeResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.SearchStudentResponse;
 import com.eefy.studyclass.domain.studyclass.dto.response.StudyClassListResponse;
-import com.eefy.studyclass.domain.studyclass.service.LectureService;
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -27,7 +23,6 @@ import java.util.List;
 public class StudyClassController {
 
     private final StudyClassService studyClassService;
-    private final LectureService lectureService;
 
     @Operation(summary = "강의 목록 조회", description = "강사: 자신이 생성한 강의 목록 조회 \n 학생: 자신이 수강하는 강의 목록 조회")
     @GetMapping("")
@@ -122,27 +117,5 @@ public class StudyClassController {
     public ResponseEntity<NoticeResponse> getNotice(@RequestHeader("Member-Id") Integer memberId,
                                                     @PathVariable Integer noticeId) {
         return ResponseEntity.ok(studyClassService.getNoticeInfo(noticeId));
-    }
-
-    @PostMapping(value = "/tutor/lecture",  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> makeLecture(@RequestHeader("Member-Id") Integer teacherId,
-                                            @RequestPart(name = "request") LectureNoteRequest lectureNoteRequest,
-                                            @RequestPart(name = "file") MultipartFile filePath) throws IOException {
-
-        lectureService.makeLectureNote(teacherId, lectureNoteRequest, filePath);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/lecture/list/{classId}")
-    public ResponseEntity<List<LectureNoteListResponse>> getLectureNoteList(@RequestHeader("Member-Id") Integer memberId,
-                                                                            @PathVariable Integer classId) {
-
-        return ResponseEntity.ok(lectureService.getLectureNoteList(classId));
-    }
-
-    @GetMapping("/lecture/{lectureId}")
-    public ResponseEntity<LectureResponse> getLecture(@RequestHeader("Member-Id") Integer memberId,
-                                                      @PathVariable Integer lectureId) {
-        return ResponseEntity.ok(lectureService.getLecture(lectureId));
     }
 }

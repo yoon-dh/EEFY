@@ -1,4 +1,4 @@
-package com.eefy.studyclass.domain.studyclass.exception.message;
+package com.eefy.studyclass.domain.lecture.exception.message;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
-package com.eefy.studyclass.domain.studyclass.dto.request;
+package com.eefy.studyclass.domain.lecture.dto.response;
 
 
-import com.eefy.studyclass.domain.studyclass.persistence.entity.Lecture;
+import com.eefy.studyclass.domain.lecture.persistence.entity.Lecture;
 import lombok.Getter;
 
 @Getter
