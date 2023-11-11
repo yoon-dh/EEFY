@@ -13,9 +13,8 @@ import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.service.HomeworkService;
-import java.io.IOException;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.info.Info;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,7 +41,7 @@ public class HomeworkController {
     // 솔브에 파일 stt 기능 구현
     // response stt 결과 출력
 
-    @Operation(summary = "과제 만들기")
+    @Operation(summary = "과제 만들기", description = "type: READING, WRITING, LISTENING, SPEAKING")
     @PostMapping("/make")
     public ResponseEntity<MakeHomeworkResponse> makeHomework(
         @RequestBody MakeHomeworkRequest makeHomeworkRequest,
@@ -54,7 +53,7 @@ public class HomeworkController {
             HttpStatus.OK);
     }
 
-    @Operation(summary = "문제 만들고 과제에 할당하기")
+    @Operation(summary = "문제 만들고 과제에 할당하기", description = "field: CHOICE, VOICE, WRITE")
     @PostMapping(value = "/make/question", consumes = {MediaType.APPLICATION_JSON_VALUE,
         MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<MakeHomeworkQuestionResponse> makeQuestion(
@@ -97,7 +96,8 @@ public class HomeworkController {
         @PathVariable Integer classHomeworkId,
         @RequestHeader("Member-Id") Integer memberId
     ) {
-        return new ResponseEntity<>(homeworkService.getProblem(classHomeworkId,memberId), HttpStatus.OK);
+        return new ResponseEntity<>(homeworkService.getProblem(classHomeworkId, memberId),
+            HttpStatus.OK);
     }
 
     // 과제 문제를 제출하는 로직
@@ -114,6 +114,7 @@ public class HomeworkController {
             homeworkService.solveProblem(solveProblemRequest, memberId, voiceFile),
             HttpStatus.OK);
     }
+
     @Operation(summary = "과제 채점")
     @GetMapping("/solve/{homeworkStudentId}")
     public ResponseEntity<SolveHomeworkResponse> solveHomework(
