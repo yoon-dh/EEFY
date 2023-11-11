@@ -19,9 +19,9 @@ public interface StudyClassService {
     void inviteMember(Integer memberId, InviteMemberRequest inviteMemberRequest);
     void disInviteMember(Integer memberId, InviteMemberRequest disInviteMemberRequest);
     void enrollHomework(Integer teacherId, EnrollHomeworkRequest enrollHomeworkRequest);
-    void createNotice(Integer teacherId, NoticeRequest noticeCreateRequest);
+    void createNotice(Integer teacherId, NoticeCreateRequest noticeCreateRequest);
     List<NoticeListResponse> getNoticeList(Integer classId);
     NoticeResponse getNoticeInfo(Integer noticeId);
-    void modifyNotice(Integer teacherId, NoticeRequest noticeModifyRequest);
+    void modifyNotice(Integer teacherId, NoticeModifyRequest noticeModifyRequest);
     void deleteNotice(Integer teacherId, Integer noticeId);
 }

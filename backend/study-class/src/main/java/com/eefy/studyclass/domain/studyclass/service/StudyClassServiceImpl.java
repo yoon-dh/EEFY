@@ -15,12 +15,14 @@ import com.eefy.studyclass.domain.studyclass.persistence.mysql.NoticeRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.ParticipateRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -59,6 +61,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     @Override
     public void createStudyClass(Integer memberId, StudyClassCreateRequest studyClassCreateRequest) {
 
+        log.info("==================== create study class ==================== ");
         studyClassValidator.checkUserRoleCreateStudyClass(memberService.getMemberInfo(memberId, memberId));
 
         StudyClass studyClass = StudyClass.builder()
@@ -156,15 +159,19 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void createNotice(Integer teacherId, NoticeRequest noticeRequest) {
+    public void createNotice(Integer teacherId, NoticeCreateRequest noticeRequest) {
+        studyClassValidator.checkUserRole(memberService.getMemberInfo(teacherId, teacherId));
+
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(noticeRequest.getClassId()));
 
         studyClassValidator.checkAuthorityStudyClass(studyClass, teacherId);
 
         Notice notice = Notice.builder()
+                .memberId(teacherId)
                 .studyClass(studyClass)
                 .title(noticeRequest.getTitle())
                 .content(noticeRequest.getContent())
+                .hit(0)
                 .build();
 
         noticeRepository.save(notice);
@@ -187,8 +194,8 @@ public class StudyClassServiceImpl implements StudyClassService {
     }
 
     @Override
-    public void modifyNotice(Integer teacherId, NoticeRequest noticeModifyRequest) {
-        Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeModifyRequest.getClassId()));
+    public void modifyNotice(Integer teacherId, NoticeModifyRequest noticeModifyRequest) {
+        Notice notice = studyClassValidator.existNoticeById(noticeRepository.findById(noticeModifyRequest.getId()));
         studyClassValidator.checkAuthorityNotice(notice, teacherId);
 
         notice.updateNoticeInfo(noticeModifyRequest);

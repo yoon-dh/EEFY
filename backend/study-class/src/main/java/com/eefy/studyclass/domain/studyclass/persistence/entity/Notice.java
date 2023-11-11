@@ -1,6 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.persistence.entity;
 
-import com.eefy.studyclass.domain.studyclass.dto.request.NoticeRequest;
+import com.eefy.studyclass.domain.studyclass.dto.request.NoticeModifyRequest;
 import com.eefy.studyclass.global.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class Notice extends BaseEntity {
     @Column(nullable = false, length = 2000)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "Integer default 0")
     private Integer hit;
 
     @Builder
@@ -43,7 +43,7 @@ public class Notice extends BaseEntity {
         this.hit = hit;
     }
 
-    public void updateNoticeInfo(NoticeRequest noticeModifyRequest) {
+    public void updateNoticeInfo(NoticeModifyRequest noticeModifyRequest) {
         this.title = noticeModifyRequest.getTitle();
         this.content = noticeModifyRequest.getContent();
     }

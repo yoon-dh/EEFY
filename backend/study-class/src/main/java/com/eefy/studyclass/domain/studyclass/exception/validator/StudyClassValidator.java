@@ -9,11 +9,13 @@ import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.global.exception.CustomException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Component
 public class StudyClassValidator {
@@ -25,6 +27,7 @@ public class StudyClassValidator {
     }
 
     public StudyClass existsStudyClassByClassId(Optional<StudyClass> optionalStudyClass) {
+        log.info("===============existsStudyClassByClassId 진입===============");
         if(optionalStudyClass.isEmpty()) throw CustomException.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER.getCode())
@@ -70,8 +73,8 @@ public class StudyClassValidator {
     public Notice existNoticeById(Optional<Notice> optionalNotice) {
         if(optionalNotice.isEmpty()) throw CustomException.builder()
                 .status(HttpStatus.BAD_REQUEST)
-                .code(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_ID.getCode())
-                .message(StudyClassEnum.NO_EXIST_STUDY_CLASS_BY_TEACHER_AND_CLASS.getMessage())
+                .code(StudyClassEnum.NO_EXIST_NOTICE.getCode())
+                .message(StudyClassEnum.NO_EXIST_NOTICE.getMessage())
                 .build();
 
         return optionalNotice.get();
@@ -80,8 +83,16 @@ public class StudyClassValidator {
     public void checkAuthorityNotice(Notice notice, Integer teacherId) {
         if(notice.getMemberId() != teacherId) throw CustomException.builder()
                 .status(HttpStatus.BAD_REQUEST)
-                .code(StudyClassEnum.UNAUTHORIZED_AOUT_DELETE_NOTICE.getCode())
-                .message(StudyClassEnum.UNAUTHORIZED_AOUT_DELETE_NOTICE.getMessage())
+                .code(StudyClassEnum.UNAUTHORIZED_ABOUT_DELETE_NOTICE.getCode())
+                .message(StudyClassEnum.UNAUTHORIZED_ABOUT_DELETE_NOTICE.getMessage())
                 .build();
+    }
+
+    public void checkUserRole(Member member) {
+        log.info("============== CheckUserRole: " + member.getRole());
+        if(!member.getRole().equals("TEACHER")) throw CustomException.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .code(MemberEnum.UNAUTHORIZED_ABOUT_CLASS.getCode())
+                .message(MemberEnum.UNAUTHORIZED_ABOUT_CLASS.getMessage()).build();
     }
 }
