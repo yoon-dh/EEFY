@@ -18,13 +18,13 @@ public class FirebaseConfig {
     private String firebaseSdkPath;
 
     @Bean
-    public FirebaseMessaging initFirebaseMessaging() throws IOException {
+    public FirebaseApp initFirebaseMessaging() throws IOException {
         InputStream file = FirebaseConfig.class.getClassLoader().getResourceAsStream(firebaseSdkPath);
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(file))
                 .build();
         file.close();
-        return FirebaseMessaging.getInstance(FirebaseApp.initializeApp(options));
+        return FirebaseApp.initializeApp(options);
     }
 }
