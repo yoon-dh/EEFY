@@ -4,6 +4,7 @@ import com.eefy.homework.domain.homework.AiServerRestClient;
 import com.eefy.homework.domain.homework.ClassServiceFeignClient;
 import com.eefy.homework.domain.homework.dto.ChoiceDto;
 import com.eefy.homework.domain.homework.dto.ClassStudentDto;
+import com.eefy.homework.domain.homework.dto.HomeworkDto;
 import com.eefy.homework.domain.homework.dto.HomeworkQuestionDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentQuestionDto;
@@ -240,6 +241,18 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         homeworkStudent.updateDoneDate();
         return new SolveHomeworkResponse(homeworkStudentId);
+    }
+
+    @Override
+    public List<HomeworkDto> getHomeworkByTeacherId(Integer memberId) {
+        List<Homework> byMemberId = homeworkRepository.findByMemberId(memberId);
+        List<HomeworkDto> homeworkDtos = new ArrayList<>();
+
+        for (Homework homework : byMemberId) {
+            homeworkDtos.add(modelMapper.map(homework, HomeworkDto.class));
+        }
+
+        return homeworkDtos;
     }
 
     private void updateChoiceAndWriteProblemScore(HomeworkQuestion homeworkQuestion,
