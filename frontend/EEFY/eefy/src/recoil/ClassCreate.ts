@@ -8,7 +8,7 @@ export const CreateModalOpen = atom<boolean>({
   default: false,
 });
 
-export const EnterClassNumber = atom<number | null>({
+export const EnterClassNumber = atom<any>({
   key: 'EnterClassNumber',
   default: null,
   effects_UNSTABLE: [persistAtom],

@@ -14,6 +14,11 @@ interface StudentSearchItemProps {
 }
 
 function StudentSearchItem({ memberId, profile, name, email, phone }: StudentSearchItemProps) {
+  let profileCheck = profile;
+  if (profile === null) {
+    profileCheck = '/icon-192x192.png';
+  }
+
   const [inviteArr, setInviteArr] = useRecoilState(inviteArray);
   const [inviteMemberIdArr, setInviteMemberIdArr] = useRecoilState(inviteMemberIdArray);
 
@@ -62,7 +67,7 @@ function StudentSearchItem({ memberId, profile, name, email, phone }: StudentSea
         <div className='flex items-center space-x-3'>
           <div className='avatar'>
             <div className='mask mask-squircle w-12 h-12 bg-primary'>
-              <Image src={profile} alt='Avatar Tailwind CSS Component' width={250} height={250} />
+              <Image src={profileCheck} alt='Avatar Tailwind CSS Component' width={250} height={250} />
             </div>
           </div>
           <div>
