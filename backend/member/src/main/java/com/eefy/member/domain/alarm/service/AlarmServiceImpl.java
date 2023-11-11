@@ -89,6 +89,7 @@ public class AlarmServiceImpl implements AlarmService {
     private void sendSubscribe(List<String> registrationTokens, String topic) {
         TopicManagementResponse response = null;
         try {
+            log.info("등록할 토큰: {}, 토픽: {}", registrationTokens, topic);
             response = FirebaseMessaging.getInstance().subscribeToTopic(registrationTokens, topic);
         } catch (FirebaseMessagingException e) {
             AlarmValidator.throwFirebaseMessagingError(e);
