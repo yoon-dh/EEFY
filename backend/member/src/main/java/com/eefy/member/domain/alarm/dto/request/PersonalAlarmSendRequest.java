@@ -1,10 +1,10 @@
 package com.eefy.member.domain.alarm.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 @AllArgsConstructor
-@Data
+@Getter
 public class PersonalAlarmSendRequest {
     private int targetMemberId;
     private int classId;
