@@ -55,7 +55,7 @@ public class QnaValidator {
 
     public void checkAuthorizationQuestion(QnaQuestion qnaQuestion, Member member) {
         log.info(">> question MemberId: " + qnaQuestion.getMemberId() + ", memberId: " + member.getMemberId() + " " + member.getRole().equals("TEACHER"));
-        if(!member.getRole().equals("TEACHER") || qnaQuestion.getMemberId() != member.getMemberId()) throw CustomException.builder()
+        if(!member.getRole().equals("TEACHER") && qnaQuestion.getMemberId() != member.getMemberId()) throw CustomException.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .code(QuestionEnum.UNAUTHORIZED_ACCESS_QUESTION.getCode())
                 .message(QuestionEnum.UNAUTHORIZED_ACCESS_QUESTION.getMessage())
