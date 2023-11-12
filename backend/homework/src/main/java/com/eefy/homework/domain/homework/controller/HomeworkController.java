@@ -2,6 +2,7 @@ package com.eefy.homework.domain.homework.controller;
 
 import com.eefy.homework.domain.homework.dto.HomeworkDto;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
+import com.eefy.homework.domain.homework.dto.request.FinishMakingHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.request.SolveProblemRequest;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,8 +44,8 @@ public class HomeworkController {
 
     @Operation(summary = "만든 과제 확인하기")
     @GetMapping("/teacher/homework")
-    public ResponseEntity<List<HomeworkDto>> getHomeworkList(@RequestHeader("Member-Id") Integer memberId)
-    {
+    public ResponseEntity<List<HomeworkDto>> getHomeworkList(
+        @RequestHeader("Member-Id") Integer memberId) {
 
         return new ResponseEntity<>(
             homeworkService.getHomeworkByTeacherId(memberId),
@@ -62,6 +64,21 @@ public class HomeworkController {
             homeworkService.makeHomework(makeHomeworkRequest, memberId),
             HttpStatus.OK);
     }
+
+    @Operation(summary = "과제 만들기 완료")
+    @PutMapping("/make")
+    public ResponseEntity<MakeHomeworkResponse> finishMakingHomework(
+        @RequestHeader("Member-Id") Integer memberId,
+        @RequestBody FinishMakingHomeworkRequest finishMakingHomeworkRequest
+    ) {
+
+        return new ResponseEntity<>(
+            homeworkService.finishMakingHomework(
+                memberId, finishMakingHomeworkRequest.getHomeworkId()),
+            HttpStatus.OK
+        );
+    }
+
 
     @Operation(summary = "문제 만들고 과제에 할당하기", description = "field: CHOICE, VOICE, WRITE")
     @PostMapping(value = "/make/question", consumes = {MediaType.APPLICATION_JSON_VALUE,

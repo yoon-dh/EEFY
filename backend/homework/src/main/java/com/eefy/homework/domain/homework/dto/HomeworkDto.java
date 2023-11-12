@@ -15,4 +15,5 @@ public class HomeworkDto {
     private String title;
     private String content;
     private HomeworkType type;
+    private Boolean isFinish;
 }

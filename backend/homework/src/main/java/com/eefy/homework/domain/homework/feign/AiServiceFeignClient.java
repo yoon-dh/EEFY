@@ -1,4 +1,4 @@
-package com.eefy.homework.domain.homework;
+package com.eefy.homework.domain.homework.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @FeignClient(name = "ai-service", url = "k9b306.p.ssafy.io:8001")
-public interface AiServerRestClient {
+public interface AiServiceFeignClient {
 
     @GetMapping(value = "/api/ai/announce/evaluate/{filePath}")
     String getAnnounceScore(@PathVariable("filePath") String filePath);
