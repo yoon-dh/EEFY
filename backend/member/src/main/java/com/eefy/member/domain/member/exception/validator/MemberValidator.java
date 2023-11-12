@@ -80,14 +80,4 @@ public class MemberValidator {
                     .build();
         }
     }
-
-    public Member existMember(Optional<Member> member) {
-        if(member.isEmpty()) throw CustomException.builder()
-                .status(HttpStatus.BAD_REQUEST)
-                .code(MemberEnum.NO_EXIST_MEMBER.getCode())
-                .message(MemberEnum.NO_EXIST_MEMBER.getMessage())
-                .build();
-
-        return member.get();
-    }
 }
