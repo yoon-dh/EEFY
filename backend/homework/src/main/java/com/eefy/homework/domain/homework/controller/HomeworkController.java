@@ -59,7 +59,6 @@ public class HomeworkController {
         @RequestBody MakeHomeworkRequest makeHomeworkRequest,
         @RequestHeader("Member-Id") Integer memberId) {
 
-        log.info("homework/make/ api 호출 : {}", makeHomeworkRequest);
         return new ResponseEntity<>(
             homeworkService.makeHomework(makeHomeworkRequest, memberId),
             HttpStatus.OK);
@@ -87,8 +86,6 @@ public class HomeworkController {
         @RequestPart MakeHomeworkQuestionRequest makeHomeworkQuestionRequest,
         @RequestPart MultipartFile voiceFile,
         @RequestHeader("Member-Id") Integer memberId) throws IOException {
-
-        log.info("homework/make/question api 호출 : {}", makeHomeworkQuestionRequest);
 
         return new ResponseEntity<>(
             homeworkService.makeQuestion(makeHomeworkQuestionRequest, memberId, voiceFile),

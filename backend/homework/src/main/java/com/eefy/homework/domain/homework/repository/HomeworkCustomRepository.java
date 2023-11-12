@@ -78,10 +78,12 @@ public class HomeworkCustomRepository {
                 homeworkStudent.id,
                 homeworkStudent.memberId,
                 homeworkStudent.classHomework.id,
-                homeworkStudent.doneDate
+                homeworkStudent.doneDate,
+                homework.title
             ))
             .from(homeworkStudent)
             .join(homeworkStudent.classHomework, classHomework)
+            .join(classHomework.homework, homework)
             .where(classIdEq(classId),
                 memberIdEq(memberId))
             .fetch();
