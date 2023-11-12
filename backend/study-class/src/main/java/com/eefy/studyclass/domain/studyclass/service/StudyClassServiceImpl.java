@@ -43,11 +43,11 @@ public class StudyClassServiceImpl implements StudyClassService {
         Member member = memberService.getMemberInfo(memberId, memberId);
 
         if(member.getRole().equals("TEACHER")) {
-            studyClassList = studyClassRepository.findByMemberId(pageable, memberId);
+            studyClassList = studyClassRepository.findByMemberIdOrderByCreatedAtDesc(pageable, memberId);
         }
 
         if(member.getRole().equals("STUDENT")) {
-            studyClassList = studyClassRepository.findByStudentId(pageable, memberId);
+            studyClassList = studyClassRepository.findByStudentIdOrderByCreatedAtDesc(pageable, memberId);
         }
 
         List<StudyClassResponse> studyClassResponseList = studyClassList.stream().map(studyClass -> {
