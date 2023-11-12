@@ -1,4 +1,4 @@
-package com.eefy.homework.domain.homework;
+package com.eefy.homework.domain.homework.feign;
 
 import com.eefy.homework.domain.homework.dto.ClassStudentDto;
 import java.util.List;

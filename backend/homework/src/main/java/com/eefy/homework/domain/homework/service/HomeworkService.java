@@ -40,4 +40,6 @@ public interface HomeworkService {
     SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId);
 
     List<HomeworkDto> getHomeworkByTeacherId(Integer memberId);
+
+    MakeHomeworkResponse finishMakingHomework(Integer memberId, Integer homeworkId);
 }

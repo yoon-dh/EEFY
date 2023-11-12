@@ -14,12 +14,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Builder
 @AllArgsConstructor
+@DynamicInsert
 public class Homework extends BaseEntity {
 
     @Id
@@ -40,6 +43,10 @@ public class Homework extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private HomeworkType type;
 
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private Boolean isFinish;
+
     public static Homework of(Integer memberId, String title, String content, HomeworkType type) {
         return Homework.builder()
             .memberId(memberId)
@@ -47,5 +54,9 @@ public class Homework extends BaseEntity {
             .content(content)
             .type(type)
             .build();
+    }
+
+    public void finishMakingHomework(){
+        isFinish = true;
     }
 }

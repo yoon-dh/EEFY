@@ -1,7 +1,5 @@
 package com.eefy.homework.domain.homework.service;
 
-import com.eefy.homework.domain.homework.AiServerRestClient;
-import com.eefy.homework.domain.homework.ClassServiceFeignClient;
 import com.eefy.homework.domain.homework.dto.ChoiceDto;
 import com.eefy.homework.domain.homework.dto.ClassStudentDto;
 import com.eefy.homework.domain.homework.dto.HomeworkDto;
@@ -23,6 +21,9 @@ import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.exception.HomeworkNotFoundException;
+import com.eefy.homework.domain.homework.feign.AiServiceFeignClient;
+import com.eefy.homework.domain.homework.feign.ClassServiceFeignClient;
+import com.eefy.homework.domain.homework.feign.MemberServiceFeignClient;
 import com.eefy.homework.domain.homework.persistence.entity.Choice;
 import com.eefy.homework.domain.homework.persistence.entity.ClassHomework;
 import com.eefy.homework.domain.homework.persistence.entity.Homework;
@@ -56,8 +57,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class HomeworkServiceImpl implements HomeworkService {
 
     private final ModelMapper modelMapper;
-    private final AiServerRestClient aiServerRestClient;
+    private final AiServiceFeignClient aiServiceFeignClient;
     private final ClassServiceFeignClient classServiceFeignClient;
+    private final MemberServiceFeignClient memberServiceFeignClient;
     private final S3Uploader s3Uploader;
 
     private final HomeworkRepository homeworkRepository;
@@ -122,7 +124,6 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         classHomeworkRepository.save(classHomework);
 
-        // todo: 실제 클래스의 사용자 받아오는 restApi 작성
         List<ClassStudentDto> classStudents = classServiceFeignClient.getClassStudent(memberId,
             assignHomeworkToClassRequest.getClassId());
         log.info(classStudents.toString());
@@ -131,6 +132,17 @@ public class HomeworkServiceImpl implements HomeworkService {
             homeworkStudentRepository.save(
                 HomeworkStudent.from(classStudentDto.getMemberId(), classHomework));
         }
+
+//         클래스로 부터 사용자를 받아온다.
+        // 클레스 아이디로부터 클래스 이름 가져온다.
+
+//        memberServiceFeignClient.sendAlarmToClassMember(memberId, AlarmSendRequest.builder()
+//            .classId(classHomework.getClassId())
+//            .className(null)
+//            .link(null)
+//            .title()
+//            .content()
+//            .build())
 
         return new AssignHomeworkToClassResponse(classHomework.getId());
     }
@@ -149,30 +161,6 @@ public class HomeworkServiceImpl implements HomeworkService {
         insertTotalCount(homeworkStudentDtos, homeworkProblemCount);
         insertSolvedCount(homeworkStudentDtos, solvedHomeworkProblemCount);
         return new ViewHomeworkResponse(homeworkStudentDtos);
-    }
-
-    private void insertTotalCount(List<HomeworkStudentDto> homeworkStudentDtos,
-        List<QuestionCountDto> homeworkProblemCount) {
-        for (HomeworkStudentDto homeworkStudentDto : homeworkStudentDtos) {
-            for (QuestionCountDto questionCountDto : homeworkProblemCount) {
-                if (questionCountDto.getHomeworkStudentId()
-                    .equals(homeworkStudentDto.getHomeworkStudentId())) {
-                    homeworkStudentDto.setTotalCount(questionCountDto.getCount());
-                }
-            }
-        }
-    }
-
-    private void insertSolvedCount(List<HomeworkStudentDto> homeworkStudentDtos,
-        List<QuestionCountDto> homeworkProblemCount) {
-        for (HomeworkStudentDto homeworkStudentDto : homeworkStudentDtos) {
-            for (QuestionCountDto questionCountDto : homeworkProblemCount) {
-                if (questionCountDto.getHomeworkStudentId()
-                    .equals(homeworkStudentDto.getHomeworkStudentId())) {
-                    homeworkStudentDto.setSolvedCount(questionCountDto.getCount());
-                }
-            }
-        }
     }
 
     @Override
@@ -198,7 +186,7 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         if (voiceFile != null && !voiceFile.isEmpty()) {
             uploadPath = s3Uploader.upload(voiceFile, voicePath);
-            sttText = aiServerRestClient.getSttText(voiceFile);
+            sttText = aiServiceFeignClient.getSttText(voiceFile);
         }
 
         HomeworkStudent homeworkStudent = validateHomeworkStudent(
@@ -230,7 +218,7 @@ public class HomeworkServiceImpl implements HomeworkService {
         int index = 0;
         for (HomeworkStudentQuestion homeworkStudentQuestion : homeworkStudentQuestions) {
             if (homeworkQuestions.get(index).getType().equals(HomeworkQuestionType.VOICE)) {
-                String score = aiServerRestClient.getAnnounceScore(
+                String score = aiServiceFeignClient.getAnnounceScore(
                     homeworkStudentQuestion.getFilePath());
                 homeworkStudentQuestion.updateScore(Integer.parseInt(score) * 20);
             } else {
@@ -254,6 +242,13 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
 
         return homeworkDtos;
+    }
+
+    @Override
+    @Transactional
+    public MakeHomeworkResponse finishMakingHomework(Integer memberId, Integer homeworkId) {
+        validateHomework(homeworkId).finishMakingHomework();
+        return new MakeHomeworkResponse(homeworkId);
     }
 
     private void updateChoiceAndWriteProblemScore(HomeworkQuestion homeworkQuestion,
@@ -365,4 +360,27 @@ public class HomeworkServiceImpl implements HomeworkService {
         return modelMapper.map(choice, ChoiceDto.class);
     }
 
+    private void insertTotalCount(List<HomeworkStudentDto> homeworkStudentDtos,
+        List<QuestionCountDto> homeworkProblemCount) {
+        for (HomeworkStudentDto homeworkStudentDto : homeworkStudentDtos) {
+            for (QuestionCountDto questionCountDto : homeworkProblemCount) {
+                if (questionCountDto.getHomeworkStudentId()
+                    .equals(homeworkStudentDto.getHomeworkStudentId())) {
+                    homeworkStudentDto.setTotalCount(questionCountDto.getCount());
+                }
+            }
+        }
+    }
+
+    private void insertSolvedCount(List<HomeworkStudentDto> homeworkStudentDtos,
+        List<QuestionCountDto> homeworkProblemCount) {
+        for (HomeworkStudentDto homeworkStudentDto : homeworkStudentDtos) {
+            for (QuestionCountDto questionCountDto : homeworkProblemCount) {
+                if (questionCountDto.getHomeworkStudentId()
+                    .equals(homeworkStudentDto.getHomeworkStudentId())) {
+                    homeworkStudentDto.setSolvedCount(questionCountDto.getCount());
+                }
+            }
+        }
+    }
 }
