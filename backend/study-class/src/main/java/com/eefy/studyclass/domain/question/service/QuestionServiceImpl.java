@@ -7,7 +7,7 @@ import com.eefy.studyclass.domain.question.dto.request.QuestionModifyRequest;
 import com.eefy.studyclass.domain.question.dto.response.AnswerListResponse;
 import com.eefy.studyclass.domain.question.dto.response.QuestionDetailResponse;
 import com.eefy.studyclass.domain.question.dto.response.QuestionListResponse;
-import com.eefy.studyclass.domain.question.dto.response.QuestionWriteRequest;
+import com.eefy.studyclass.domain.question.dto.request.QuestionWriteRequest;
 import com.eefy.studyclass.domain.question.exception.validator.QnaValidator;
 import com.eefy.studyclass.domain.question.persistence.entity.QnaAnswer;
 import com.eefy.studyclass.domain.question.persistence.entity.QnaQuestion;
@@ -83,7 +83,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void writeQuestion(int memberId, com.eefy.studyclass.domain.question.dto.request.QuestionWriteRequest request) {
+    public void writeQuestion(int memberId, QuestionWriteRequest request) {
         Member member = memberService.getMemberInfo(memberId, memberId);
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(request.getClassId()));
 
@@ -139,15 +139,5 @@ public class QuestionServiceImpl implements QuestionService {
     private List<QuestionListResponse> makeQuestionListResponse(Member member, int classId) {
         List<QnaQuestion> questions = qnaQuestionRepository.findByMemberIdAndStudyClassId(member.getMemberId(), classId);
         return questions.stream().map(QuestionListResponse::new).collect(Collectors.toList());
-    }
-
-    private QuestionWriteRequest makeQuestionWriteResponse(QnaQuestion question) {
-        return QuestionWriteRequest.builder()
-                .questionId(question.getId())
-                .title(question.getTitle())
-                .content(question.getContent())
-                .createdAt(question.getCreatedAt())
-                .modifiedAt(question.getUpdatedAt())
-                .build();
     }
 }
