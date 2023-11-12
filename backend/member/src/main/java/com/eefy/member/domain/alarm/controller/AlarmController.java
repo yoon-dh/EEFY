@@ -37,7 +37,7 @@ public class AlarmController {
     }
 
     @Operation(summary = "클래스 내 학생들에게 푸시 알림 전송", description = "클래스 내 학생들에게 푸시 알림을 전송하는 API")
-    @PostMapping
+    @PostMapping("/tutor")
     public ResponseEntity<String> pushMessageGroup(@RequestHeader("Member-Id") int memberId,
                                                    @RequestBody AlarmSendRequest alarmSendRequest) {
 
@@ -46,7 +46,7 @@ public class AlarmController {
 
     @Operation(summary = "클래스에 대한 토픽 구독",
             description = "수강생이 클래스에 초대됐을 때 해당 클래스의 토픽을 구독하는 API")
-    @PostMapping("/{classId}")
+    @PostMapping("/tutor/{classId}")
     public SubscribeClassTopicResponse subscribeClassTopic(@PathVariable int classId,
                                                            @RequestBody SubscribeClassTopicRequest request) {
         return alarmService.subscribeClassTopic(classId, request);
