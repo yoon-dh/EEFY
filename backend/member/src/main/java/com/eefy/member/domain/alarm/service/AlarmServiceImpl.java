@@ -14,6 +14,7 @@ import com.eefy.member.domain.alarm.persistence.entity.redis.SavedMessage;
 import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
+import com.eefy.member.global.exception.CustomException;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -23,6 +24,7 @@ import com.google.firebase.messaging.WebpushFcmOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,8 +93,14 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
-    public String readAlarmMessage(int messageId) {
-        return null;
+    @Transactional
+    public String readAlarmMessage(int memberId, String messageId) {
+        Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
+        checkReadAlarmMessageStatus(alarmMessageOptional, messageId);
+        AlarmMessage alarmMessage = alarmMessageOptional.get();
+        alarmMessage.getMessages().remove(messageId);
+        messageRedisRepository.save(alarmMessage);
+        return "SUCCESS";
     }
 
     private void saveAlarmMessage(int memberId, SavedMessage savedMessage, String messageId) {
@@ -198,5 +206,18 @@ public class AlarmServiceImpl implements AlarmService {
                     .build());
         }
         return response;
+    }
+
+    private void checkReadAlarmMessageStatus(Optional<AlarmMessage> alarmMessageOptional, String messageId) {
+        if (alarmMessageOptional.isEmpty()
+                || alarmMessageOptional.get().getMessages() == null
+                || alarmMessageOptional.get().getMessages().isEmpty()
+                || alarmMessageOptional.get().getMessages().get(messageId) == null) {
+            throw CustomException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .code(1700)
+                    .message("보관된 메세지가 없습니다.")
+                    .build();
+        }
     }
 }
