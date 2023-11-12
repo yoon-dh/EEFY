@@ -111,7 +111,7 @@ public class AlarmServiceImpl implements AlarmService {
             throw new RuntimeException(e);
         }
         subscriptionRepository.deleteAllByAlarm(alarm);
-        alarmRepository.deleteById(classId);
+        alarmRepository.deleteById(alarm.getId());
         return "SUCCESS";
     }
 
