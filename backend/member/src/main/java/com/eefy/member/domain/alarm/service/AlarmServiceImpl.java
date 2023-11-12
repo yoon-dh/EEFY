@@ -7,6 +7,9 @@ import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.exception.validator.AlarmValidator;
 import com.eefy.member.domain.alarm.persistence.AlarmRepository;
 import com.eefy.member.domain.alarm.persistence.entity.Alarm;
+import com.eefy.member.domain.alarm.persistence.entity.AlarmMessageRedisRepository;
+import com.eefy.member.domain.alarm.persistence.entity.redis.AlarmMessage;
+import com.eefy.member.domain.alarm.persistence.entity.redis.SavedMessage;
 import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
@@ -18,9 +21,11 @@ import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushFcmOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,8 +37,10 @@ import java.util.stream.Collectors;
 public class AlarmServiceImpl implements AlarmService {
     private final FirebaseMessaging firebaseMessaging;
     private final MemberValidator memberValidator;
+
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
+    private final AlarmMessageRedisRepository messageRedisRepository;
 
     @Override
     public String sendMessageToPersonal(int memberId, PersonalAlarmSendRequest request) {
@@ -41,7 +48,10 @@ public class AlarmServiceImpl implements AlarmService {
         log.info("클래스 아이디: {}, token: {}", request.getClassId(), member.getToken());
 
         Message message = makePersonalMessage(request, member.getToken());
-        return sendMessage(message);
+        SavedMessage savedMessage = new ModelMapper().map(request, SavedMessage.class);
+        String messageId = sendMessage(message);
+        saveAlarmMessage(memberId, savedMessage, messageId);
+        return messageId;
     }
 
     @Override
@@ -51,7 +61,10 @@ public class AlarmServiceImpl implements AlarmService {
         log.info("클래스 아이디: {}, topic: {}", classId, topic);
 
         Message message = makeGroupMessage(alarmSendRequest, topic);
-        return sendMessage(message);
+        SavedMessage savedMessage = new ModelMapper().map(alarmSendRequest, SavedMessage.class);
+        String messageId = sendMessage(message);
+        saveAlarmMessage(memberId, savedMessage, messageId);
+        return messageId;
     }
 
     @Override
@@ -62,6 +75,33 @@ public class AlarmServiceImpl implements AlarmService {
         List<String> tokens = getStudentTokens(request.getStudentIds());
         sendSubscribe(tokens, topic);
         return new SubscribeClassTopicResponse(topic);
+    }
+
+    @Override
+    public SubscribeClassTopicResponse getAlarmMessages(int memberId, int messageId) {
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public SubscribeClassTopicResponse readAlarmMessage(int messageId) {
+        return null;
+    }
+
+    private void saveAlarmMessage(int memberId, SavedMessage savedMessage, String messageId) {
+        Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
+        AlarmMessage alarmMessage = getValidAlarmMessage(alarmMessageOptional, memberId);
+        alarmMessage.getMessages().put(messageId, savedMessage);
+        messageRedisRepository.save(alarmMessage);
+        log.info("Successfully saved Message: " + savedMessage.toString());
+    }
+
+    private AlarmMessage getValidAlarmMessage(Optional<AlarmMessage> alarmMessageOptional, int memberId) {
+        AlarmMessage alarmMessage = alarmMessageOptional.orElseGet(() -> new AlarmMessage(memberId, new HashMap<>()));
+        if (alarmMessage.getMessages() == null) {
+            alarmMessage.setMessages(new HashMap<>());
+        }
+        return alarmMessage;
     }
 
     private String getTopic(int classId, Optional<Alarm> alarmOptional) {

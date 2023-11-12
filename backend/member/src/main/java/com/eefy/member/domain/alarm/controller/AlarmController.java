@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,5 +47,18 @@ public class AlarmController {
     public SubscribeClassTopicResponse subscribeClassTopic(@PathVariable int classId,
                                                            @RequestBody SubscribeClassTopicRequest request) {
         return alarmService.subscribeClassTopic(classId, request);
+    }
+
+    @Operation(summary = "메세지 목록 조회", description = "알림 메세지 목록을 조회하기 위한 API")
+    @GetMapping("/message/{messageId}")
+    public SubscribeClassTopicResponse getAlarmMessages(@RequestHeader("Member-Id") int memberId,
+                                                        @PathVariable int messageId) {
+        return alarmService.getAlarmMessages(memberId, messageId);
+    }
+
+    @Operation(summary = "메세지 읽음 처리", description = "알림 메세지를 읽음 처리 하기 위한 API")
+    @DeleteMapping("/message/{messageId}")
+    public SubscribeClassTopicResponse readAlarmMessage(@PathVariable int messageId) {
+        return alarmService.readAlarmMessage(messageId);
     }
 }
