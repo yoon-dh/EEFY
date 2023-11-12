@@ -53,14 +53,13 @@ public class AlarmController {
     }
 
     @Operation(summary = "메세지 목록 조회", description = "알림 메세지 목록을 조회하기 위한 API")
-    @GetMapping("/message/{messageId}")
-    public List<SavedMessageResponse> getAlarmMessages(@RequestHeader("Member-Id") int memberId,
-                                                       @PathVariable int messageId) {
+    @GetMapping
+    public List<SavedMessageResponse> getAlarmMessages(@RequestHeader("Member-Id") int memberId) {
         return alarmService.getAlarmMessages(memberId);
     }
 
     @Operation(summary = "메세지 읽음 처리", description = "알림 메세지를 읽음 처리 하기 위한 API")
-    @DeleteMapping("/message/{messageId}")
+    @DeleteMapping("/{messageId}")
     public ResponseEntity<String> readAlarmMessage(@RequestHeader("Member-Id") int memberId,
                                                    @PathVariable String messageId) {
         return ResponseEntity.ok().body(alarmService.readAlarmMessage(memberId, messageId));
