@@ -164,8 +164,7 @@ public class HomeworkServiceImpl implements HomeworkService {
         List<HomeworkStudentDto> homeworkStudentDtos = homeworkCustomRepository.viewHomeworkByStudentId(
             viewHomeworkRequest.getClassId(), memberId);
         List<QuestionCountDto> solvedHomeworkProblemCount = homeworkCustomRepository.getSolvedHomeworkProblemCount(
-            viewHomeworkRequest.getClassId(),
-            memberId);
+            viewHomeworkRequest.getClassId(), memberId);
         List<QuestionCountDto> homeworkProblemCount = homeworkCustomRepository.getHomeworkProblemCount(
             viewHomeworkRequest.getClassId(), memberId);
 
