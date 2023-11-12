@@ -1,6 +1,7 @@
 package com.eefy.studyclass.domain.studyclass.dto.response;
 
 
+import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,14 +13,18 @@ public class StudyClassResponse {
     private Integer studentCnt;
     private String title;
     private String content;
-    private String teacher;
+    private String teacherName;
+    private String teacherNickname;
+    private String teacherProfileImagePath;
 
-    public static StudyClassResponse of(StudyClass studyClass, String teacherName) {
+    public static StudyClassResponse of(StudyClass studyClass, Member teacher) {
         return StudyClassResponse.builder()
                 .id(studyClass.getId())
                 .studentCnt(studyClass.getStudentCnt())
                 .title(studyClass.getTitle())
                 .content(studyClass.getContent())
-                .teacher(teacherName).build();
+                .teacherName(teacher.getName())
+                .teacherProfileImagePath(teacher.getProfileImagePath())
+                .teacherNickname(teacher.getNickname()).build();
     }
 }

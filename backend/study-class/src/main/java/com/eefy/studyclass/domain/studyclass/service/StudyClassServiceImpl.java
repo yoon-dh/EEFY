@@ -46,8 +46,8 @@ public class StudyClassServiceImpl implements StudyClassService {
         }
 
         List<StudyClassResponse> studyClassResponseList = studyClassList.stream().map(studyClass -> {
-            String teacherName = memberService.getMemberInfo(memberId, studyClass.getMemberId()).getNickname();
-            return StudyClassResponse.of(studyClass, teacherName);
+            Member teacher = memberService.getMemberInfo(memberId, studyClass.getMemberId());
+            return StudyClassResponse.of(studyClass, teacher);
         }).collect(Collectors.toList());
 
         return new StudyClassListResponse(studyClassResponseList, studyClassResponseList.size());
@@ -206,5 +206,14 @@ public class StudyClassServiceImpl implements StudyClassService {
 
         studyClassValidator.checkAuthorityNotice(notice, member.getMemberId());
         noticeRepository.delete(notice);
+    }
+
+    @Override
+    public StudyClassResponse getStudyClassInfo(Integer studyClassId) {
+        StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(studyClassId));
+
+        Member teacher = memberService.getMemberInfo(studyClass.getMemberId(), studyClass.getMemberId());
+
+        return StudyClassResponse.of(studyClass, teacher);
     }
 }

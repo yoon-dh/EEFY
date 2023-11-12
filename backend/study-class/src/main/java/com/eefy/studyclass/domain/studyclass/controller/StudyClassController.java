@@ -29,6 +29,12 @@ public class StudyClassController {
         return ResponseEntity.ok(studyClassService.getStudyClassList(pageable, memberId));
     }
 
+    @Operation(summary = "강의 정보 조회", description = "해당 ID에 대한 클래스 정보 조회")
+    @GetMapping("/{studyClassId}")
+    public ResponseEntity<StudyClassResponse> getStudyInfo(@PathVariable Integer studyClassId) {
+        return ResponseEntity.ok(studyClassService.getStudyClassInfo(studyClassId));
+    }
+
     @Operation(summary = "강의 생성", description = "TEACHER ROLE을 가진 사용자가 강의 생성")
     @PostMapping("/tutor")
     public ResponseEntity<Void> createStudyClass(@RequestHeader("Member-Id") Integer memberId,

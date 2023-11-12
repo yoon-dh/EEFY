@@ -21,4 +21,5 @@ public interface StudyClassService {
     NoticeResponse getNoticeInfo(Integer noticeId);
     void modifyNotice(Integer teacherId, NoticeModifyRequest noticeModifyRequest);
     void deleteNotice(Integer teacherId, Integer noticeId);
+    StudyClassResponse getStudyClassInfo(Integer studyClassId);
 }
