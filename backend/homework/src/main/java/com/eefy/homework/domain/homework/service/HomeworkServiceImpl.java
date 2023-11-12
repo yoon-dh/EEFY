@@ -32,7 +32,6 @@ import com.eefy.homework.domain.homework.persistence.entity.Homework;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudent;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudentQuestion;
-import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkQuestionType;
 import com.eefy.homework.domain.homework.repository.ChoiceRepository;
 import com.eefy.homework.domain.homework.repository.ClassHomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkCustomRepository;
@@ -102,7 +101,7 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         // todo: 강사가 유효한 사용자인지 검증
         String filePath = null;
-        if (voiceFile != null && !voiceFile.isEmpty()) {
+        if (hasVoice(voiceFile)) {
             filePath = s3Uploader.upload(voiceFile, voicePath);
         }
         HomeworkQuestion homeworkQuestion = saveHomeworkQuestion(makeHomeworkQuestionRequest,
@@ -191,21 +190,26 @@ public class HomeworkServiceImpl implements HomeworkService {
     public SolveProblemResponse solveProblem(SolveProblemRequest solveProblemRequest,
         Integer memberId, MultipartFile voiceFile) throws IOException {
 
-        String uploadPath = null;
-        String sttText = null;
-
-        if (voiceFile != null && !voiceFile.isEmpty()) {
-            uploadPath = s3Uploader.upload(voiceFile, voicePath);
-            sttText = aiServiceFeignClient.getSttText(voiceFile);
-        }
-
         HomeworkStudent homeworkStudent = validateHomeworkStudent(
             solveProblemRequest.getHomeworkStudentId());
         HomeworkQuestion homeworkQuestion = validateHomeworkQuestion(
             solveProblemRequest.getHomeworkQuestionId());
 
+        String uploadPath = null;
+        String sttText = null;
+        if (hasVoice(voiceFile)) {
+            uploadPath = s3Uploader.upload(voiceFile, voicePath);
+            sttText = aiServiceFeignClient.getSttText(voiceFile);
+        }
+
         HomeworkStudentQuestion homeworkStudentQuestion = HomeworkStudentQuestion.from(
             homeworkQuestion, homeworkStudent, solveProblemRequest.getSubmitAnswer(), uploadPath);
+
+        if (hasVoice(voiceFile)) {
+            updateVoiceProblemScore(homeworkStudentQuestion);
+        } else {
+            updateChoiceAndWriteProblemScore(homeworkQuestion, homeworkStudentQuestion);
+        }
 
         homeworkStudentQuestionRepository.save(homeworkStudentQuestion);
         return new SolveProblemResponse(homeworkStudentQuestion.getId(), sttText);
@@ -223,19 +227,6 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         if (homeworkQuestions.size() != homeworkStudentQuestions.size()) {
             throw new RuntimeException("문제를 다 안풀었습니다.");
-        }
-
-        int index = 0;
-        for (HomeworkStudentQuestion homeworkStudentQuestion : homeworkStudentQuestions) {
-            if (homeworkQuestions.get(index).getType().equals(HomeworkQuestionType.VOICE)) {
-                String score = aiServiceFeignClient.getAnnounceScore(
-                    homeworkStudentQuestion.getFilePath());
-                homeworkStudentQuestion.updateScore(Integer.parseInt(score) * 20);
-            } else {
-                updateChoiceAndWriteProblemScore(homeworkQuestions.get(index),
-                    homeworkStudentQuestion);
-            }
-            index++;
         }
 
         homeworkStudent.updateDoneDate();
@@ -393,4 +384,15 @@ public class HomeworkServiceImpl implements HomeworkService {
             }
         }
     }
+
+    private boolean hasVoice(MultipartFile voiceFile) {
+        return voiceFile != null && !voiceFile.isEmpty();
+    }
+
+    private void updateVoiceProblemScore(HomeworkStudentQuestion homeworkStudentQuestion) {
+        String score = aiServiceFeignClient.getAnnounceScore(
+            homeworkStudentQuestion.getFilePath());
+        homeworkStudentQuestion.updateScore(Integer.parseInt(score) * 20);
+    }
+
 }
