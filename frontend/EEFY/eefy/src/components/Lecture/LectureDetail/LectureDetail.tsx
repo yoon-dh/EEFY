@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useRecoilState } from 'recoil';
-import { NoticeNum } from '@/recoil/Notice';
+import { DetailData } from '@/recoil/Notice';
+import {LecturePage} from '@/recoil/Lecture'
 import dayjs from 'dayjs';
 import {
   Container,
@@ -29,13 +30,14 @@ type Notice = {
   title: string;
   createTime: Date;
   imgUrl: string;
-  useName: string;
+  nickname: string;
   content: string;
 };
 
 function LectureDetail() {
-  const [notice, setNotice] = useRecoilState<Notice | null>(NoticeNum);
+  const [notice, setNotice] = useRecoilState<Notice | null>(DetailData);
   const [targetFile, setTargetFile] = useState<FileList | null>(null);
+  const [lecturePage, setLecturePage] = useRecoilState(LecturePage);
 
   const [ocr, setOcr] = useRecoilState(OcrFileCheck)
 
@@ -79,6 +81,10 @@ function LectureDetail() {
     }
   };
   
+  const handledown = () => {
+
+  }
+  
   return (
     <>
       <Container
@@ -110,12 +116,9 @@ function LectureDetail() {
                       }}
                     >
                       <Img src={notice.imgUrl} />
-                      <UseName>{notice.useName}</UseName>
+                      <UseName>{notice.nickname}</UseName>
                     </div>
-                    <div className='flex' style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
-                      <UpdataBtn>수정</UpdataBtn>
-                      <DeleteBtn>삭제</DeleteBtn>
-                    </div>
+
                   </div>
                 </Header>
                 <Line />
@@ -141,13 +144,18 @@ function LectureDetail() {
                   }}
                   src={open} width={14} height={14} alt=''/> */}
                 </ViewerBtn>
-                <DownloadBtn>
-                  자료 다운 받기
-                  <Image 
+                <DownloadBtn
+                id="imgInput" 
+                type="file"  
+                accept=".pdf, image/*"
+                onClick={handledown}
+                >
+                  {/* 자료 다운 받기 */}
+                  {/* <Image 
                   style={{
                     margin:'0px 0px 0px 5px'
                   }}
-                  src={down} width={14} height={14} alt=''/>
+                  src={down} width={14} height={14} alt=''/> */}
                 </DownloadBtn>
               </BtnBox>
           </>

@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-position: absolute;
+/* position: absolute;
 top: 50%;
 left: 50%;
-transform: translate(-50%, -55%);
-width: 70%;
-height: 80%;
-border: 2px solid #AC98FF;
+transform: translate(-50%, -55%); */
+margin: 0px 0px 10px 0px;
+width: 100%;
+height: 112%;
 background-color: white;
 z-index: 3;
 display: flex;
@@ -25,7 +25,6 @@ position: relative;
 top: 5%;
 width: 100%;
 height: 90%;
-border: 1px solid #AC98FF;
 border-radius: 12px;
 
   overflow-y: auto;

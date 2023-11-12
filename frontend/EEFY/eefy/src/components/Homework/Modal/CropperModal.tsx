@@ -7,7 +7,8 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import { Container, Wrappe, BtnBox, ImgBox, PdfBtn } from './CropperModal.style';
 import { useRecoilState } from 'recoil';
-import { Category } from '@/recoil/Homework';
+import { Category, Homework, HomeworkProblem } from '@/recoil/Homework';
+import { postOcr } from '@/api/Homework/Problem';
 
 function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | null, onCloseModal: () => void }) {
   const { imgUrl, pdfFile, onCloseModal } = props;
@@ -15,43 +16,107 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
   const [isPdf, setIsPdf] = useState<boolean>(false);
   const [ocrImg, setOcrImg] = useState<string>("");
   const [category, setCategory] = useRecoilState(Category);
+  const [homework, setHomework] = useRecoilState(Homework);
+  const [homeworkProblem, setHomeworkProblem] = useRecoilState(HomeworkProblem);  
 
 
   useEffect(() => {
-    console.log(props)
     if (pdfFile) {
-      console.log(pdfFile);
       setIsPdf(true);
     } else if (!imgUrl) {
       // getCropData();
     }
   }, []);
 
-  const getCropData = () => {
+  const getCropData = async() => {
     // 파일 정보
     if (typeof cropperRef.current?.cropper !== 'undefined') {
-      console.log(cropperRef.current?.cropper, 'cropperRef.current?.cropper');
       cropperRef.current?.cropper.getCroppedCanvas().toBlob((blob) => {
         if (blob) {
-          const imageUrl1 = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = imageUrl1;
-          link.download = 'image.jpg';
-          link.click();
+          const formData = new FormData();
+          formData.append("image_file", blob as Blob);
+          handleCropImage(formData)
+          // const link = document.createElement('a');
+          // link.href = imageUrl1;
+          // link.download = 'image.jpg';
+          // link.click();
         } else {
           console.error("Failed to create Blob.");
         }
       });
     }
-    setCategory('multiple')
   };
+
+
+  const handleCropImage = async (croppedImage : any) => { 
+    const res = await postOcr(croppedImage);
+    console.log(res);
+    if(res?.status===200){
+
+      let title = ''
+      let content = ''
+      for (let i = 0; i <= res.data.length; i++){
+        title += res.data[i];
+      }
+      const data = {
+        title: title,
+        content: '',
+        field: "CHOICE",
+        answer: '',
+        choiceRequests: [
+          {
+            number:"1",
+          content:''
+        },
+          {
+            number:"2",
+          content:''
+        },
+          {
+            number:"3",
+          content:''
+        },
+          {
+            number:"4",
+          content:''
+        },
+      ]
+    }
+    setHomeworkProblem([...homeworkProblem, data])
+    setCategory('multiple')
+
+      // const NumList = []
+      // for (let i = 0; i <= res.data.length; i++){
+      //   console.log(res.data[i], 'ocr')
+      //   let num = ''
+      //   for (let j = 0; j <= res.data[i]?.length; j++){
+      //     if(res.data[i][j] != undefined){
+      //       // title = title + res.data[i][j]
+      //       if(title && title.includes('?')){
+      //         content +=res.data[i][j]
+      //         if(content.includes('①')){
+      //           NumList.push(num)
+      //         } else {
+      //           num += res.data[i][j]
+      //         }
+      //       }else{
+      //           title += res.data[i][j];
+      //       }
+      //     }
+      //     }
+      //   console.log(NumList)
+      //   console.log(content[0] === "[" ? content.slice(5) : content, 'content console.log임')
+      //   console.log(title.slice(4,), 'title console.log임')
+      // }
+    }
+
+  };
+
 
   const getPdfUrl = () => {
     if (pdfFile) {
       setSelect(!select);
       pdfjs.getDocument(pdfFile).promise.then(pdfToImage);
-      console.log(pdfjs, 'pdfjs');
-      console.log(pdfFile, 'pdfFile');
     } else {
       console.error('pdfFile is null or invalid.');
     }
@@ -86,7 +151,7 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
   }
 
   return (
-    <Container className='flex-col'>
+    <Container className='flex-col boxShadow'>
       <Wrappe>
         {isPdf ? (
           <>
@@ -96,7 +161,7 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
                 <Document
                 file={pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
                   <Page 
-                  width={1200} height={720} 
+                  width={210*5} height={210*1.414*5} 
                   pageNumber={pageNumber} />
                 </Document>
               </ImgBox>
@@ -112,11 +177,17 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
               viewMode={1}
               minCropBoxHeight={10}
               minCropBoxWidth={10}
-              background={false}
+              background={true}
               responsive={true}
               autoCropArea={1}
               checkOrientation={false}
               guides={true}
+              modal={true}
+              center={true}
+              highlight={true}
+              movable={true}
+              scalable={true}
+              toggleDragModeOnDblclick={true} // 두번 클릭하여 모드 전환
               style={{ height: '100%', width: "100%" }}
               />
           </ImgBox>
@@ -139,6 +210,12 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
                   autoCropArea={1}
                   checkOrientation={false}
                   guides={true}
+                  modal={true}
+                  center={true}
+                  highlight={true}
+                  movable={true}
+                  scalable={true}
+                  toggleDragModeOnDblclick={true} // 두번 클릭하여 모드 전환
                   style={{ height: '100%', width: '100%' }}
                 />
               </ImgBox>

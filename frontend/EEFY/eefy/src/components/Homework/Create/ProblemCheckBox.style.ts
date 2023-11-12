@@ -11,7 +11,7 @@ export const Wrappe = styled.div`
 flex-wrap: wrap;
 align-content: flex-start;
 flex: 8;
-height: 500px;
+height: 530px;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -21,9 +21,9 @@ height: 500px;
 `
 export const Box = styled.div`
 border-radius: 8px;
-background-color: #AC98FF;
-color: white;
-width: 40px;
+/* background-color: #AC98FF; */
+color: #AC98FF;
+width: 100%;
 height: 40px;
 margin: 8px 10px 8px 10.5px;
 font-size: 12px;
@@ -32,7 +32,8 @@ align-items: center;
 justify-content: center;
 cursor: pointer;
 &:hover{
-  background-color: #8A6DFF;
+  background-color: rgba(255, 255, 255, .25); /* 밝게 보이도록 배경색 추가 */
+  border-width: 1px 1px 1px 1px; /* 입체감 흰색 테두리 */
 }
 @media(max-width:1340px){
   margin: 5px 10px 5px 15.5px;

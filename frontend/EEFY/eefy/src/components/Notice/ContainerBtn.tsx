@@ -1,5 +1,8 @@
 import { CreateBtn, NoticeTitle, Tab, TabBox } from './ContainerBtn.style';
+import { useRecoilState } from 'recoil';
+import { NoticePage } from '@/recoil/Notice';
 function ContainerBtn() {
+  const [noticePageUrl, setNoticePageUrl] = useRecoilState(NoticePage)
   
   return (
     <div className='flex mt-1'>
@@ -13,7 +16,7 @@ function ContainerBtn() {
         </div>
       </TabBox>
 
-      <CreateBtn>글 작성</CreateBtn>
+      <CreateBtn onClick={()=>setNoticePageUrl('create')}>글 작성</CreateBtn>
     </div>
   );
 }

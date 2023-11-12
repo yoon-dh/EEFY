@@ -23,3 +23,7 @@ export const QuestionNum = atom({
   default: {}
 })
 
+export const QuestionPage = atom<string>({
+  key: 'QuestionPage',
+  default: 'detail',
+});

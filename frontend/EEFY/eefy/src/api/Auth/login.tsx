@@ -17,6 +17,7 @@ export const postLogin = async (data:loginData) => {
     return response;
   }catch(error){
       console.log('로그인 실패',error)
+    return error
   }
 };
 
