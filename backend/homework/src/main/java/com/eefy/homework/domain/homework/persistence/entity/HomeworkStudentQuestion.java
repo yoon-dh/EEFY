@@ -34,7 +34,7 @@ public class HomeworkStudentQuestion {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private HomeworkStudent homeworkStudent;
 
-    @Column(nullable = false)
+    @ColumnDefault("'voice'")
     private String submitAnswer;
 
     private String filePath;

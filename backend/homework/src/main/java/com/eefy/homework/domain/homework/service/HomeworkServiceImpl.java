@@ -3,6 +3,7 @@ package com.eefy.homework.domain.homework.service;
 import com.eefy.homework.domain.homework.dto.AlarmSendRequest;
 import com.eefy.homework.domain.homework.dto.ChoiceDto;
 import com.eefy.homework.domain.homework.dto.ClassStudentDto;
+import com.eefy.homework.domain.homework.dto.EvaluateAnnounceRequest;
 import com.eefy.homework.domain.homework.dto.HomeworkDto;
 import com.eefy.homework.domain.homework.dto.HomeworkQuestionDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
@@ -391,8 +392,8 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     private void updateVoiceProblemScore(HomeworkStudentQuestion homeworkStudentQuestion) {
         String score = aiServiceFeignClient.getAnnounceScore(
-            homeworkStudentQuestion.getFilePath());
-        homeworkStudentQuestion.updateScore(Integer.parseInt(score) * 20);
+            new EvaluateAnnounceRequest(homeworkStudentQuestion.getFilePath()));
+        homeworkStudentQuestion.updateScore(Character.getNumericValue(score.charAt(1)) * 20);
     }
 
 }
