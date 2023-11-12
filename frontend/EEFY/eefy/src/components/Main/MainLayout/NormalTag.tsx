@@ -6,7 +6,7 @@ import { userData } from '@/recoil/Auth';
 
 export default function NormalTag() {
     const userDataObj = useRecoilValue(userData);
-    const userName = userDataObj.role === 'TEACHER' ? userDataObj?.nickname : userDataObj.name;
+    const userName = userDataObj?.role === 'TEACHER' ? userDataObj?.nickname : userDataObj?.name;
 
     console.log(userData);
     console.log(userDataObj);
