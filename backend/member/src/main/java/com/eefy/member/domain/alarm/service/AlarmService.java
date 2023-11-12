@@ -12,6 +12,7 @@ public interface AlarmService {
     String sendMessageToPersonal(int memberId, PersonalAlarmSendRequest request);
     String sendMessageToGroup(int memberId, AlarmSendRequest alarmSendRequest);
     SubscribeClassTopicResponse subscribeClassTopic(int classId, SubscribeClassTopicRequest request);
+    String unsubscribeClassTopic(int classId);
     List<SavedMessageResponse> getAlarmMessages(int memberId);
     String readAlarmMessage(int memberId, String messageId);
 }
