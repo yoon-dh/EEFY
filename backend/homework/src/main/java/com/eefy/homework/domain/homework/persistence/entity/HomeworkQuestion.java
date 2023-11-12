@@ -42,7 +42,7 @@ public class HomeworkQuestion {
     @Column(nullable = false, length = 4000)
     private String content;
 
-    @Column(nullable = false, length = 4000)
+    @Column(nullable = true, length = 4000)
     private String filePath;
 
     @Column(nullable = false, length = 200)
