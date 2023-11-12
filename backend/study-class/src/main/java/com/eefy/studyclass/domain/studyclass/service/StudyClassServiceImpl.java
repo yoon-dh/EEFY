@@ -1,5 +1,8 @@
 package com.eefy.studyclass.domain.studyclass.service;
 
+import com.eefy.studyclass.domain.alarm.dto.request.PushAlarmRequest;
+import com.eefy.studyclass.domain.alarm.dto.request.StudentIdsRequest;
+import com.eefy.studyclass.domain.alarm.service.AlarmService;
 import com.eefy.studyclass.domain.member.exception.validator.MemberValidator;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +32,7 @@ public class StudyClassServiceImpl implements StudyClassService {
     private final ClassHomeworkRepository classHomeworkRepository;
     private final NoticeRepository noticeRepository;
     private final MemberServiceImpl memberService;
+    private final AlarmService alarmService;
     private final StudyClassValidator studyClassValidator;
     private final MemberValidator memberValidator;
 
@@ -123,6 +128,19 @@ public class StudyClassServiceImpl implements StudyClassService {
                     .studyClass(studyClass).build();
             participateRepository.save(participate);
         }
+
+        ArrayList<Integer> studentIds = (ArrayList<Integer>) inviteMemberRequest.getMemberList().stream().map(StudyClassStudentRequest::getMemberId).collect(Collectors.toList());
+
+        alarmService.subscribeStudyClassTopic(studyClass.getId(), StudentIdsRequest.builder().studentIds(studentIds).build());
+
+        PushAlarmRequest pushAlarmRequest = PushAlarmRequest.builder()
+                .classId(studyClass.getId())
+                .link("")
+                .className(studyClass.getTitle())
+                .title("학습 강좌 초대 알람")
+                .content(studyClass.getTitle() +"강좌에 초대되었습니다.")
+                .build();
+        alarmService.pushAlarmToStudent(studyClass.getMemberId(), pushAlarmRequest);
     }
 
     @Override
@@ -150,6 +168,14 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .homeworkId(enrollHomeworkRequest.getHomeworkId())
                 .studyClass(studyClass).build();
 
+        PushAlarmRequest pushAlarmRequest = PushAlarmRequest.builder()
+                .classId(studyClass.getId())
+                .link("")
+                .className(studyClass.getTitle())
+                .title("과제가 등록되었습니다.")
+                .content(studyClass.getTitle() + "강의의 새로운 과제가 생성되었습니다.").build();
+        alarmService.pushAlarmToStudent(teacherId, pushAlarmRequest);
+
         classHomeworkRepository.save(classHomework);
     }
 
@@ -168,6 +194,15 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .content(noticeRequest.getContent())
                 .hit(0)
                 .build();
+
+        PushAlarmRequest pushAlarmRequest = PushAlarmRequest.builder()
+                .classId(studyClass.getId())
+                .link("")
+                .className(studyClass.getTitle())
+                .title("새로운 공지사항이 등록되었습니다.")
+                .content(notice.getContent())
+                .build();
+        alarmService.pushAlarmToStudent(teacherId, pushAlarmRequest);
 
         return NoticeIdResponse.builder()
                 .id(noticeRepository.save(notice).getId()).build();

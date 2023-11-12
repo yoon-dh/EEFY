@@ -1,8 +1,11 @@
 package com.eefy.studyclass.domain.question.service;
 
+import com.eefy.studyclass.domain.alarm.dto.request.PushAlarmPersonalRequest;
+import com.eefy.studyclass.domain.alarm.service.AlarmService;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberService;
 import com.eefy.studyclass.domain.question.dto.request.AnswerModifyRequest;
+import com.eefy.studyclass.domain.question.dto.request.AnswerWriteRequest;
 import com.eefy.studyclass.domain.question.dto.request.QuestionModifyRequest;
 import com.eefy.studyclass.domain.question.dto.response.AnswerListResponse;
 import com.eefy.studyclass.domain.question.dto.response.QuestionDetailResponse;
@@ -34,6 +37,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final StudyClassRepository studyClassRepository;
     private final QnaAnswerRepository qnaAnswerRepository;
     private final MemberService memberService;
+    private final AlarmService alarmService;
     private final StudyClassValidator studyClassValidator;
     private final QnaValidator qnaValidator;
     @Override
@@ -103,6 +107,17 @@ public class QuestionServiceImpl implements QuestionService {
                 .content(request.getContent())
                 .build();
 
+        PushAlarmPersonalRequest alarmRequest = PushAlarmPersonalRequest.builder()
+                .targetMemberId(studyClass.getMemberId())
+                .classId(studyClass.getId())
+                .link("")
+                .className(studyClass.getTitle())
+                .title("질문 등록")
+                .content(member.getName() + "학생이 " + studyClass.getTitle() + "강좌에 질문을 등록하였습니다.")
+                .build();
+
+        alarmService.pushAlarmToPersonal(memberId, alarmRequest);
+
         qnaQuestionRepository.save(question);
     }
 
@@ -120,7 +135,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void writeAnswer(int memberId, com.eefy.studyclass.domain.question.dto.request.AnswerWriteRequest request) {
+    public void writeAnswer(int memberId, AnswerWriteRequest request) {
         QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(request.getId()));
 
         QnaAnswer answer = QnaAnswer.builder()
@@ -128,7 +143,44 @@ public class QuestionServiceImpl implements QuestionService {
                 .memberId(memberId)
                 .content(request.getContent()).build();
 
+        Member member = memberService.getMemberInfo(memberId, memberId); // 작성자
+        PushAlarmPersonalRequest pushAlarmPersonalRequest = pushAlarmWriteAnswer(qnaQuestion, answer, member);
+
+        alarmService.pushAlarmToPersonal(memberId, pushAlarmPersonalRequest);
         qnaAnswerRepository.save(answer);
+    }
+
+    private PushAlarmPersonalRequest pushAlarmWriteAnswer(QnaQuestion qnaQuestion, QnaAnswer answer, Member member) {
+
+        int studyId = qnaQuestion.getStudyClass().getId();
+        String studyTitle = qnaQuestion.getStudyClass().getTitle();
+        int targetId = 0;
+        String link = "";
+        String title = "";
+        String content = "";
+
+        if(member.getRole().equals("TEACHER")) {
+            targetId = qnaQuestion.getMemberId();
+            title = qnaQuestion.getTitle() + "답변 등록";
+            content = member.getNickname() + "강사님이 " + qnaQuestion.getTitle() + "에 대한 답변을 등록했습니다.";
+        }
+        else {
+            Member teacher = memberService.getMemberInfo(member.getMemberId(), qnaQuestion.getStudyClass().getMemberId());
+
+            // To do: 선생님한테 알람 가게 하기
+            targetId = teacher.getMemberId();
+            title = qnaQuestion.getTitle() + "답글 등록";
+            content = member.getName() + "학생이(가)" + qnaQuestion.getTitle() + "에 대한 답글을 작성했습니다.";
+
+        }
+
+        return PushAlarmPersonalRequest.builder()
+                .targetMemberId(targetId)
+                .classId(studyId)
+                .link(link)
+                .className(studyTitle)
+                .title(title)
+                .content(content).build();
     }
 
     @Override
