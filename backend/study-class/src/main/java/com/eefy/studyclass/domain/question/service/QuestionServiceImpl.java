@@ -87,6 +87,7 @@ public class QuestionServiceImpl implements QuestionService {
         QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(questionId));
         qnaValidator.checkEqualQuestionWriter(qnaQuestion, memberId);
 
+        qnaAnswerRepository.deleteAllByQuestionId(questionId);
         qnaQuestionRepository.delete(qnaQuestion);
     }
 

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface QnaAnswerRepository extends JpaRepository<QnaAnswer, Integer> {
     List<QnaAnswer> findByQuestionIdOrderByCreatedAtDesc(int questionId);
+
+    void deleteAllByQuestionId(int questionId);
 }

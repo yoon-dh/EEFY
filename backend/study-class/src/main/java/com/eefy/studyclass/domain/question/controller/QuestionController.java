@@ -41,7 +41,7 @@ public class QuestionController {
     }
 
     @Operation(summary = "질의응답(질문) 수정", description = "학생이 질문을 수정하는 API")
-    @PutMapping("/studnet")
+    @PutMapping("/student")
     ResponseEntity<Void> modifyQuestion(@RequestHeader("Member-Id") int memberId,
                                         @RequestBody QuestionModifyRequest request) {
         questionService.updateQuestion(memberId, request);
