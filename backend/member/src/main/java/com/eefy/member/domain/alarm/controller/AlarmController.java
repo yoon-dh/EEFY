@@ -3,6 +3,7 @@ package com.eefy.member.domain.alarm.controller;
 import com.eefy.member.domain.alarm.dto.request.AlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.PersonalAlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
+import com.eefy.member.domain.alarm.dto.response.SavedMessageResponse;
 import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.service.AlarmService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/alarm")
@@ -36,7 +39,7 @@ public class AlarmController {
     @Operation(summary = "클래스 내 학생들에게 푸시 알림 전송", description = "클래스 내 학생들에게 푸시 알림을 전송하는 API")
     @PostMapping
     public ResponseEntity<String> pushMessageGroup(@RequestHeader("Member-Id") int memberId,
-                                              @RequestBody AlarmSendRequest alarmSendRequest) {
+                                                   @RequestBody AlarmSendRequest alarmSendRequest) {
 
         return ResponseEntity.ok().body(alarmService.sendMessageToGroup(memberId, alarmSendRequest));
     }
@@ -51,14 +54,14 @@ public class AlarmController {
 
     @Operation(summary = "메세지 목록 조회", description = "알림 메세지 목록을 조회하기 위한 API")
     @GetMapping("/message/{messageId}")
-    public SubscribeClassTopicResponse getAlarmMessages(@RequestHeader("Member-Id") int memberId,
-                                                        @PathVariable int messageId) {
-        return alarmService.getAlarmMessages(memberId, messageId);
+    public List<SavedMessageResponse> getAlarmMessages(@RequestHeader("Member-Id") int memberId,
+                                                       @PathVariable int messageId) {
+        return alarmService.getAlarmMessages(memberId);
     }
 
     @Operation(summary = "메세지 읽음 처리", description = "알림 메세지를 읽음 처리 하기 위한 API")
     @DeleteMapping("/message/{messageId}")
-    public SubscribeClassTopicResponse readAlarmMessage(@PathVariable int messageId) {
-        return alarmService.readAlarmMessage(messageId);
+    public ResponseEntity<String> readAlarmMessage(@PathVariable int messageId) {
+        return ResponseEntity.ok().body(alarmService.readAlarmMessage(messageId));
     }
 }

@@ -3,6 +3,7 @@ package com.eefy.member.domain.alarm.service;
 import com.eefy.member.domain.alarm.dto.request.AlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.PersonalAlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
+import com.eefy.member.domain.alarm.dto.response.SavedMessageResponse;
 import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.exception.validator.AlarmValidator;
 import com.eefy.member.domain.alarm.persistence.AlarmRepository;
@@ -25,8 +26,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -78,13 +81,17 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
-    public SubscribeClassTopicResponse getAlarmMessages(int memberId, int messageId) {
-        return null;
+    public List<SavedMessageResponse> getAlarmMessages(int memberId) {
+        Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
+        if (alarmMessageOptional.isEmpty()
+                || alarmMessageOptional.get().getMessages() == null) return new ArrayList<>();
+
+        Map<String, SavedMessage> messages = alarmMessageOptional.get().getMessages();
+        return makeSavedMessageListResponse(messages);
     }
 
     @Override
-    @Transactional
-    public SubscribeClassTopicResponse readAlarmMessage(int messageId) {
+    public String readAlarmMessage(int messageId) {
         return null;
     }
 
@@ -175,5 +182,21 @@ public class AlarmServiceImpl implements AlarmService {
             AlarmValidator.throwFirebaseMessagingError(e);
             throw new IllegalArgumentException("토큰 구독 실패: " + e);
         }
+    }
+
+    private List<SavedMessageResponse> makeSavedMessageListResponse(Map<String, SavedMessage> messages) {
+        List<SavedMessageResponse> response = new ArrayList<>();
+        for (String messageId : messages.keySet()) {
+            SavedMessage savedMessage = messages.get(messageId);
+            response.add(SavedMessageResponse.builder()
+                    .messageId(messageId)
+                    .classId(savedMessage.getClassId())
+                    .className(savedMessage.getClassName())
+                    .title(savedMessage.getTitle())
+                    .content(savedMessage.getContent())
+                    .link(savedMessage.getLink())
+                    .build());
+        }
+        return response;
     }
 }
