@@ -8,11 +8,13 @@ import com.eefy.studyclass.domain.question.persistence.entity.QnaQuestion;
 import com.eefy.studyclass.global.exception.CustomException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Component
 public class QnaValidator {
@@ -52,6 +54,7 @@ public class QnaValidator {
     }
 
     public void checkAuthorizationQuestion(QnaQuestion qnaQuestion, Member member) {
+        log.info(">> question MemberId: " + qnaQuestion.getMemberId() + ", memberId: " + member.getMemberId() + " " + member.getRole().equals("TEACHER"));
         if(!member.getRole().equals("TEACHER") || qnaQuestion.getMemberId() != member.getMemberId()) throw CustomException.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .code(QuestionEnum.UNAUTHORIZED_ACCESS_QUESTION.getCode())
