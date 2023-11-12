@@ -35,4 +35,5 @@ def evaluate_announce(voice_file):
     print("[responseCode] " + str(response.status))
     print("[responBody]")
     print(str(response.data, "utf-8"))
-    return str(response.data, "utf-8")
+    load = json.loads(response.data)
+    return load["return_object"]["score"][0]
