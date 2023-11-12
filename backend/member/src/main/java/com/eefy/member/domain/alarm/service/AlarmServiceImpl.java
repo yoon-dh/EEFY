@@ -10,7 +10,6 @@ import com.eefy.member.domain.alarm.persistence.entity.Alarm;
 import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AlarmServiceImpl implements AlarmService {
-    private final FirebaseApp firebaseApp;
+    private final FirebaseMessaging firebaseMessaging;
     private final MemberValidator memberValidator;
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
@@ -101,7 +100,7 @@ public class AlarmServiceImpl implements AlarmService {
     private String sendMessage(Message message) {
         String response = null;
         try {
-            response = FirebaseMessaging.getInstance().send(message);
+            response = firebaseMessaging.send(message);
         } catch (FirebaseMessagingException e) {
             throw new RuntimeException("알림 전송 실패: " + e);
         }
@@ -126,7 +125,7 @@ public class AlarmServiceImpl implements AlarmService {
         TopicManagementResponse response = null;
         try {
             log.info("등록할 토큰: {}, 토픽: {}", registrationTokens, topic);
-            response = FirebaseMessaging.getInstance(firebaseApp).subscribeToTopic(registrationTokens, topic);
+            response = firebaseMessaging.subscribeToTopic(registrationTokens, topic);
         } catch (FirebaseMessagingException e) {
             AlarmValidator.throwFirebaseMessagingError(e);
             throw new IllegalArgumentException("토큰 구독 실패: " + e);
