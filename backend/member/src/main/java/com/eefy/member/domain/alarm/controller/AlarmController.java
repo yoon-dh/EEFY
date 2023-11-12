@@ -52,6 +52,14 @@ public class AlarmController {
         return alarmService.subscribeClassTopic(classId, request);
     }
 
+    @Operation(summary = "클래스에 대한 토픽 구독 취소",
+            description = "클래스가 삭제될 때, 수강생들이 구독하고 있는 토픽에 대한 구독을 취소하는 API")
+    @DeleteMapping("/tutor/{classId}")
+    public String subscribeClassTopic(@PathVariable int classId) {
+        return alarmService.unsubscribeClassTopic(classId);
+    }
+
+
     @Operation(summary = "메세지 목록 조회", description = "알림 메세지 목록을 조회하기 위한 API")
     @GetMapping
     public List<SavedMessageResponse> getAlarmMessages(@RequestHeader("Member-Id") int memberId) {

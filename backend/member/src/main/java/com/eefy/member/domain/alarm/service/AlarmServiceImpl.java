@@ -7,8 +7,10 @@ import com.eefy.member.domain.alarm.dto.response.SavedMessageResponse;
 import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.exception.validator.AlarmValidator;
 import com.eefy.member.domain.alarm.persistence.AlarmRepository;
+import com.eefy.member.domain.alarm.persistence.ClassSubscriptionRepository;
 import com.eefy.member.domain.alarm.persistence.entity.Alarm;
 import com.eefy.member.domain.alarm.persistence.entity.AlarmMessageRedisRepository;
+import com.eefy.member.domain.alarm.persistence.entity.ClassSubscription;
 import com.eefy.member.domain.alarm.persistence.entity.redis.AlarmMessage;
 import com.eefy.member.domain.alarm.persistence.entity.redis.SavedMessage;
 import com.eefy.member.domain.member.exception.validator.MemberValidator;
@@ -45,6 +47,7 @@ public class AlarmServiceImpl implements AlarmService {
 
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
+    private final ClassSubscriptionRepository subscriptionRepository;
     private final AlarmMessageRedisRepository messageRedisRepository;
 
     @Override
@@ -62,7 +65,8 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     public String sendMessageToGroup(int memberId, AlarmSendRequest alarmSendRequest) {
         int classId = alarmSendRequest.getClassId();
-        String topic = alarmRepository.findByClassId(classId).get().getTopic();
+        String topic = alarmRepository.findByClassId(classId)
+                .orElseThrow(() -> new IllegalArgumentException("토픽 없음")).getTopic();
         log.info("클래스 아이디: {}, topic: {}", classId, topic);
 
         Message message = makeGroupMessage(alarmSendRequest, topic);
@@ -76,10 +80,39 @@ public class AlarmServiceImpl implements AlarmService {
     @Transactional
     public SubscribeClassTopicResponse subscribeClassTopic(int classId, SubscribeClassTopicRequest request) {
         Optional<Alarm> alarmOptional = alarmRepository.findByClassId(classId);
-        String topic = getTopic(classId, alarmOptional);
+        List<Member> members = memberRepository.findAllById(request.getStudentIds());
+        if (members.size() != request.getStudentIds().size())
+            throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
+
+        Alarm alarm = getAlarm(classId, alarmOptional);
         List<String> tokens = getStudentTokens(request.getStudentIds());
-        sendSubscribe(tokens, topic);
-        return new SubscribeClassTopicResponse(topic);
+
+        sendSubscribe(tokens, alarm.getTopic());
+        subscriptionRepository.saveAll(makeClassSubscription(members, alarm));
+        return new SubscribeClassTopicResponse(alarm.getTopic());
+    }
+
+    @Override
+    @Transactional
+    public String unsubscribeClassTopic(int classId) {
+        Alarm alarm = alarmRepository.findByClassId(classId)
+                .orElseThrow(() -> CustomException.builder()
+                        .status(HttpStatus.BAD_REQUEST)
+                        .code(1800)
+                        .message("클래스에 대한 알림 토픽이 존재하지 않습니다.")
+                        .build());
+        List<String> registrationTokens = subscriptionRepository.findByAlarmWithMember(alarm)
+                .stream()
+                .map(c -> c.getMember().getToken())
+                .collect(Collectors.toList());
+        try {
+            firebaseMessaging.unsubscribeFromTopic(registrationTokens, alarm.getTopic());
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
+        subscriptionRepository.deleteAllByAlarm(alarm);
+        alarmRepository.deleteById(classId);
+        return "SUCCESS";
     }
 
     @Override
@@ -96,8 +129,7 @@ public class AlarmServiceImpl implements AlarmService {
     @Transactional
     public String readAlarmMessage(int memberId, String messageId) {
         Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
-        checkReadAlarmMessageStatus(alarmMessageOptional, messageId);
-        AlarmMessage alarmMessage = alarmMessageOptional.get();
+        AlarmMessage alarmMessage = getValidAlarmMessage(alarmMessageOptional, messageId);
         alarmMessage.getMessages().remove(messageId);
         messageRedisRepository.save(alarmMessage);
         return "SUCCESS";
@@ -119,13 +151,20 @@ public class AlarmServiceImpl implements AlarmService {
         return alarmMessage;
     }
 
-    private String getTopic(int classId, Optional<Alarm> alarmOptional) {
-        String topic;
+    private Alarm getAlarm(int classId, Optional<Alarm> alarmOptional) {
         if (alarmOptional.isEmpty()) {
-            topic = makeClassTopic(classId);
-            alarmRepository.save(new Alarm(classId, topic));
-        } else topic = alarmOptional.get().getTopic();
-        return topic;
+            String topic = makeClassTopic(classId);
+            return alarmRepository.save(new Alarm(classId, topic));
+        }
+        return alarmOptional.get();
+    }
+
+    private List<ClassSubscription> makeClassSubscription(List<Member> members, Alarm alarm) {
+        List<ClassSubscription> subscriptions = new ArrayList<>();
+        for (Member member : members) {
+            subscriptions.add(new ClassSubscription(member, alarm));
+        }
+        return subscriptions;
     }
 
     private Message makePersonalMessage(PersonalAlarmSendRequest request, String token) {
@@ -208,7 +247,7 @@ public class AlarmServiceImpl implements AlarmService {
         return response;
     }
 
-    private void checkReadAlarmMessageStatus(Optional<AlarmMessage> alarmMessageOptional, String messageId) {
+    private AlarmMessage getValidAlarmMessage(Optional<AlarmMessage> alarmMessageOptional, String messageId) {
         if (alarmMessageOptional.isEmpty()
                 || alarmMessageOptional.get().getMessages() == null
                 || alarmMessageOptional.get().getMessages().isEmpty()
@@ -219,5 +258,6 @@ public class AlarmServiceImpl implements AlarmService {
                     .message("보관된 메세지가 없습니다.")
                     .build();
         }
+        return alarmMessageOptional.get();
     }
 }
