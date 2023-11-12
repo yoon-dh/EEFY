@@ -37,17 +37,17 @@ function ClassList() {
     const CLASS_ID = useRecoilValue(EnterClassNumber);
 
     // FIXME:
-    const alarmTest = async () => {
-        const data = {
-            classId: CLASS_ID,
-            link: 'test',
-            className: '토익 900완성반',
-            title: 'push test',
-            content: 'push test',
-        };
-        const res = await pushTest(data);
-        console.log(res);
-    };
+    // const alarmTest = async () => {
+    //     const data = {
+    //         classId: CLASS_ID,
+    //         link: 'test',
+    //         className: '토익 900완성반',
+    //         title: '메시지 눌렀는데 ',
+    //         content: '스웨거로 안가는 것 같아요',
+    //     };
+    //     const res = await pushTest(data);
+    //     console.log(res);
+    // };
 
     const onMessageFCM = async () => {
         const permission = await Notification.requestPermission();
@@ -99,7 +99,7 @@ function ClassList() {
 
     return (
         <div className=' w-full h-full' style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center' }} onClick={alarmTest}>
+            <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center' }}>
                 운영 중인 클래스 <span style={{ color: '#4f4d4d81' }}>({classCnt})</span>
             </div>
             <div style={{ flex: '8.5', display: 'flex', gap: '30px', flexWrap: 'wrap' }}>

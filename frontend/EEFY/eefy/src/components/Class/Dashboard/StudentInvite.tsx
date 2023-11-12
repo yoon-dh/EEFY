@@ -4,7 +4,7 @@ import * as S from '../../Main/MainClass/ClassCreateModal.style';
 import * as style from '../../../styles/MainStyle.style';
 
 import StudentSearchItem from './StudentSearchItem';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { inviteArray, inviteMemberIdArray } from '@/recoil/TeacherClass';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { TbArrowsExchange2 } from 'react-icons/tb';
@@ -27,70 +27,11 @@ interface Student {
     phone: string;
 }
 
-function StudentInvite() {
-    const dummyData = [
-        {
-            memberId: 1,
-            profile: '/logo.png',
-            name: '윤동훈1',
-            email: 'acttoze1@gmail.com',
-            phone: '010-7748-8173',
-        },
-        {
-            memberId: 2,
-            profile: '/logo.png',
-            name: '윤동훈2',
-            email: 'acttoze1@gmail.com',
-            phone: '010-7748-8173',
-        },
-        {
-            memberId: 3,
-            profile: '/logo.png',
-            name: '윤동훈3',
-            email: 'acttoze1@gmail.com',
-            phone: '010-7748-8173',
-        },
-        {
-            memberId: 4,
-            profile: '/logo.png',
-            name: '윤동훈4',
-            email: 'acttoze1@gmail.com',
-            phone: '010-7748-8173',
-        },
-        {
-            memberId: 5,
-            profile: '/logo.png',
-            name: '윤동훈5',
-            email: 'acttoze1@gmail.com',
-            phone: '010-7748-8173',
-        },
-        {
-            memberId: 6,
-            profile: '/logo.png',
-            name: '윤동훈6',
-            email: 'acttoze1@gmail.com',
-            phone: '010-7748-8173',
-        },
-        {
-            memberId: 7,
-            profile: '/logo.png',
-            name: '윤동훈7',
-            email: 'acttoze1@gmail.com',
-            phone: '010-7748-8173',
-        },
-        {
-            memberId: 8,
-            profile: '/logo.png',
-            name: '윤동훈8',
-            email: 'acttoze1@gmail.com',
-            phone: '010-7748-8173',
-        },
-    ];
-
+function StudentInvite({ CLASS_ID }: any) {
     //  true = Name, false = E-mail
     const [isName, setIsName] = useState<boolean>(true);
     const [keyWord, setKeyword] = useState<string>('');
-    const CLASS_ID = useRecoilValue(EnterClassNumber);
+    // const CLASS_ID = useRecoilValue(EnterClassNumber);
 
     const [inviteArr, setInviteArr] = useRecoilState(inviteArray);
     const [inviteMemberIdArr, setInviteMemberIdArr] = useRecoilState(inviteMemberIdArray);
@@ -131,13 +72,20 @@ function StudentInvite() {
         console.log(SubscribeStudentData);
 
         await InviteStudents(InviteStudentData);
-        // TODO: 구독 API
         await SubscribeStudents(CLASS_ID, SubscribeStudentData);
+        setSearchState(false);
     };
+
+    useEffect(() => {
+        return () => {
+            setInviteArr([]);
+            setInviteMemberIdArr([]);
+            setSearchState(false);
+        };
+    }, []);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }} className='w-full h-full overflow-auto no-scrollbar'>
-            {/* <div style={{ display: 'flex', flexDirection: 'column' }} className='w-full h-full overflow-auto no-scrollbar'> */}
             {/* invite Nav */}
             <div className='flex justify-between items-center' style={{ padding: '8px 12px', flex: '1' }}>
                 <div className='text-4xl'>
