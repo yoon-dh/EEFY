@@ -1,6 +1,9 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { NoticeNum } from '@/recoil/Notice';
+import { DetailData } from '@/recoil/Notice';
+import {QuestionPage} from '@/recoil/Question'
+import {deleteQuestionDelete} from '@/api/Question/Question'
+
 import dayjs from 'dayjs';
 import { Container, Header, Wrappe, Title, Time, Img, UseName, Line, ContentBox, Content, UpdataBtn, DeleteBtn } from './QuestionDetail.style';
 
@@ -14,8 +17,13 @@ type Notice = {
 };
 
 function QuestionDetail() {
-  const [notice, setNotice] = useRecoilState<Notice | null>(NoticeNum);
+  const [notice, setNotice] = useRecoilState<Notice | null>(DetailData);
+  const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage)
 
+  const handleDetele = async(id:any)=>{
+    const res = await deleteQuestionDelete(4)
+    console.log(res)
+  }
   return (
     <>
       <Container
@@ -49,17 +57,14 @@ function QuestionDetail() {
                     <UseName>{notice.useName}</UseName>
                   </div>
                   <div className='flex' style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
-                    <UpdataBtn>수정</UpdataBtn>
-                    <DeleteBtn>삭제</DeleteBtn>
+                    <UpdataBtn onClick={()=>setQuestionPageUrl('updata')}>수정</UpdataBtn>
+                    <DeleteBtn onClick={()=>handleDetele(notice.id)}>삭제</DeleteBtn>
                   </div>
                 </div>
               </Header>
               <Line />
               <ContentBox>
                 <Content>
-                  {notice.content}
-                  {notice.content}
-                  {notice.content}
                   {notice.content}
                   {notice.content}
                 </Content>

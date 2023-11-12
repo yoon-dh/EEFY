@@ -1,31 +1,36 @@
 import React, { useState, useEffect } from "react";
 import * as S from './LectureCreate.style'
 import { useRecoilState } from "recoil";
-import {CreateLecture} from '@/recoil/Lecture'
+import {LecturePage} from '@/recoil/Lecture'
+import { DetailData, NoticeList } from '@/recoil/Notice'
+import {postLectureCreate, getLectureList, getLectureDetail} from '@/api/Lecture/Lecture'
 import swal from "sweetalert";
+
 function LectureCreate(){
 
-  const [lecturePage, setLecturepage] = useRecoilState(CreateLecture)
+  const [lecturePage, setLecturepage] = useRecoilState(LecturePage)
+  const [notice, setNotice] = useRecoilState<any | null>(DetailData);
+  const [listData, setListData] = useRecoilState(NoticeList);
+
   const [title, setTitle] = useState(''); 
   const [content, setContent] = useState(''); 
   const [file, setFile] = useState<File  | null>(null)
 
   const contentInfo = {
+    classId:27,
     title: title,
     content: content
   }
 
-    // 파일 선택 5개 제한
-    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const selectedFile = e.target.files?.[0]; 
-      if (selectedFile) {
-        console.log(selectedFile);
-        setFile(selectedFile);
-      }
+  //파일 업로드
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0]; 
+    if (selectedFile) {
+      console.log(selectedFile);
+      setFile(selectedFile);
     }
+  }
     
-    
-
   const handleSubmit = async () => {
     console.log(contentInfo, 'contentInfo')
     console.log(file, 'file')
@@ -41,12 +46,28 @@ function LectureCreate(){
       const jsonBlob = new Blob([JSON.stringify(contentInfo)], {
         type: "application/json",
       });
-      formData.append("filePath", file);
-      formData.append("lectureInfo", jsonBlob);
-      setLecturepage(false)
-      swal("", "생성되었습니다!", "success");
+      formData.append("file", file);
+      formData.append("request", jsonBlob);
+      
+      const res = await postLectureCreate(formData)
+      if (res?.status===200){
+        const classId = 27
+        const List = await getLectureList(classId);
+        if (List?.status===200){
+          setListData(List.data)
+          if(List.data){
+            const Detail = await getLectureDetail(List.data[0].id)
+            if(Detail?.status===200){
+              setNotice(Detail.data)
+              setLecturepage('detail')
+              swal("", "생성되었습니다!", "success");
+            }
+          }
+        }
+      }
     }
   }
+
   return(
     <S.Container className='flex flex-col'>
       <S.Wrappe>
@@ -81,7 +102,7 @@ function LectureCreate(){
         </S.Box>
       </S.Wrappe>
       <S.BtnBox>
-        <S.CancelBtn onClick={()=>setLecturepage(false)}>
+        <S.CancelBtn onClick={()=>setLecturepage('detail')}>
           취소
         </S.CancelBtn>
         <S.CreateBtn onClick={handleSubmit}>

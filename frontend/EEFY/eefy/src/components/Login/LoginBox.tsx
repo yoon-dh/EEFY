@@ -21,7 +21,7 @@ export default function LoginBox() {
       password: password
     }
     console.log(data)
-    const res = await postLogin(data)
+    const res:any = await postLogin(data)
     console.log(res)
     if(res?.status === 200){
     }

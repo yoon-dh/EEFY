@@ -25,7 +25,6 @@ function Home() {
       ) : (
         <CanvasModal/>
       )}
-      {/* {ocr.isSuccess && <CanvasModal/>} */}
     </div>
   );
 }

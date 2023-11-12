@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const CreateLecture = atom<boolean>({
-  key: 'CreateLecture',
-  default: false,
+export const LecturePage = atom<string>({
+  key: 'LecturePage',
+  default: 'detail',
 });
