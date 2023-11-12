@@ -195,7 +195,8 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         String uploadPath = null;
         String sttText = null;
-        if (voiceFile != null) {
+
+        if (voiceFile != null && !voiceFile.isEmpty()) {
             uploadPath = s3Uploader.upload(voiceFile, voicePath);
             sttText = aiServerRestClient.getSttText(voiceFile);
         }
