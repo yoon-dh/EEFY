@@ -3,6 +3,8 @@ import { privateApi } from '..';
 
 interface pushdata {
     classId: number;
+    link: string;
+    className: string;
     title: string;
     content: string;
 }

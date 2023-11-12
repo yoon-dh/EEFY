@@ -40,6 +40,8 @@ function ClassList() {
     const alarmTest = async () => {
         const data = {
             classId: CLASS_ID,
+            link: 'test',
+            className: '토익 900완성반',
             title: 'push test',
             content: 'push test',
         };
