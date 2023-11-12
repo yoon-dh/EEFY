@@ -1,5 +1,7 @@
 package com.eefy.studyclass.domain.question.service;
 
+import com.eefy.studyclass.domain.alarm.dto.request.PushAlarmPersonalRequest;
+import com.eefy.studyclass.domain.alarm.service.AlarmService;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberService;
 import com.eefy.studyclass.domain.question.dto.request.AnswerModifyRequest;
@@ -34,6 +36,7 @@ public class QuestionServiceImpl implements QuestionService {
     private final StudyClassRepository studyClassRepository;
     private final QnaAnswerRepository qnaAnswerRepository;
     private final MemberService memberService;
+    private final AlarmService alarmService;
     private final StudyClassValidator studyClassValidator;
     private final QnaValidator qnaValidator;
     @Override
@@ -102,6 +105,17 @@ public class QuestionServiceImpl implements QuestionService {
                 .title(request.getTitle())
                 .content(request.getContent())
                 .build();
+
+        PushAlarmPersonalRequest alarmRequest = PushAlarmPersonalRequest.builder()
+                .targetMemberId(studyClass.getMemberId())
+                .classId(studyClass.getId())
+                .link("")
+                .className(studyClass.getTitle())
+                .title("질문 등록")
+                .content(member.getName() + "학생이 " + studyClass.getTitle() + "강좌에 질문을 등록하였습니다.")
+                .build();
+
+        alarmService.pushAlarmToPersonal(memberId, alarmRequest);
 
         qnaQuestionRepository.save(question);
     }
