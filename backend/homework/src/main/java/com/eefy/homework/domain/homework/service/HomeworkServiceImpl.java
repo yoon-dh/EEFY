@@ -97,7 +97,7 @@ public class HomeworkServiceImpl implements HomeworkService {
 
         // todo: 강사가 유효한 사용자인지 검증
         String filePath = null;
-        if (voiceFile == null) {
+        if (voiceFile != null && !voiceFile.isEmpty()) {
             filePath = s3Uploader.upload(voiceFile, voicePath);
         }
         HomeworkQuestion homeworkQuestion = saveHomeworkQuestion(makeHomeworkQuestionRequest,
