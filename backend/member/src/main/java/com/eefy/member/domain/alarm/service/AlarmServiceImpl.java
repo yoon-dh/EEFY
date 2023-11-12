@@ -58,15 +58,19 @@ public class AlarmServiceImpl implements AlarmService {
     @Transactional
     public SubscribeClassTopicResponse subscribeClassTopic(int classId, SubscribeClassTopicRequest request) {
         Optional<Alarm> alarmOptional = alarmRepository.findByClassId(classId);
+        String topic = getTopic(classId, alarmOptional);
+        List<String> tokens = getStudentTokens(request.getStudentIds());
+        sendSubscribe(tokens, topic);
+        return new SubscribeClassTopicResponse(topic);
+    }
+
+    private String getTopic(int classId, Optional<Alarm> alarmOptional) {
         String topic;
         if (alarmOptional.isEmpty()) {
             topic = makeClassTopic(classId);
             alarmRepository.save(new Alarm(classId, topic));
         } else topic = alarmOptional.get().getTopic();
-        List<String> tokens = getStudentTokens(request.getStudentIds());
-        sendSubscribe(tokens, topic);
-        log.info("Successfully subscribe topic: 구독 성공 - {}", topic);
-        return new SubscribeClassTopicResponse(topic);
+        return topic;
     }
 
     private Message makePersonalMessage(PersonalAlarmSendRequest request, String token) {
@@ -98,14 +102,13 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     private String sendMessage(Message message) {
-        String response = null;
         try {
-            response = firebaseMessaging.send(message);
+            String response = firebaseMessaging.send(message);
+            log.info("Successfully sent message: {}", response);
+            return response;
         } catch (FirebaseMessagingException e) {
             throw new RuntimeException("알림 전송 실패: " + e);
         }
-        log.info("Successfully sent message: {}", response);
-        return response;
     }
 
     private List<String> getStudentTokens(List<Integer> studentIds) {
@@ -122,16 +125,15 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     private void sendSubscribe(List<String> registrationTokens, String topic) {
-        TopicManagementResponse response = null;
         try {
             log.info("등록할 토큰: {}, 토픽: {}", registrationTokens, topic);
-            response = firebaseMessaging.subscribeToTopic(registrationTokens, topic);
+            TopicManagementResponse response = firebaseMessaging.subscribeToTopic(registrationTokens, topic);
+            response.getErrors().forEach(e -> log.info(e.getIndex() + " " + e.getReason()));
+            log.info("{}개의 토큰 구독 성공, {}개의 토큰 구독 실패", response.getSuccessCount(), response.getFailureCount());
+            log.info("발생한 에러 수: {}", response.getErrors().size());
         } catch (FirebaseMessagingException e) {
             AlarmValidator.throwFirebaseMessagingError(e);
             throw new IllegalArgumentException("토큰 구독 실패: " + e);
         }
-        log.info("{}개의 토큰 구독 성공, {}개의 토큰 구독 실패", response.getSuccessCount(), response.getFailureCount());
-        log.info("발생한 에러 수: {}", response.getErrors().size());
-        response.getErrors().forEach(e -> log.info(e.getIndex() + " " + e.getReason()));
     }
 }
