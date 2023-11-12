@@ -80,8 +80,8 @@ export default function Footer() {
 
         onMessage(messaging, payload => {
             console.log('Message received. ', payload);
-            console.log(payload.notification?.title);
-            setOnMessageTitle(payload.notification?.title);
+            console.log(payload.data?.title);
+            setOnMessageTitle(payload.data?.title);
         });
     };
 
