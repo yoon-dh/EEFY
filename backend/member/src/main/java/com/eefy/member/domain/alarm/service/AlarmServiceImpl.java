@@ -3,13 +3,18 @@ package com.eefy.member.domain.alarm.service;
 import com.eefy.member.domain.alarm.dto.request.AlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.PersonalAlarmSendRequest;
 import com.eefy.member.domain.alarm.dto.request.SubscribeClassTopicRequest;
+import com.eefy.member.domain.alarm.dto.response.SavedMessageResponse;
 import com.eefy.member.domain.alarm.dto.response.SubscribeClassTopicResponse;
 import com.eefy.member.domain.alarm.exception.validator.AlarmValidator;
 import com.eefy.member.domain.alarm.persistence.AlarmRepository;
 import com.eefy.member.domain.alarm.persistence.entity.Alarm;
+import com.eefy.member.domain.alarm.persistence.entity.AlarmMessageRedisRepository;
+import com.eefy.member.domain.alarm.persistence.entity.redis.AlarmMessage;
+import com.eefy.member.domain.alarm.persistence.entity.redis.SavedMessage;
 import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
+import com.eefy.member.global.exception.CustomException;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -18,10 +23,15 @@ import com.google.firebase.messaging.WebpushConfig;
 import com.google.firebase.messaging.WebpushFcmOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,8 +42,10 @@ import java.util.stream.Collectors;
 public class AlarmServiceImpl implements AlarmService {
     private final FirebaseMessaging firebaseMessaging;
     private final MemberValidator memberValidator;
+
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
+    private final AlarmMessageRedisRepository messageRedisRepository;
 
     @Override
     public String sendMessageToPersonal(int memberId, PersonalAlarmSendRequest request) {
@@ -41,7 +53,10 @@ public class AlarmServiceImpl implements AlarmService {
         log.info("클래스 아이디: {}, token: {}", request.getClassId(), member.getToken());
 
         Message message = makePersonalMessage(request, member.getToken());
-        return sendMessage(message);
+        SavedMessage savedMessage = new ModelMapper().map(request, SavedMessage.class);
+        String messageId = sendMessage(message);
+        saveAlarmMessage(memberId, savedMessage, messageId);
+        return messageId;
     }
 
     @Override
@@ -51,22 +66,66 @@ public class AlarmServiceImpl implements AlarmService {
         log.info("클래스 아이디: {}, topic: {}", classId, topic);
 
         Message message = makeGroupMessage(alarmSendRequest, topic);
-        return sendMessage(message);
+        SavedMessage savedMessage = new ModelMapper().map(alarmSendRequest, SavedMessage.class);
+        String messageId = sendMessage(message);
+        saveAlarmMessage(memberId, savedMessage, messageId);
+        return messageId;
     }
 
     @Override
     @Transactional
     public SubscribeClassTopicResponse subscribeClassTopic(int classId, SubscribeClassTopicRequest request) {
         Optional<Alarm> alarmOptional = alarmRepository.findByClassId(classId);
+        String topic = getTopic(classId, alarmOptional);
+        List<String> tokens = getStudentTokens(request.getStudentIds());
+        sendSubscribe(tokens, topic);
+        return new SubscribeClassTopicResponse(topic);
+    }
+
+    @Override
+    public List<SavedMessageResponse> getAlarmMessages(int memberId) {
+        Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
+        if (alarmMessageOptional.isEmpty()
+                || alarmMessageOptional.get().getMessages() == null) return new ArrayList<>();
+
+        Map<String, SavedMessage> messages = alarmMessageOptional.get().getMessages();
+        return makeSavedMessageListResponse(messages);
+    }
+
+    @Override
+    @Transactional
+    public String readAlarmMessage(int memberId, String messageId) {
+        Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
+        checkReadAlarmMessageStatus(alarmMessageOptional, messageId);
+        AlarmMessage alarmMessage = alarmMessageOptional.get();
+        alarmMessage.getMessages().remove(messageId);
+        messageRedisRepository.save(alarmMessage);
+        return "SUCCESS";
+    }
+
+    private void saveAlarmMessage(int memberId, SavedMessage savedMessage, String messageId) {
+        Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
+        AlarmMessage alarmMessage = getValidAlarmMessage(alarmMessageOptional, memberId);
+        alarmMessage.getMessages().put(messageId, savedMessage);
+        messageRedisRepository.save(alarmMessage);
+        log.info("Successfully saved Message: " + savedMessage.toString());
+    }
+
+    private AlarmMessage getValidAlarmMessage(Optional<AlarmMessage> alarmMessageOptional, int memberId) {
+        AlarmMessage alarmMessage = alarmMessageOptional.orElseGet(() -> new AlarmMessage(memberId, new HashMap<>()));
+        if (alarmMessage.getMessages() == null) {
+            alarmMessage.setMessages(new HashMap<>());
+        }
+        return alarmMessage;
+    }
+
+    private String getTopic(int classId, Optional<Alarm> alarmOptional) {
         String topic;
         if (alarmOptional.isEmpty()) {
             topic = makeClassTopic(classId);
             alarmRepository.save(new Alarm(classId, topic));
         } else topic = alarmOptional.get().getTopic();
-        List<String> tokens = getStudentTokens(request.getStudentIds());
-        sendSubscribe(tokens, topic);
-        log.info("Successfully subscribe topic: 구독 성공 - {}", topic);
-        return new SubscribeClassTopicResponse(topic);
+        return topic;
     }
 
     private Message makePersonalMessage(PersonalAlarmSendRequest request, String token) {
@@ -98,14 +157,13 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     private String sendMessage(Message message) {
-        String response = null;
         try {
-            response = firebaseMessaging.send(message);
+            String response = firebaseMessaging.send(message);
+            log.info("Successfully sent message: {}", response);
+            return response;
         } catch (FirebaseMessagingException e) {
             throw new RuntimeException("알림 전송 실패: " + e);
         }
-        log.info("Successfully sent message: {}", response);
-        return response;
     }
 
     private List<String> getStudentTokens(List<Integer> studentIds) {
@@ -122,16 +180,44 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     private void sendSubscribe(List<String> registrationTokens, String topic) {
-        TopicManagementResponse response = null;
         try {
             log.info("등록할 토큰: {}, 토픽: {}", registrationTokens, topic);
-            response = firebaseMessaging.subscribeToTopic(registrationTokens, topic);
+            TopicManagementResponse response = firebaseMessaging.subscribeToTopic(registrationTokens, topic);
+            response.getErrors().forEach(e -> log.info(e.getIndex() + " " + e.getReason()));
+            log.info("{}개의 토큰 구독 성공, {}개의 토큰 구독 실패", response.getSuccessCount(), response.getFailureCount());
+            log.info("발생한 에러 수: {}", response.getErrors().size());
         } catch (FirebaseMessagingException e) {
             AlarmValidator.throwFirebaseMessagingError(e);
             throw new IllegalArgumentException("토큰 구독 실패: " + e);
         }
-        log.info("{}개의 토큰 구독 성공, {}개의 토큰 구독 실패", response.getSuccessCount(), response.getFailureCount());
-        log.info("발생한 에러 수: {}", response.getErrors().size());
-        response.getErrors().forEach(e -> log.info(e.getIndex() + " " + e.getReason()));
+    }
+
+    private List<SavedMessageResponse> makeSavedMessageListResponse(Map<String, SavedMessage> messages) {
+        List<SavedMessageResponse> response = new ArrayList<>();
+        for (String messageId : messages.keySet()) {
+            SavedMessage savedMessage = messages.get(messageId);
+            response.add(SavedMessageResponse.builder()
+                    .messageId(messageId)
+                    .classId(savedMessage.getClassId())
+                    .className(savedMessage.getClassName())
+                    .title(savedMessage.getTitle())
+                    .content(savedMessage.getContent())
+                    .link(savedMessage.getLink())
+                    .build());
+        }
+        return response;
+    }
+
+    private void checkReadAlarmMessageStatus(Optional<AlarmMessage> alarmMessageOptional, String messageId) {
+        if (alarmMessageOptional.isEmpty()
+                || alarmMessageOptional.get().getMessages() == null
+                || alarmMessageOptional.get().getMessages().isEmpty()
+                || alarmMessageOptional.get().getMessages().get(messageId) == null) {
+            throw CustomException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .code(1700)
+                    .message("보관된 메세지가 없습니다.")
+                    .build();
+        }
     }
 }
