@@ -1,5 +1,6 @@
 package com.eefy.homework.domain.homework.service;
 
+import com.eefy.homework.domain.homework.dto.AlarmSendRequest;
 import com.eefy.homework.domain.homework.dto.ChoiceDto;
 import com.eefy.homework.domain.homework.dto.ClassStudentDto;
 import com.eefy.homework.domain.homework.dto.HomeworkDto;
@@ -19,6 +20,7 @@ import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionRespon
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
+import com.eefy.homework.domain.homework.dto.response.StudyClassResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
 import com.eefy.homework.domain.homework.exception.HomeworkNotFoundException;
 import com.eefy.homework.domain.homework.feign.AiServiceFeignClient;
@@ -40,6 +42,7 @@ import com.eefy.homework.domain.homework.repository.HomeworkStudentQuestionRepos
 import com.eefy.homework.domain.homework.repository.HomeworkStudentRepository;
 import com.eefy.homework.global.S3Uploader;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,8 +116,6 @@ public class HomeworkServiceImpl implements HomeworkService {
     @Transactional
     public AssignHomeworkToClassResponse assignHomeworkToClass(
         AssignHomeworkToClassRequest assignHomeworkToClassRequest, Integer memberId) {
-        // todo: 강사가 유효한 사용자인지 검증
-        // todo: 클래스가 유요한지 검사
 
         Homework homework = validateHomework(assignHomeworkToClassRequest.getHomeworkId());
 
@@ -133,18 +134,28 @@ public class HomeworkServiceImpl implements HomeworkService {
                 HomeworkStudent.from(classStudentDto.getMemberId(), classHomework));
         }
 
-//         클래스로 부터 사용자를 받아온다.
-        // 클레스 아이디로부터 클래스 이름 가져온다.
+        StudyClassResponse classDetail = classServiceFeignClient.getClassDetail(
+            assignHomeworkToClassRequest.getClassId());
 
-//        memberServiceFeignClient.sendAlarmToClassMember(memberId, AlarmSendRequest.builder()
-//            .classId(classHomework.getClassId())
-//            .className(null)
-//            .link(null)
-//            .title()
-//            .content()
-//            .build())
+        memberServiceFeignClient.sendAlarmToClassMember(memberId, getAlarmSendRequest(homework,
+            classHomework, classDetail));
 
         return new AssignHomeworkToClassResponse(classHomework.getId());
+    }
+
+    private AlarmSendRequest getAlarmSendRequest(Homework homework,
+        ClassHomework classHomework, StudyClassResponse classDetail) {
+        return AlarmSendRequest.builder()
+            .classId(classHomework.getClassId())
+            .className(classDetail.getTitle())
+            .link(null)
+            .title("새로운 과제가 할당되었습니다.")
+            .content(
+                String.format("%s 클래스 : %s 제출기한 -> %s", classDetail.getTitle(), homework.getTitle(),
+                    classHomework.getDueDate()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+            )
+            .build();
     }
 
     @Override
