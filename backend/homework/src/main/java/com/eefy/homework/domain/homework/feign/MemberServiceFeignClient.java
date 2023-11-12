@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name = "member-service", url = "k9b306.p.ssafy.io:64417")
 public interface MemberServiceFeignClient {
 
-    @PostMapping("/api/alarm")
+    @PostMapping("/api/alarm/tutor")
     String sendAlarmToClassMember(
         @RequestHeader("Member-Id") Integer memberId, @RequestBody AlarmSendRequest alarmSendRequest);
 }

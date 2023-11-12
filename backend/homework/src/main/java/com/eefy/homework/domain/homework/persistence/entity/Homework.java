@@ -43,7 +43,6 @@ public class Homework extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private HomeworkType type;
 
-    @Column(nullable = false)
     @ColumnDefault("false")
     private Boolean isFinish;
 
