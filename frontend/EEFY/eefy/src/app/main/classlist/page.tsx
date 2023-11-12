@@ -42,8 +42,8 @@ function ClassList() {
             classId: CLASS_ID,
             link: 'test',
             className: '토익 900완성반',
-            title: 'push test',
-            content: 'push test',
+            title: '메시지 눌렀는데 ',
+            content: '스웨거로 안가는 것 같아요',
         };
         const res = await pushTest(data);
         console.log(res);
