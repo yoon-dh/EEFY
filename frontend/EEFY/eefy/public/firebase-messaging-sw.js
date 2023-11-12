@@ -28,6 +28,7 @@ messaging.onBackgroundMessage(payload => {
     const datacontent = {
         body: payload.data.content,
         icon: '/icon-192x192.png',
+        actions: [{ action: '/main/classlist' }],
     };
 
     self.registration.showNotification(dataTitle, datacontent);

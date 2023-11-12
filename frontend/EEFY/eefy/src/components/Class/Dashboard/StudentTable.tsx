@@ -20,9 +20,9 @@ interface Student {
     phoneNumber: string;
 }
 
-function StudentTable() {
+function StudentTable({ CLASS_ID }: any) {
     const [searchState, setSearchState] = useRecoilState(isSearchState);
-    const CLASS_ID = useRecoilValue(EnterClassNumber);
+    // const CLASS_ID = useRecoilValue(EnterClassNumber);
     const [classInsideStudentArr, setClassInsideStudentArr] = useState<Array<Student>>([]);
 
     // 학생 프로필, 이름,  과제, 질의응답
@@ -79,22 +79,26 @@ function StudentTable() {
             </div>
             <table className='table' style={{ flex: '9', display: 'block', height: '100%' }}>
                 {/* head */}
-                <thead>
-                    <tr>
-                        <th>
+                <thead style={{ width: '100%', display: 'block' }}>
+                    <tr style={{ width: '100%', display: 'flex' }}>
+                        <th style={{ flex: '0.5' }}>
                             <label>
                                 <input type='checkbox' className='checkbox' />
                             </label>
                         </th>
-                        <th>Name</th>
-                        <th>E-mail</th>
-                        <th>Phone</th>
-                        <th></th>
+                        <th style={{ flex: '3' }}>Name</th>
+                        <th style={{ flex: '2.5' }}>E-mail</th>
+                        <th style={{ flex: '2.5' }}>Phone</th>
+                        <th style={{ flex: '1.5' }}></th>
                     </tr>
                 </thead>
                 {classInsideStudentArr?.length ? (
-                    <tbody>
-                        <tr onClick={() => setSearchState(true)} className='bg-stone-100 '>
+                    <tbody style={{ display: 'block', width: '100%' }}>
+                        <tr
+                            style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+                            onClick={() => setSearchState(true)}
+                            className='bg-stone-100 rounded-lg'
+                        >
                             <td colSpan={5} className='text-xl rounded-xl' style={{ textAlign: 'center' }}>
                                 + 초대하기
                             </td>
@@ -102,6 +106,7 @@ function StudentTable() {
                         {classInsideStudentArr?.map(item => (
                             <StudentTableItem
                                 key={item.memberId}
+                                memberId={item.memberId}
                                 profile={item.profileImagePath}
                                 name={item.name}
                                 email={item.email}
