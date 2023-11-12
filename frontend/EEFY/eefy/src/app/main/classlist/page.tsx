@@ -99,9 +99,16 @@ function ClassList() {
 
     return (
         <div className=' w-full h-full' style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center' }}>
-                운영 중인 클래스 <span style={{ color: '#4f4d4d81' }}>({classCnt})</span>
-            </div>
+            {userDataObj?.role === 'TEACHER' ? (
+                <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center' }}>
+                    운영 중인 클래스 <span style={{ color: '#4f4d4d81' }}>({classCnt})</span>
+                </div>
+            ) : (
+                <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center' }}>
+                    수강 중인 클래스 <span style={{ color: '#4f4d4d81' }}>({classCnt})</span>
+                </div>
+            )}
+
             <div style={{ flex: '8.5', display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
                 {/* 강사면 보이고 아니면 안보이게 */}
                 {userDataObj?.role === 'TEACHER' ? (
