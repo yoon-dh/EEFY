@@ -62,35 +62,44 @@ function CategoryModal(){
     setPdfFile('')
     setIsSuccess(false)
   }
+  
   return(
     <Container>
       {/* <Wrappe> */}
         {/* <Img 
         onClick={onClose}
         src='/Img/취소.png'/> */}
-        <Box>
-          <div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <TitleBox htmlFor="imgInput">
-              <Title>객관식</Title>
-            </TitleBox>
-            <input
-              id="imgInput"
-              type="file"
-              accept=".pdf, image/*"
-              style={{ display: 'none' }}
-              onChange={uploadFile}
-            />
-          </div>
-          </div>
-          <div style={{margin:'0px 0px 0px 20px'}}>
-            <TitleBox>
-              <Title>서술형</Title>
-            </TitleBox>
-          </div>
-        </Box>
+        {!isSuccess ? (
+          <>
+          <Box>
+            <div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <TitleBox htmlFor="imgInput">
+                <Title>객관식</Title>
+              </TitleBox>
+              <input
+                id="imgInput"
+                type="file"
+                accept=".pdf, image/*"
+                style={{ display: 'none' }}
+                onChange={uploadFile}
+              />
+            </div>
+            </div>
+            {/* <div style={{margin:'0px 0px 0px 20px'}}>
+              <TitleBox>
+                <Title>서술형</Title>
+              </TitleBox>
+            </div> */}
+          </Box>
+          </>
+        ) : (
+          <>
+          <CropperModal imgUrl={imgUrl} pdfFile={pdfFile} onCloseModal={onCloseModal}/>
+          </>
+        )}
       {/* </Wrappe> */}
-      {isSuccess && <CropperModal imgUrl={imgUrl} pdfFile={pdfFile} onCloseModal={onCloseModal}/>}
+      {/* {isSuccess && <CropperModal imgUrl={imgUrl} pdfFile={pdfFile} onCloseModal={onCloseModal}/>} */}
     </Container>
   )
 }

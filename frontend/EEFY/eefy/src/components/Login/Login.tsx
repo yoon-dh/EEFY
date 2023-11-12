@@ -12,6 +12,7 @@ import { useRecoilState } from 'recoil';
 import { ForgetPasswordBox, userData } from '@/recoil/Auth';
 import { postLogin } from '@/api/Auth/login';
 import Swal from 'sweetalert2';
+import { useForm } from 'react-hook-form';
 
 export default function Login() {
   const [anim, setAnim] = useState(false);
@@ -22,6 +23,10 @@ export default function Login() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  const {
+    handleSubmit,
+  } = useForm({ mode: 'onBlur' });
+
   const router = useRouter();
   useEffect(() => {
     setAnim(true);
@@ -31,12 +36,12 @@ export default function Login() {
   }, []);
 
   // 로그인
-  const handleLogin = async () => {
+  const onSubmit = async () => {
     const data = {
       email: email,
       password: password,
     };
-    const res = await postLogin(data);
+    const res : any = await postLogin(data);
     if (res?.status === 200) {
       router.push('/main/classlist');
       Swal.fire({
@@ -56,9 +61,10 @@ export default function Login() {
     } else {
       Swal.fire({
         icon: 'error',
-        text: '로그인에 실패했습니다!',
+        // text: `${res.}로그인에 실패했습니다!`,
+        text: `${res?.response.data.message}!`,
         showConfirmButton: false,
-        timer: 1000,
+        timer: 1500,
       });
     }
   };
@@ -116,6 +122,7 @@ export default function Login() {
         {/* <LoginBox/> */}
         <div>
           <Title>Login</Title>
+          <form onSubmit={handleSubmit(onSubmit)}>
           <InputBox>
             <TextField
               id='standard-basic'
@@ -227,8 +234,9 @@ export default function Login() {
             >
               Forgot Password?
             </PasswordBtn>
-            <LoginBtn onClick={handleLogin}>login</LoginBtn>
+            <LoginBtn type='submit'>login</LoginBtn>
           </InputBox>
+          </form>
 
           <Box>
             <Etc>Don’t have an account?</Etc>

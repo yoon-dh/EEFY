@@ -87,7 +87,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 `
-export const DownloadBtn = styled.div`
+export const DownloadBtn = styled.input`
 width: 30%;
 height: 40px;
 padding: 10px 10px;

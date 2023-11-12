@@ -17,7 +17,7 @@ color: #AFAFAF;
 cursor: pointer;
 margin: 30px 0px 0px 0px;
 `
-export const LoginBtn = styled.div`
+export const LoginBtn = styled.button`
 display: flex;
 flex-direction: row;
 justify-content: center;

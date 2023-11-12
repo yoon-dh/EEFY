@@ -1,8 +1,8 @@
 import { CreateBtn, NoticeTitle, Tab } from './ContainerBtn.style';
 import { useRecoilState } from 'recoil';
-import {CreateLecture} from '@/recoil/Lecture'
+import {LecturePage} from '@/recoil/Lecture'
 function ContainerBtn() {
-  const [lecturePage, setLecturePage] = useRecoilState(CreateLecture)
+  const [lecturePage, setLecturePage] = useRecoilState(LecturePage)
   return (
     <div className='flex mt-1'>
       <div>
@@ -16,7 +16,7 @@ function ContainerBtn() {
           </Tab> 
         </div>
       </div>
-        <CreateBtn onClick={()=>setLecturePage(true)}>
+        <CreateBtn onClick={()=>setLecturePage('create')}>
           자료 생성
         </CreateBtn>
     </div>

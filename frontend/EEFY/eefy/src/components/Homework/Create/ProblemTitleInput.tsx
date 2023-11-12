@@ -1,7 +1,9 @@
 import React, {useState} from "react"
 import { useRecoilState } from "recoil"
-import { HomeworkProblem } from "@/recoil/Homework"
+import { Homework } from "@/recoil/Homework"
 import styled from "styled-components"
+import {postHomeworkMake} from '@/api/Homework/Problem'
+import { userData } from "@/recoil/Auth"
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -41,11 +43,23 @@ const Btn = styled.div`
   cursor: pointer;
 `
 function ProblemTitleInput(){
-  const [problem, setProblem] = useRecoilState(HomeworkProblem);
+  const [problem, setProblem] = useRecoilState(Homework);
+  const [user, setUser] = useRecoilState(userData);
   const [title, setTitle] = useState('')
-  const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setProblem({ ...problem, Title: newTitle });
+  const [content, setContent] = useState('')
+
+  const HomeworkMake = async() =>{
+    const data ={
+      title:title,
+      content:'sdsdf',
+      type:'READING'
+  }
+  console.log(user.memberId)
+    const res = await postHomeworkMake(data, user.memberId)
+    console.log(res)
+    if(res?.status===200){
+      setProblem({Title:title, homeworkId:res?.data.homeworkId})
+    }
   }
   return(
       <Container className="w-full h-full">
@@ -54,9 +68,9 @@ function ProblemTitleInput(){
           <TitleInput id='title' value={title} onChange={(e)=>{
             setTitle(e.target.value)
           }}/>
-          <Btn onClick={()=>{
-            setProblem({...problem, Title:title})
-          }}>생성</Btn>
+          <Btn 
+          onClick={HomeworkMake}
+          >생성</Btn>
         </TitleInputBox>
       </Container>
   )
