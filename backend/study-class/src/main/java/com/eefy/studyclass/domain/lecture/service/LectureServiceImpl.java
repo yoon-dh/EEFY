@@ -79,7 +79,8 @@ public class LectureServiceImpl implements LectureService {
     public LectureResponse getLecture(int lectureId) {
 
         Lecture lecture = lectureValidator.existLecture(lectureRepository.findById(lectureId));
+        Member member = memberService.getMemberInfo(lecture.getMemberId(), lecture.getMemberId());
 
-        return new LectureResponse(lecture);
+        return new LectureResponse(lecture, member);
     }
 }
