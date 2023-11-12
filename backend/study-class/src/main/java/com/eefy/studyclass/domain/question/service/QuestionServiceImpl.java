@@ -120,7 +120,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void writeAnswer(int memberId, com.eefy.studyclass.domain.question.dto.request.AnswerWriteRequest request) {
-        QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(request.getQuestionId()));
+        QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(request.getId()));
 
         QnaAnswer answer = QnaAnswer.builder()
                 .question(qnaQuestion)

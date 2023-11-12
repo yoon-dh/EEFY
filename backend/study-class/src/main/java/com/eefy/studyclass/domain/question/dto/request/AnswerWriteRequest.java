@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AnswerWriteRequest {
-    private Integer questionId;
+    private Integer id;
     private String content;
 }
