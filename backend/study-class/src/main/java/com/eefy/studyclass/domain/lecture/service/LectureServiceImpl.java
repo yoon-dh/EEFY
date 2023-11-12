@@ -66,7 +66,7 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<LectureNoteListResponse> getLectureNoteList(int classId) {
 
-        List<Lecture> lectureList = lectureRepository.findByStudyClassId(classId);
+        List<Lecture> lectureList = lectureRepository.findByStudyClassIdOrderByCreatedAtDesc(classId);
 
         return lectureList.stream().map(lecture ->  LectureNoteListResponse.builder()
                 .id(lecture.getId())

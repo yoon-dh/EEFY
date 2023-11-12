@@ -20,5 +20,6 @@ public interface QuestionService {
     void updateAnswer(int memberId, AnswerModifyRequest request);
     void updateQuestion(int memberId, QuestionModifyRequest request);
     void deleteAnswer(int memberId, int commentId);
+    void updateQuestionStatus(int memberId, int questionId);
 }
 

@@ -53,4 +53,8 @@ public class QnaQuestion extends BaseEntity {
         this.title = request.getTitle();
         this.content = request.getContent();
     }
+
+    public void updateQnaStatus() {
+        this.waitStatus = 1;
+    }
 }

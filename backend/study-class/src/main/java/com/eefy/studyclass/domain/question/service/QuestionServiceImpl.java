@@ -75,6 +75,14 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public void updateQuestionStatus(int memberId, int questionId) {
+        QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(questionId));
+        qnaValidator.checkEqualQuestionWriter(qnaQuestion, memberId);
+
+        qnaQuestion.updateQnaStatus();
+    }
+
+    @Override
     public void deleteQuestion(int memberId, int questionId) {
         QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(questionId));
         qnaValidator.checkEqualQuestionWriter(qnaQuestion, memberId);

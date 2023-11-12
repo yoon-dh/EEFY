@@ -18,12 +18,14 @@ public class QuestionDetailResponse {
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private boolean waitStatus;
 
     public QuestionDetailResponse(QnaQuestion question, Member member) {
         this.questionId = question.getId();
         this.title = question.getTitle();
         this.content = question.getContent();
         this.memberId = question.getMemberId();
+        this.waitStatus = question.waitStatusToBoolean(question.getWaitStatus());
         this.name = member.getName();
         this.createdAt = question.getCreatedAt();
         this.modifiedAt = question.getUpdatedAt();

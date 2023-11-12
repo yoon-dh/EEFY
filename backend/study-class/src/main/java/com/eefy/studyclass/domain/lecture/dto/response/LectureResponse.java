@@ -10,6 +10,7 @@ public class LectureResponse {
     private Integer id;
     private Integer memberId;
     private String nickname;
+    private String profileImgPath;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String title;
@@ -19,6 +20,7 @@ public class LectureResponse {
         this.id = lecture.getId();
         this.memberId = lecture.getMemberId();
         this.nickname = member.getNickname();
+        this.profileImgPath = member.getProfileImagePath();
         this.createdAt = lecture.getCreatedAt();
         this.updatedAt = lecture.getUpdatedAt();
         this.title = lecture.getTitle();

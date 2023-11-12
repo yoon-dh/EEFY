@@ -95,4 +95,12 @@ public class QuestionController {
                                                            @PathVariable int questionId) {
         return ResponseEntity.ok(questionService.getAnswerlist(memberId, questionId));
     }
+
+    @Operation(summary = "질의응답(답변) 문제 해결 완료", description = "학생이 질문 해결이 완료되었는지 체크하는 API")
+    @PutMapping("/{questionId}")
+    ResponseEntity<Void> updateQuestionStatus(@RequestHeader("Member-Id") int memberId,
+                                              @PathVariable int questionId) {
+        questionService.updateQuestionStatus(memberId, questionId);
+        return ResponseEntity.ok().build();
+    }
 }
