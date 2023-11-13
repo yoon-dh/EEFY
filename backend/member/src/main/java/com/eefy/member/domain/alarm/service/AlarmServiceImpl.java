@@ -58,7 +58,7 @@ public class AlarmServiceImpl implements AlarmService {
         Message message = makePersonalMessage(request, member.getToken());
         SavedMessage savedMessage = new ModelMapper().map(request, SavedMessage.class);
         String messageId = sendMessage(message);
-        saveAlarmMessage(memberId, savedMessage, messageId);
+        saveAlarmMessage(request.getTargetMemberId(), savedMessage, messageId);
         return messageId;
     }
 
@@ -72,7 +72,7 @@ public class AlarmServiceImpl implements AlarmService {
         Message message = makeGroupMessage(alarmSendRequest, topic);
         SavedMessage savedMessage = new ModelMapper().map(alarmSendRequest, SavedMessage.class);
         String messageId = sendMessage(message);
-        saveAlarmMessage(memberId, savedMessage, messageId);
+        saveAlarmMessage(savedMessage, classId, messageId);
         return messageId;
     }
 
@@ -133,6 +133,16 @@ public class AlarmServiceImpl implements AlarmService {
         alarmMessage.getMessages().remove(messageId);
         messageRedisRepository.save(alarmMessage);
         return makeSavedMessageListResponse(alarmMessage.getMessages());
+    }
+
+    private void saveAlarmMessage(SavedMessage savedMessage, int classId, String messageId) {
+        Alarm alarm = alarmRepository.findByClassId(classId)
+                .orElseThrow(() -> new IllegalArgumentException("알림 정보 미존재."));
+        List<Integer> subscriberIds = subscriptionRepository.findByAlarmWithMember(alarm)
+                .stream()
+                .map(c -> c.getMember().getId())
+                .collect(Collectors.toList());
+        subscriberIds.forEach(memberId -> saveAlarmMessage(memberId, savedMessage, messageId));
     }
 
     private void saveAlarmMessage(int memberId, SavedMessage savedMessage, String messageId) {
