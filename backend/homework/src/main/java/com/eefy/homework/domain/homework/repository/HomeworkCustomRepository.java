@@ -71,14 +71,6 @@ public class HomeworkCustomRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private BooleanExpression homeworkTitleContain(String searchWord) {
-        return searchWord == null ? null : homework.title.contains(searchWord);
-    }
-
-    private BooleanExpression homeworkTypeEq(HomeworkType type) {
-        return type == null ? null : homework.type.eq(type);
-    }
-
     public List<HomeworkQuestion> getProblem(Integer classHomeworkId) {
         return
             jpaQueryFactory
@@ -105,7 +97,7 @@ public class HomeworkCustomRepository {
                 .on(homeworkStudent.classHomework.eq(classHomework))
                 .join(homeworkQuestion)
                 .on(homeworkQuestion.homework.eq(homework))
-                .where(classHomework.classId.eq(classId), homeworkStudent.memberId.eq(memberId))
+                .where(classIdEq(classId), homeworkStudent.memberId.eq(memberId))
                 .groupBy(homeworkStudent)
                 .fetch();
     }
@@ -122,7 +114,9 @@ public class HomeworkCustomRepository {
                 .on(homeworkStudent.classHomework.eq(classHomework))
                 .join(homeworkStudentQuestion)
                 .on(homeworkStudentQuestion.homeworkStudent.eq(homeworkStudent))
-                .where(classHomework.classId.eq(classId), homeworkStudent.memberId.eq(memberId))
+                .where(
+                    classIdEq(classId),
+                    homeworkStudent.memberId.eq(memberId))
                 .groupBy(homeworkStudent)
                 .fetch();
     }
@@ -152,4 +146,11 @@ public class HomeworkCustomRepository {
         return classId == null ? null : classHomework.classId.eq(classId);
     }
 
+    private BooleanExpression homeworkTitleContain(String searchWord) {
+        return searchWord == null ? null : homework.title.contains(searchWord);
+    }
+
+    private BooleanExpression homeworkTypeEq(HomeworkType type) {
+        return type == null ? null : homework.type.eq(type);
+    }
 }
