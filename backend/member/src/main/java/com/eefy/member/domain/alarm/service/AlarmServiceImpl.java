@@ -120,8 +120,8 @@ public class AlarmServiceImpl implements AlarmService {
         Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
         if (alarmMessageOptional.isEmpty()
                 || alarmMessageOptional.get().getMessages() == null) return new ArrayList<>();
-
         Map<String, SavedMessage> messages = alarmMessageOptional.get().getMessages();
+        log.info("요청받은 알림 메세지 목록: " + messages);
         return makeSavedMessageListResponse(messages);
     }
 
@@ -244,6 +244,7 @@ public class AlarmServiceImpl implements AlarmService {
                     .link(savedMessage.getLink())
                     .build());
         }
+        log.info("알림 응답 목록: {}", response);
         return response;
     }
 
