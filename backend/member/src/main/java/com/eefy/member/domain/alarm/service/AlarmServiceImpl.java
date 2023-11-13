@@ -106,7 +106,7 @@ public class AlarmServiceImpl implements AlarmService {
         try {
             firebaseMessaging.unsubscribeFromTopic(registrationTokens, alarm.getTopic());
         } catch (FirebaseMessagingException e) {
-            throw new RuntimeException(e);
+            AlarmValidator.throwFirebaseMessagingError(e);
         }
         subscriptionRepository.deleteAllByAlarm(alarm);
         alarmRepository.deleteById(alarm.getId());
@@ -142,11 +142,15 @@ public class AlarmServiceImpl implements AlarmService {
 
     private void saveAlarmMessage(SavedMessage savedMessage, int classId, String messageId) {
         Alarm alarm = AlarmValidator.getValidAlarm(alarmRepository.findByClassId(classId));
-        List<Integer> subscriberIds = subscriptionRepository.findByAlarmWithMember(alarm)
+        List<Integer> subscriberIds = getSubscriberIds(alarm);
+        subscriberIds.forEach(memberId -> saveAlarmMessage(memberId, savedMessage, messageId));
+    }
+
+    private List<Integer> getSubscriberIds(Alarm alarm) {
+        return subscriptionRepository.findByAlarmWithMember(alarm)
                 .stream()
                 .map(c -> c.getMember().getId())
                 .collect(Collectors.toList());
-        subscriberIds.forEach(memberId -> saveAlarmMessage(memberId, savedMessage, messageId));
     }
 
     private void saveAlarmMessage(int memberId, SavedMessage savedMessage, String messageId) {
@@ -154,7 +158,7 @@ public class AlarmServiceImpl implements AlarmService {
         AlarmMessage alarmMessage = getValidAlarmMessage(alarmMessageOptional, memberId);
         alarmMessage.getMessages().put(messageId, savedMessage);
         messageRedisRepository.save(alarmMessage);
-        log.info("Successfully saved Message: " + savedMessage.toString());
+        log.info("Successfully saved Message {} for memberId {}", savedMessage.toString(), memberId);
     }
 
     private AlarmMessage getValidAlarmMessage(Optional<AlarmMessage> alarmMessageOptional, int memberId) {
