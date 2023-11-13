@@ -11,39 +11,25 @@ import {postHomeworkMakeQuestion} from '@/api/Homework/Problem'
 interface HomeworkProblemType {
   title: string; 
   content: string; 
+  choiceRequests: any;
 }
 function ProblemBox(){
   const [homework, setHomework] = useRecoilState(Homework);
-  const [homeworkProblem, setHomeworkProblem] = useRecoilState<HomeworkProblemType[]>(HomeworkProblem);  const [category, setCategory] = useRecoilState(Category);
+  const [homeworkProblem, setHomeworkProblem] = useRecoilState<HomeworkProblemType[]>(HomeworkProblem);  
+  const [category, setCategory] = useRecoilState(Category);
   const [user, setUser] = useRecoilState(userData);
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [answer, setAnswer] = useState('')
-  const [targetFile, setTargetFile] = useState<any | null>(null);
   const [count, setCount] = useState(0)
-
-  const [choiceRequests, setChoiceRequests] = useState([
-    {
-      number:"1",
-    content:''
-  },
-    {
-      number:"2",
-    content:''
-  },
-    {
-      number:"3",
-    content:''
-  },
-    {
-      number:"4",
-    content:''
-  },
-])
+  const [choiceRequest, setChoiceRequest] = useState<any>([])
 
 useEffect(() => {
-  if (homeworkProblem.length > 1) {
+  console.log(homeworkProblem)
+  if (homeworkProblem.length > 0) {
     setTitle(homeworkProblem[homeworkProblem.length - 1].title);
+    setContent(homeworkProblem[homeworkProblem.length - 1].content);
+    setChoiceRequest(homeworkProblem[homeworkProblem.length - 1].choiceRequests)
     console.log(homeworkProblem[homeworkProblem.length - 1].title);
   }
 }, [homeworkProblem]);
@@ -55,15 +41,14 @@ useEffect(() => {
     setContent(e.target.value)
   }
 
-  const handleNumTitle=(value:any,number:any)=>{
-    const updatedChoiceRequests = [...choiceRequests];
-    updatedChoiceRequests[number].content = value;
-    console.log(value,updatedChoiceRequests[number])
-    // const data = {
-    //   number:number,
-    //   content:
-    // }
-    setChoiceRequests(updatedChoiceRequests);
+  const handleChoiceContent=(value:any,number:any)=>{
+    setChoiceRequest({
+      ...choiceRequest,
+      [number]: {
+        ...choiceRequest[number],
+        content: value
+      }
+    });
   }
 
   const MakeProblem = async()=>{
@@ -71,61 +56,35 @@ useEffect(() => {
       title: title,
       content: content,
       field: "CHOICE",
-      answer: 'df',
-      choiceRequests: choiceRequests
+      answer: answer,
+      choiceRequests: choiceRequest
     }
     const makeHomeworkQuestionRequest = {
-      "homeworkId": homework.homeworkId,
+      homeworkId: homework.homeworkId,
       ...data,
     }
-    if (targetFile) {
+    console.log(makeHomeworkQuestionRequest,'<= makeHomeworkQuestionRequest')
       const formData = new FormData();
       const jsonBlob = new Blob([JSON.stringify(makeHomeworkQuestionRequest)], {
         type: "application/json",
       });
         formData.append("makeHomeworkQuestionRequest", jsonBlob);
-        formData.append("voiceFile", targetFile);
-        setHomeworkProblem([...homeworkProblem, data])
-        // const res = await postHomeworkMakeQuestion(formData,user.memberId)
-        // console.log(res)
-        setCount(count+1)
-        setCategory('')
-        setTitle('')
-        setContent('')
-        setTargetFile(null)
-        setChoiceRequests([
-          {
-            number:"1",
-          content:''
-        },
-          {
-            number:"2",
-          content:''
-        },
-          {
-            number:"3",
-          content:''
-        },
-          {
-            number:"4",
-          content:''
-        },
-      ])
-    }
+        const newHomeworkProblem = [...homeworkProblem];
+        newHomeworkProblem[homeworkProblem.length - 1] = data;
+        setHomeworkProblem(newHomeworkProblem);
+        const res = await postHomeworkMakeQuestion(formData,user.memberId)
+          
+          console.log(res)
+          setCount(count+1)
+          setCategory('')
+          setTitle('')
+          setContent('')
+          setAnswer('')
+          setChoiceRequest([])
+    
   }
 
-  
-  const uploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target?.files?.[0];
-    if (selectedFile) {
-      const fileExtension = selectedFile.name.split('.').pop()?.toLowerCase();
-      console.log(fileExtension, 'fileExtension');
-  
-      if (fileExtension === 'png' || fileExtension === 'JPG' || fileExtension === 'jpg') {
-        setTargetFile(selectedFile);
-      }
-    }
-  };
+
   
   return(
     <S.Container className='boxShadow'>
@@ -143,10 +102,16 @@ useEffect(() => {
           <>
           {category == 'multiple' ? (
             <>
-              <div style={{flex:2, width:'100%', alignItems:'center', justifyContent:'center'}}>
-                <S.Title>
-                  <S.TitleInput onChange={(e)=>handleTitle(e)} name='title' value={title}/>
-                </S.Title>
+              <div 
+              style={{
+                flex:2, 
+                width:'100%', alignItems:'center', justifyContent:'center'}}>
+                  <S.Title>
+                    <S.TitleInput onChange={(e)=>handleTitle(e)} name='title' value={title}/>
+                    <S.AnswerBox>
+                      <S.AnswerInput placeholder='정답을 입력학세요' onChange={(e)=>{setAnswer(e.target.value)}}/>
+                    </S.AnswerBox>
+                  </S.Title>
               </div>
               <div style={{flex:4, width:'100%'}}>
                 <S.ContentBox>
@@ -155,7 +120,7 @@ useEffect(() => {
               </div>
               <div style={{flex:4, width:'100%'}}>
                 <S.NumberBox>
-                  {choiceRequests.map((item, index)=>(
+                  {choiceRequest.map((item:any, index:number)=>(
                     <div key={index} className='flex w-full'>
                       <div style={{
                         width:'40px',
@@ -166,7 +131,8 @@ useEffect(() => {
                         alignItems:'center',
                         justifyContent:'center',
                         margin:'12px 10px 0px 0px',
-                        fontWeight:'bold'
+                        fontWeight:'bold',
+                        fontSize:'14px'
                       }}>
                         {item.number}
                       </div>
@@ -176,10 +142,11 @@ useEffect(() => {
                         outline:'none',
                         border: '2px solid #D6BCFF',
                         borderRadius: '8px',
-                        padding:'5px'
-                      }} value={item.content}
+                        padding:'5px',
+                        fontSize:'14px'
+                      }} value={item.content.slice(1)}
                       name='Numtitle'
-                      onChange={(e) => handleNumTitle(String(e.target.value), Number(item.number)-1)}
+                      onChange={(e) => handleChoiceContent(String(e.target.value), Number(item.number)-1)}
                       />
                     </div>
                   ))}
@@ -187,8 +154,6 @@ useEffect(() => {
               </div>
 
               <div style={{flex:1, width:'100%'}}>
-
-                <input type="file" onChange={uploadFile}/>
 
                 <S.BtnBox>
                   <div style={{

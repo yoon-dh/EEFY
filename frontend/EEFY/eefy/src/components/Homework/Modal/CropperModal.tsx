@@ -53,61 +53,36 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
     console.log(res);
     if(res?.status===200){
 
-      let title = ''
-      let content = ''
-      for (let i = 0; i <= res.data.length; i++){
-        title += res.data[i];
-      }
       const data = {
-        title: title,
-        content: '',
+        title: res?.data[0].slice(4),
+        content: res?.data[1],
         field: "CHOICE",
         answer: '',
         choiceRequests: [
           {
             number:"1",
-          content:''
+          content:res?.data[2].slice(1)
         },
           {
             number:"2",
-          content:''
+          content:res?.data[3]
         },
           {
             number:"3",
-          content:''
+          content:res?.data[4]
         },
           {
             number:"4",
-          content:''
+          content:res?.data[5]
+        },
+          {
+            number:"5",
+          content:res?.data[6]
         },
       ]
     }
     setHomeworkProblem([...homeworkProblem, data])
     setCategory('multiple')
-
-      // const NumList = []
-      // for (let i = 0; i <= res.data.length; i++){
-      //   console.log(res.data[i], 'ocr')
-      //   let num = ''
-      //   for (let j = 0; j <= res.data[i]?.length; j++){
-      //     if(res.data[i][j] != undefined){
-      //       // title = title + res.data[i][j]
-      //       if(title && title.includes('?')){
-      //         content +=res.data[i][j]
-      //         if(content.includes('①')){
-      //           NumList.push(num)
-      //         } else {
-      //           num += res.data[i][j]
-      //         }
-      //       }else{
-      //           title += res.data[i][j];
-      //       }
-      //     }
-      //     }
-      //   console.log(NumList)
-      //   console.log(content[0] === "[" ? content.slice(5) : content, 'content console.log임')
-      //   console.log(title.slice(4,), 'title console.log임')
-      // }
     }
 
   };
@@ -251,14 +226,18 @@ function CropperModal(props: { imgUrl: string | undefined, pdfFile: string | nul
           justifyContent:'flex-end'
         }}
         >
-          <button 
-            style={{
-              padding:'5px 12px',
-              color:'white',
-              backgroundColor:'#AC98FF',
-              borderRadius:'8px'
-            }}
-            onClick={getPdfUrl}>pdf영역선택</button>
+          {isPdf && (
+            <>
+            <button 
+              style={{
+                padding:'5px 12px',
+                color:'white',
+                backgroundColor:'#AC98FF',
+                borderRadius:'8px'
+              }}
+              onClick={getPdfUrl}>pdf 페이지선택</button>
+            </>
+          )}
           <button 
             style={{
               padding:'5px 12px',

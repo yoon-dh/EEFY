@@ -62,7 +62,7 @@ export const postHomeworkMakeQuestion = async (data: any, memberId: memberId) =>
     console.log('문제 생성 진입', data);
     const response = await privateApi.post('/homework/make/question', data, {
       headers:{
-        "Member-Id":Number(memberId),
+        // "Member-Id":Number(memberId),
         'Content-Type': 'multipart/form-data',
       }
     });
