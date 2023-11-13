@@ -1,4 +1,4 @@
-package com.eefy.member.domain.alarm.persistence.entity;
+package com.eefy.member.domain.alarm.persistence;
 
 import com.eefy.member.domain.alarm.persistence.entity.redis.AlarmMessage;
 import org.springframework.data.repository.CrudRepository;
