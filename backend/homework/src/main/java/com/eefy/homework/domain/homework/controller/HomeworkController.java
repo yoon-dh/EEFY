@@ -9,17 +9,20 @@ import com.eefy.homework.domain.homework.dto.request.SolveProblemRequest;
 import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
+import com.eefy.homework.domain.homework.dto.response.HomeworkListResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
+import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkType;
 import com.eefy.homework.domain.homework.service.HomeworkService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,14 +45,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class HomeworkController {
 
     private final HomeworkService homeworkService;
+    // 내가 만들어야 하는거
+    // 선생측 과제 페이징 처리된거
+    // 학생측 과제 페이징 치리된거
 
     @Operation(summary = "만든 과제 확인하기")
     @GetMapping("/teacher/homework")
-    public ResponseEntity<List<HomeworkDto>> getHomeworkList(
+    public ResponseEntity<HomeworkListResponse> getHomeworkList(
+        Pageable pageable, @RequestParam(required = false) HomeworkType homeworkType,
         @RequestHeader("Member-Id") Integer memberId) {
 
         return new ResponseEntity<>(
-            homeworkService.getHomeworkByTeacherId(memberId),
+            homeworkService.getHomeworkByTeacherId(memberId, pageable, homeworkType),
             HttpStatus.OK
         );
     }
