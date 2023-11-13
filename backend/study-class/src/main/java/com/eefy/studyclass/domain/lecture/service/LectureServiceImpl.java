@@ -1,5 +1,10 @@
 package com.eefy.studyclass.domain.lecture.service;
 
+import com.eefy.studyclass.domain.lecture.dto.request.CanvasData;
+import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
+import com.eefy.studyclass.domain.lecture.dto.response.NoteInfoResponse;
+import com.eefy.studyclass.domain.lecture.persistence.entity.LectureNoteInfo;
+import com.eefy.studyclass.domain.lecture.persistence.mongo.LectureNoteInfoRepository;
 import com.eefy.studyclass.domain.member.persistence.entity.Member;
 import com.eefy.studyclass.domain.member.service.MemberServiceImpl;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureNoteListResponse;
@@ -20,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +42,7 @@ public class LectureServiceImpl implements LectureService {
     private AwsS3Service s3Uploader;
     private final StudyClassRepository studyClassRepository;
     private final LectureRepository lectureRepository;
+    private final LectureNoteInfoRepository lectureNoteInfoRepository;
     private final LectureValidator lectureValidator;
     private final StudyClassValidator studyClassValidator;
     private final MemberServiceImpl memberService;
@@ -82,5 +89,40 @@ public class LectureServiceImpl implements LectureService {
         Member member = memberService.getMemberInfo(lecture.getMemberId(), lecture.getMemberId());
 
         return new LectureResponse(lecture, member);
+    }
+
+    @Override
+    public void noteLecture(Integer memberId, NoteInfoRequest noteInfoRequest) {
+        // 해당 LectureId, memberId 값의 데이터가 있으면 뒤에 insert 하기
+        log.info("=============== LectureServiceImpl ===============");
+        log.info("noteInfoRequeest.getLectureId(): " + noteInfoRequest.getLectureId());
+        ArrayList<CanvasData> noteDetailInfo = noteInfoRequest.getCanvasData();
+
+        for(CanvasData request: noteDetailInfo) {
+            log.info("==============" + request.toString());
+        }
+
+        boolean existLectureNoteInfoById = lectureNoteInfoRepository.existsByMemberIdAndLectureId(memberId, noteInfoRequest.getLectureId());
+
+        log.info("=============== existLectureNoteInfoById : " + existLectureNoteInfoById);
+
+//            LectureNoteInfo lectureNoteInfo = new LectureNoteInfo(memberId, noteInfoRequest);
+//            lectureNoteInfoRepository.save(lectureNoteInfo);
+
+        for(CanvasData canvasData: noteDetailInfo) {
+            LectureNoteInfo lectureNoteInfo = new LectureNoteInfo(memberId, noteInfoRequest.getLectureId(), canvasData);
+            lectureNoteInfoRepository.save(lectureNoteInfo);
+        }
+    }
+
+    @Override
+    public List<NoteInfoRequest> loadNoteInfo(int memberId, int lectureId) {
+        return null;
+    }
+
+    @Override
+    public List<NoteInfoResponse> getLectureNoteDetailPage(int memberId, int lectureId, int pageNum) {
+
+        return null;
     }
 }

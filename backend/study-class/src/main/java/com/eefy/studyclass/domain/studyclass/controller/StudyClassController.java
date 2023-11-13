@@ -1,5 +1,7 @@
 package com.eefy.studyclass.domain.studyclass.controller;
 
+import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
+import com.eefy.studyclass.domain.lecture.service.LectureService;
 import com.eefy.studyclass.domain.studyclass.dto.request.*;
 import com.eefy.studyclass.domain.studyclass.dto.response.*;
 import com.eefy.studyclass.domain.studyclass.service.StudyClassService;

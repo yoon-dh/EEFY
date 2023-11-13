@@ -2,6 +2,12 @@ server:
   port: 64418
 
 spring:
+  data:
+    mongodb:
+      host: 43.200.245.0
+      port: 27017
+      database: eefy-note
+
   zipkin:
     base-url: ${ZIPKIN_URL}
     enabled: true
