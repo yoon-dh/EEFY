@@ -8,12 +8,6 @@ export default function NormalTag() {
   const userDataObj = useRecoilValue(userData);
   const userName = userDataObj?.role === 'TEACHER' ? userDataObj?.nickname : userDataObj?.name;
 
-<<<<<<< HEAD
-=======
-  console.log(userData);
-  console.log(userDataObj);
-
->>>>>>> 2336777cd21f9d2e512dacfdf44976d9e28cc04a
   return (
     <div
       className='w-5/6 shadow-lg rounded-lg py-2 px-3'
