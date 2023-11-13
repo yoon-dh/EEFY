@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @ToString
 @Getter
 @AllArgsConstructor
@@ -16,4 +18,5 @@ public class SavedMessageResponse {
     private String className;
     private String title;
     private String content;
+    private LocalDateTime createdAt;
 }

@@ -255,6 +255,7 @@ public class AlarmServiceImpl implements AlarmService {
                     .title(savedMessage.getTitle())
                     .content(savedMessage.getContent())
                     .link(savedMessage.getLink())
+                    .createdAt(savedMessage.getCreatedAt())
                     .build());
         }
         log.info("알림 응답 목록: {}", response);
