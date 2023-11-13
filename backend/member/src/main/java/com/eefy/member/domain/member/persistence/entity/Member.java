@@ -69,4 +69,8 @@ public class Member extends BaseEntity {
     public void updateProfileImageUrl(String profileImagePath) {
         this.profileImagePath = profileImagePath;
     }
+
+    public void updatePassword(String checkedPassword, PasswordEncoder passwordEncoder) {
+        password = passwordEncoder.encode(checkedPassword);
+    }
 }

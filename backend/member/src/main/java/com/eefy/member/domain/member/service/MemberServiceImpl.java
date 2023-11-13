@@ -2,6 +2,7 @@ package com.eefy.member.domain.member.service;
 
 import com.eefy.member.domain.member.dto.request.JoinRequest;
 import com.eefy.member.domain.member.dto.request.MemberUpdateRequest;
+import com.eefy.member.domain.member.dto.request.PasswordUpdateRequest;
 import com.eefy.member.domain.member.dto.response.MemberResponse;
 import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.event.UploadProfileImageEvent;
@@ -74,6 +75,16 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponse getMember(int memberId) {
         Member member = memberValidator.getValidMember(memberRepository.findById(memberId));
         return new ModelMapper().map(member, MemberResponse.class);
+    }
+
+    @Override
+    public String updatePassword(int memberId, PasswordUpdateRequest passwordUpdateRequest) {
+        Member member = memberValidator.getValidMember(memberRepository.findById(memberId));
+        String password = passwordUpdateRequest.getPassword();
+        String checkedPassword = passwordUpdateRequest.getCheckedPassword();
+        memberValidator.checkPasswordStatus(password, checkedPassword);
+        member.updatePassword(checkedPassword, passwordEncoder);
+        return "SUCCESS";
     }
 
     private void checkJoinStatus(JoinRequest joinRequest, MemberRole role) {

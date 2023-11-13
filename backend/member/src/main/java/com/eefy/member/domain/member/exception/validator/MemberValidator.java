@@ -30,17 +30,7 @@ public class MemberValidator {
         checkPasswordStatus(pasword, checkedPassword);
     }
 
-    private void checkAlreadyJoinStatus(Optional<Member> memberOptional) {
-        if (memberOptional.isPresent()) {
-            throw CustomException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .code(MemberEnum.ALREADY_JOINED_MEMBER.getCode())
-                    .message(MemberEnum.ALREADY_JOINED_MEMBER.getMessage())
-                    .build();
-        }
-    }
-
-    private void checkPasswordStatus(String pasword, String checkedPassword) {
+    public void checkPasswordStatus(String pasword, String checkedPassword) {
         if (!pasword.equals(checkedPassword)) {
             throw CustomException.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -77,6 +67,16 @@ public class MemberValidator {
                     .status(HttpStatus.BAD_REQUEST)
                     .code(1008)
                     .message("닉네임을 입력해주세요.")
+                    .build();
+        }
+    }
+
+    private void checkAlreadyJoinStatus(Optional<Member> memberOptional) {
+        if (memberOptional.isPresent()) {
+            throw CustomException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .code(MemberEnum.ALREADY_JOINED_MEMBER.getCode())
+                    .message(MemberEnum.ALREADY_JOINED_MEMBER.getMessage())
                     .build();
         }
     }
