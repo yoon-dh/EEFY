@@ -30,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +58,7 @@ public class AlarmServiceImpl implements AlarmService {
 
         Message message = makePersonalMessage(request, member.getToken());
         SavedMessage savedMessage = new ModelMapper().map(request, SavedMessage.class);
+        savedMessage.setCreatedAt(LocalDateTime.now());
         String messageId = sendMessage(message);
         saveAlarmMessage(request.getTargetMemberId(), savedMessage, messageId);
         return messageId;
@@ -71,6 +73,7 @@ public class AlarmServiceImpl implements AlarmService {
 
         Message message = makeGroupMessage(alarmSendRequest, topic);
         SavedMessage savedMessage = new ModelMapper().map(alarmSendRequest, SavedMessage.class);
+        savedMessage.setCreatedAt(LocalDateTime.now());
         String messageId = sendMessage(message);
         saveAlarmMessage(savedMessage, classId, messageId);
         return messageId;
