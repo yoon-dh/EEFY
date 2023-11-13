@@ -43,7 +43,7 @@ public interface HomeworkService {
     SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId);
 
     HomeworkListResponse getHomeworkByTeacherId(Integer memberId, Pageable pageable,
-        HomeworkType type);
+        HomeworkType type, String searchWord);
 
     MakeHomeworkResponse finishMakingHomework(Integer memberId, Integer homeworkId);
 }

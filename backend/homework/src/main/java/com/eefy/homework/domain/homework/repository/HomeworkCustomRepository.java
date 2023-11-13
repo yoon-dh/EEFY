@@ -7,15 +7,22 @@ import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkQues
 import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkStudent.homeworkStudent;
 import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkStudentQuestion.homeworkStudentQuestion;
 
+import com.eefy.homework.domain.homework.dto.HomeworkDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
+import com.eefy.homework.domain.homework.dto.QHomeworkDto;
+import com.eefy.homework.domain.homework.dto.QHomeworkQuestionDto;
 import com.eefy.homework.domain.homework.dto.QHomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.QQuestionCountDto;
 import com.eefy.homework.domain.homework.dto.QuestionCountDto;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
+import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,6 +30,54 @@ import org.springframework.stereotype.Repository;
 public class HomeworkCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
+
+    public Page<HomeworkDto> getHomework(Integer memberId, Pageable pageable, HomeworkType type,
+        String searchWord) {
+
+        List<HomeworkDto> content = jpaQueryFactory
+            .select(
+                new QHomeworkDto(
+                    homework.id,
+                    homework.memberId,
+                    homework.title,
+                    homework.content,
+                    homework.type,
+                    homework.isFinish,
+                    homework.createdAt,
+                    homework.modifiedAt
+                )
+            )
+            .from(homework)
+            .where(
+                homework.memberId.eq(memberId),
+                homeworkTypeEq(type),
+                homeworkTitleContain(searchWord)
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .orderBy(homework.modifiedAt.desc())
+            .fetch();
+
+        long total = jpaQueryFactory
+            .select(homework.count())
+            .from(homework)
+            .where(
+                homework.memberId.eq(memberId),
+                homeworkTypeEq(type),
+                homeworkTitleContain(searchWord)
+            )
+            .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanExpression homeworkTitleContain(String searchWord) {
+        return searchWord == null ? null : homework.title.contains(searchWord);
+    }
+
+    private BooleanExpression homeworkTypeEq(HomeworkType type) {
+        return type == null ? null : homework.type.eq(type);
+    }
 
     public List<HomeworkQuestion> getProblem(Integer classHomeworkId) {
         return

@@ -47,11 +47,13 @@ public class HomeworkController {
     @Operation(summary = "만든 과제 확인하기")
     @GetMapping("/teacher/homework")
     public ResponseEntity<HomeworkListResponse> getHomeworkList(
-        Pageable pageable, @RequestParam(required = false) HomeworkType homeworkType,
+        Pageable pageable,
+        @RequestParam(required = false) HomeworkType homeworkType,
+        @RequestParam(required = false) String searchWord,
         @RequestHeader("Member-Id") Integer memberId) {
 
         return new ResponseEntity<>(
-            homeworkService.getHomeworkByTeacherId(memberId, pageable, homeworkType),
+            homeworkService.getHomeworkByTeacherId(memberId, pageable, homeworkType, searchWord),
             HttpStatus.OK
         );
     }

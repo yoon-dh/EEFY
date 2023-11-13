@@ -241,23 +241,16 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     @Override
     public HomeworkListResponse getHomeworkByTeacherId(Integer memberId, Pageable pageable,
-        HomeworkType type) {
-        Page<Homework> byMemberId = null;
-        if (type == null) {
-            byMemberId = homeworkRepository.findByMemberIdOrderByModifiedAt(memberId, pageable);
-        } else {
-            byMemberId = homeworkRepository.findByMemberIdAndType(memberId, pageable, type);
-        }
+        HomeworkType type, String searchWord) {
 
-        List<HomeworkDto> homeworkDtos = new ArrayList<>();
+        Page<HomeworkDto> homeowrkDtos = homeworkCustomRepository.getHomework(
+            memberId, pageable, type, searchWord);
 
-        for (Homework homework : byMemberId) {
-            homeworkDtos.add(modelMapper.map(homework, HomeworkDto.class));
-        }
+        List<HomeworkDto> content = homeowrkDtos.getContent();
 
-        return HomeworkListResponse.of(homeworkDtos,
-            PageInfo.of(byMemberId.getNumber(), byMemberId.getTotalPages(),
-                byMemberId.getTotalElements()));
+        return HomeworkListResponse.of(content,
+            PageInfo.of(homeowrkDtos.getNumber(), homeowrkDtos.getTotalPages(),
+                homeowrkDtos.getTotalElements()));
     }
 
     @Override
