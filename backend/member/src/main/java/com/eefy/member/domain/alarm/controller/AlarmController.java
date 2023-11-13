@@ -44,8 +44,7 @@ public class AlarmController {
         return ResponseEntity.ok().body(alarmService.sendMessageToGroup(memberId, alarmSendRequest));
     }
 
-    @Operation(summary = "클래스에 대한 토픽 생성",
-            description = "클래스가 생성됐을 때 토픽을 부여하는 API")
+    @Operation(summary = "클래스에 대한 토픽 생성", description = "클래스가 생성됐을 때 토픽을 부여하는 API")
     @PostMapping("/tutor/{classId}/topic")
     public ResponseEntity<String> createClassTopic(@PathVariable int classId) {
         return ResponseEntity.ok().body(alarmService.createClassTopic(classId));
@@ -76,7 +75,7 @@ public class AlarmController {
     @Operation(summary = "메세지 읽음 처리", description = "알림 메세지를 읽음 처리 하기 위한 API")
     @DeleteMapping
     public List<SavedMessageResponse> readAlarmMessage(@RequestHeader("Member-Id") int memberId,
-                                                   @RequestParam String messageId) {
+                                                       @RequestParam String messageId) {
         return alarmService.readAlarmMessage(memberId, messageId);
     }
 }
