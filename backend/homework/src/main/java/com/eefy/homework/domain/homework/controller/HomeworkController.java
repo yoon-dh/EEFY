@@ -1,6 +1,5 @@
 package com.eefy.homework.domain.homework.controller;
 
-import com.eefy.homework.domain.homework.dto.HomeworkDto;
 import com.eefy.homework.domain.homework.dto.request.AssignHomeworkToClassRequest;
 import com.eefy.homework.domain.homework.dto.request.FinishMakingHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.request.MakeHomeworkQuestionRequest;
@@ -19,7 +18,6 @@ import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkType;
 import com.eefy.homework.domain.homework.service.HomeworkService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -45,9 +43,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class HomeworkController {
 
     private final HomeworkService homeworkService;
-    // 내가 만들어야 하는거
-    // 선생측 과제 페이징 처리된거
-    // 학생측 과제 페이징 치리된거
 
     @Operation(summary = "만든 과제 확인하기")
     @GetMapping("/teacher/homework")
@@ -92,7 +87,7 @@ public class HomeworkController {
         MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<MakeHomeworkQuestionResponse> makeQuestion(
         @RequestPart MakeHomeworkQuestionRequest makeHomeworkQuestionRequest,
-        @RequestPart MultipartFile voiceFile,
+        @RequestPart(required = false) MultipartFile voiceFile,
         @RequestHeader("Member-Id") Integer memberId) throws IOException {
 
         return new ResponseEntity<>(
@@ -139,7 +134,7 @@ public class HomeworkController {
         MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SolveProblemResponse> solveProblem(
         @RequestPart SolveProblemRequest solveProblemRequest,
-        @RequestPart MultipartFile voiceFile,
+        @RequestPart(required = false) MultipartFile voiceFile,
         @RequestHeader("Member-Id") Integer memberId
     ) throws IOException {
         return new ResponseEntity<>(

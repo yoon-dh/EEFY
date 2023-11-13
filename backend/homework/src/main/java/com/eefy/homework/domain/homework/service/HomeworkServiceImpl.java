@@ -244,7 +244,7 @@ public class HomeworkServiceImpl implements HomeworkService {
         HomeworkType type) {
         Page<Homework> byMemberId = null;
         if (type == null) {
-            byMemberId = homeworkRepository.findByMemberId(memberId, pageable);
+            byMemberId = homeworkRepository.findByMemberIdOrderByModifiedAt(memberId, pageable);
         } else {
             byMemberId = homeworkRepository.findByMemberIdAndType(memberId, pageable, type);
         }
