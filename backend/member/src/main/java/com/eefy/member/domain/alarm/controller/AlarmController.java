@@ -41,8 +41,14 @@ public class AlarmController {
     @PostMapping("/tutor")
     public ResponseEntity<String> pushMessageGroup(@RequestHeader("Member-Id") int memberId,
                                                    @RequestBody AlarmSendRequest alarmSendRequest) {
-
         return ResponseEntity.ok().body(alarmService.sendMessageToGroup(memberId, alarmSendRequest));
+    }
+
+    @Operation(summary = "클래스에 대한 토픽 생성",
+            description = "클래스가 생성됐을 때 토픽을 부여하는 API")
+    @PostMapping("/tutor/{classId}/topic")
+    public ResponseEntity<String> createClassTopic(@PathVariable int classId) {
+        return ResponseEntity.ok().body(alarmService.createClassTopic(classId));
     }
 
     @Operation(summary = "클래스에 대한 토픽 구독",

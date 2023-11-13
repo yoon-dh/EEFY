@@ -9,7 +9,7 @@ import com.eefy.member.domain.alarm.exception.validator.AlarmValidator;
 import com.eefy.member.domain.alarm.persistence.AlarmRepository;
 import com.eefy.member.domain.alarm.persistence.ClassSubscriptionRepository;
 import com.eefy.member.domain.alarm.persistence.entity.Alarm;
-import com.eefy.member.domain.alarm.persistence.entity.AlarmMessageRedisRepository;
+import com.eefy.member.domain.alarm.persistence.AlarmMessageRedisRepository;
 import com.eefy.member.domain.alarm.persistence.entity.ClassSubscription;
 import com.eefy.member.domain.alarm.persistence.entity.redis.AlarmMessage;
 import com.eefy.member.domain.alarm.persistence.entity.redis.SavedMessage;
@@ -78,12 +78,19 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     @Transactional
+    public String createClassTopic(int classId) {
+        String topic = makeClassTopic(classId);
+        alarmRepository.save(new Alarm(classId, topic));
+        return topic;
+    }
+
+    @Override
+    @Transactional
     public SubscribeClassTopicResponse subscribeClassTopic(int classId, SubscribeClassTopicRequest request) {
-        Optional<Alarm> alarmOptional = alarmRepository.findByClassId(classId);
         List<Member> members = memberRepository.findAllById(request.getStudentIds());
         AlarmValidator.checkValidMemberCount(request.getStudentIds().size(), members.size());
 
-        Alarm alarm = getAlarm(classId, alarmOptional);
+        Alarm alarm = AlarmValidator.getValidAlarm(alarmRepository.findByClassId(classId));
         List<String> tokens = getStudentTokens(request.getStudentIds());
 
         sendSubscribe(tokens, alarm.getTopic());
@@ -156,14 +163,6 @@ public class AlarmServiceImpl implements AlarmService {
             alarmMessage.setMessages(new HashMap<>());
         }
         return alarmMessage;
-    }
-
-    private Alarm getAlarm(int classId, Optional<Alarm> alarmOptional) {
-        if (alarmOptional.isEmpty()) {
-            String topic = makeClassTopic(classId);
-            return alarmRepository.save(new Alarm(classId, topic));
-        }
-        return alarmOptional.get();
     }
 
     private List<ClassSubscription> makeClassSubscription(List<Member> members, Alarm alarm) {
