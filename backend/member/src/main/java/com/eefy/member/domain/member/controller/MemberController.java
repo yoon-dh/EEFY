@@ -2,6 +2,7 @@ package com.eefy.member.domain.member.controller;
 
 import com.eefy.member.domain.member.dto.request.JoinRequest;
 import com.eefy.member.domain.member.dto.request.MemberUpdateRequest;
+import com.eefy.member.domain.member.dto.request.PasswordUpdateRequest;
 import com.eefy.member.domain.member.dto.response.MemberResponse;
 import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.service.MemberService;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,5 +61,12 @@ public class MemberController {
     @GetMapping
     public MemberResponse getMember(@RequestParam int memberId) {
         return memberService.getMember(memberId);
+    }
+
+    @Operation(summary = "비밀번호 수정", description = "비밀번호를 수정 하는 API")
+    @PutMapping
+    public ResponseEntity<String> updatePassword(@RequestHeader("Member-Id") int memberId,
+                                                 @Validated @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
+        return ResponseEntity.ok().body(memberService.updatePassword(memberId, passwordUpdateRequest));
     }
 }
