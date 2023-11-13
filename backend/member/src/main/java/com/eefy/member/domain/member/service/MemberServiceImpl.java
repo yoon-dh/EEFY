@@ -78,6 +78,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public String updatePassword(int memberId, PasswordUpdateRequest passwordUpdateRequest) {
         Member member = memberValidator.getValidMember(memberRepository.findById(memberId));
         String password = passwordUpdateRequest.getPassword();
