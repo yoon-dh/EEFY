@@ -72,7 +72,8 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .type(studyClassCreateRequest.getType())
                 .build();
 
-        studyClassRepository.save(studyClass);
+        Integer studyClassId = studyClassRepository.save(studyClass).getId();
+        alarmService.createTopic(studyClassId);
     }
 
     @Override

@@ -14,6 +14,9 @@ public interface AlarmClientApi {
     @PostMapping("/api/alarm/tutor")
     void pushAlarmToStudent(@RequestHeader("Member-Id") Integer teacherId, @RequestBody PushAlarmRequest request);
 
+    @PostMapping("/api/alarm/tutor/{classId}/topic")
+    void createTopic(@PathVariable Integer classId);
+
     @PostMapping("/api/alarm/tutor/{classId}")
     void subscribeStudyClassTopic(@PathVariable Integer classId, @RequestBody StudentIdsRequest request);
 
