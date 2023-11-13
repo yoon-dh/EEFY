@@ -8,13 +8,16 @@ import { RiQuestionnaireFill } from 'react-icons/ri'; // 질문사항
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import { Name } from '@/recoil/Notice';
+
+import * as S from '../../../styles/MainStyle.style';
+
 export default function SideNav() {
   const [name, setName] = useRecoilState<string>(Name);
   return (
     <div className='w-full h-full'>
       <div className='h-full' style={{ display: 'flex', justifyContent: 'center' }}>
         <ul
-          className='menu bg-base-200 rounded-box w-3/6'
+          className='menu rounded-box w-3/6'
           style={{
             boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
             border: '1px solid rgba(131, 129, 129, 0.2)',
