@@ -54,18 +54,22 @@ public class AlarmValidator {
         return alarmMessageOptional.get();
     }
 
+    public static void validateSendingSubscribe(TopicManagementResponse response) {
+        log.info("{}개의 토큰 구독 성공, {}개의 토큰 구독 실패", response.getSuccessCount(), response.getFailureCount());
+        log.info("발생한 에러 수: {}", response.getErrors().size());
+        response.getErrors().forEach(e -> log.error("토픽 구독 에러: {}", e.getReason()));
+        if (response.getErrors().size() >= 1 || response.getFailureCount() >= 1) {
+            throw CustomException.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .code(AlarmErrorEnum.FAILED_SUBSCRIBE_TOPIC.getCode())
+                    .message(AlarmErrorEnum.FAILED_SUBSCRIBE_TOPIC.getMessage())
+                    .build();
+        }
+    }
+
     private static boolean checkValidAlarmMessage(AlarmMessage alarmMessage, String messageId) {
         return alarmMessage.getMessages() != null
                 && !alarmMessage.getMessages().isEmpty()
                 && alarmMessage.getMessages().get(messageId) != null;
-    }
-
-    public static void validateSendingSubscribe(TopicManagementResponse response) {
-        log.info("{}개의 토큰 구독 성공, {}개의 토큰 구독 실패", response.getSuccessCount(), response.getFailureCount());
-        log.info("발생한 에러 수: {}", response.getErrors().size());
-        if (response.getErrors().size() >= 1 || response.getFailureCount() >= 1) {
-            throw CustomException.builder()
-                    .build();
-        }
     }
 }
