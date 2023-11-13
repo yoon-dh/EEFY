@@ -16,7 +16,6 @@ import com.eefy.member.domain.alarm.persistence.entity.redis.SavedMessage;
 import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
-import com.eefy.member.global.exception.CustomException;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -26,7 +25,6 @@ import com.google.firebase.messaging.WebpushFcmOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,8 +65,7 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     public String sendMessageToGroup(int memberId, AlarmSendRequest alarmSendRequest) {
         int classId = alarmSendRequest.getClassId();
-        String topic = alarmRepository.findByClassId(classId)
-                .orElseThrow(() -> new IllegalArgumentException("토픽 없음")).getTopic();
+        String topic = AlarmValidator.getValidAlarm(alarmRepository.findByClassId(classId)).getTopic();
         log.info("클래스 아이디: {}, topic: {}", classId, topic);
 
         Message message = makeGroupMessage(alarmSendRequest, topic);
@@ -84,8 +81,7 @@ public class AlarmServiceImpl implements AlarmService {
     public SubscribeClassTopicResponse subscribeClassTopic(int classId, SubscribeClassTopicRequest request) {
         Optional<Alarm> alarmOptional = alarmRepository.findByClassId(classId);
         List<Member> members = memberRepository.findAllById(request.getStudentIds());
-        if (members.size() != request.getStudentIds().size())
-            throw new IllegalArgumentException("회원 정보가 일치하지 않습니다.");
+        AlarmValidator.checkValidMemberCount(request.getStudentIds().size(), members.size());
 
         Alarm alarm = getAlarm(classId, alarmOptional);
         List<String> tokens = getStudentTokens(request.getStudentIds());
@@ -98,16 +94,8 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     @Transactional
     public String unsubscribeClassTopic(int classId) {
-        Alarm alarm = alarmRepository.findByClassId(classId)
-                .orElseThrow(() -> CustomException.builder()
-                        .status(HttpStatus.BAD_REQUEST)
-                        .code(1800)
-                        .message("클래스에 대한 알림 토픽이 존재하지 않습니다.")
-                        .build());
-        List<String> registrationTokens = subscriptionRepository.findByAlarmWithMember(alarm)
-                .stream()
-                .map(c -> c.getMember().getToken())
-                .collect(Collectors.toList());
+        Alarm alarm = AlarmValidator.getValidAlarm(alarmRepository.findByClassId(classId));
+        List<String> registrationTokens = getRegistrationTokensOfClass(alarm);
         try {
             firebaseMessaging.unsubscribeFromTopic(registrationTokens, alarm.getTopic());
         } catch (FirebaseMessagingException e) {
@@ -116,6 +104,13 @@ public class AlarmServiceImpl implements AlarmService {
         subscriptionRepository.deleteAllByAlarm(alarm);
         alarmRepository.deleteById(alarm.getId());
         return "SUCCESS";
+    }
+
+    private List<String> getRegistrationTokensOfClass(Alarm alarm) {
+        return subscriptionRepository.findByAlarmWithMember(alarm)
+                .stream()
+                .map(c -> c.getMember().getToken())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -132,15 +127,14 @@ public class AlarmServiceImpl implements AlarmService {
     @Transactional
     public List<SavedMessageResponse> readAlarmMessage(int memberId, String messageId) {
         Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
-        AlarmMessage alarmMessage = getValidAlarmMessage(alarmMessageOptional, messageId);
+        AlarmMessage alarmMessage = AlarmValidator.getValidAlarmMessage(alarmMessageOptional, messageId);
         alarmMessage.getMessages().remove(messageId);
         messageRedisRepository.save(alarmMessage);
         return makeSavedMessageListResponse(alarmMessage.getMessages());
     }
 
     private void saveAlarmMessage(SavedMessage savedMessage, int classId, String messageId) {
-        Alarm alarm = alarmRepository.findByClassId(classId)
-                .orElseThrow(() -> new IllegalArgumentException("알림 정보 미존재."));
+        Alarm alarm = AlarmValidator.getValidAlarm(alarmRepository.findByClassId(classId));
         List<Integer> subscriberIds = subscriptionRepository.findByAlarmWithMember(alarm)
                 .stream()
                 .map(c -> c.getMember().getId())
@@ -174,9 +168,7 @@ public class AlarmServiceImpl implements AlarmService {
 
     private List<ClassSubscription> makeClassSubscription(List<Member> members, Alarm alarm) {
         List<ClassSubscription> subscriptions = new ArrayList<>();
-        for (Member member : members) {
-            subscriptions.add(new ClassSubscription(member, alarm));
-        }
+        members.forEach(m -> subscriptions.add(new ClassSubscription(m, alarm)));
         return subscriptions;
     }
 
@@ -198,7 +190,7 @@ public class AlarmServiceImpl implements AlarmService {
         return Message.builder()
                 .setWebpushConfig(WebpushConfig.builder()
                         .setFcmOptions(WebpushFcmOptions.builder()
-                                .setLink("https://k9b306.p.ssafy.io/api/member/swagger-ui/index.html")
+                                .setLink(alarmSendRequest.getLink())
                                 .build())
                         .build())
                 .putData("className", alarmSendRequest.getClassName())
@@ -236,11 +228,9 @@ public class AlarmServiceImpl implements AlarmService {
             log.info("등록할 토큰: {}, 토픽: {}", registrationTokens, topic);
             TopicManagementResponse response = firebaseMessaging.subscribeToTopic(registrationTokens, topic);
             response.getErrors().forEach(e -> log.info(e.getIndex() + " " + e.getReason()));
-            log.info("{}개의 토큰 구독 성공, {}개의 토큰 구독 실패", response.getSuccessCount(), response.getFailureCount());
-            log.info("발생한 에러 수: {}", response.getErrors().size());
+            AlarmValidator.validateSendingSubscribe(response);
         } catch (FirebaseMessagingException e) {
             AlarmValidator.throwFirebaseMessagingError(e);
-            throw new IllegalArgumentException("토큰 구독 실패: " + e);
         }
     }
 
@@ -260,19 +250,5 @@ public class AlarmServiceImpl implements AlarmService {
         }
         log.info("알림 응답 목록 수: {}", response.size());
         return response;
-    }
-
-    private AlarmMessage getValidAlarmMessage(Optional<AlarmMessage> alarmMessageOptional, String messageId) {
-        if (alarmMessageOptional.isEmpty()
-                || alarmMessageOptional.get().getMessages() == null
-                || alarmMessageOptional.get().getMessages().isEmpty()
-                || alarmMessageOptional.get().getMessages().get(messageId) == null) {
-            throw CustomException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .code(1700)
-                    .message("보관된 메세지가 없습니다.")
-                    .build();
-        }
-        return alarmMessageOptional.get();
     }
 }
