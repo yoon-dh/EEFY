@@ -38,8 +38,12 @@ export default function Footer() {
   const RecoilAlarmList = useRecoilValue(AlarmList);
 
   useEffect(() => {
-    if (onMessageTitle) {
+    console.log('딸랑딸랑 진입 직전');
+    console.log(onMessageTitle);
+    if (onMessageTitle !== '') {
+      console.log('딸랑딸랑 진입 ');
       setStartShake(true);
+      console.log('딸랑딸랑!');
 
       const timer = setTimeout(() => {
         setStartShake(false);

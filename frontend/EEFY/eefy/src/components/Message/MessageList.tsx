@@ -63,8 +63,11 @@ function MessageList() {
       // test
       setRecoilAlarmArr(res?.data);
     };
-    alarmListArr();
-  }, []);
+    if (isMessageModalOpen) {
+      console.log('모달 열었음');
+      alarmListArr();
+    }
+  }, [isMessageModalOpen]);
 
   return (
     <Modal style={modalStyle} isOpen={isMessageModalOpen} onRequestClose={() => closeModal()}>
