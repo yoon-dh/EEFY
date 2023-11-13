@@ -15,6 +15,7 @@ import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
+import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkType;
 import com.eefy.homework.domain.homework.service.HomeworkService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,11 +52,11 @@ public class HomeworkController {
     @Operation(summary = "만든 과제 확인하기")
     @GetMapping("/teacher/homework")
     public ResponseEntity<HomeworkListResponse> getHomeworkList(
-        Pageable pageable,
+        Pageable pageable, @RequestParam(required = false) HomeworkType homeworkType,
         @RequestHeader("Member-Id") Integer memberId) {
 
         return new ResponseEntity<>(
-            homeworkService.getHomeworkByTeacherId(memberId, pageable),
+            homeworkService.getHomeworkByTeacherId(memberId, pageable, homeworkType),
             HttpStatus.OK
         );
     }

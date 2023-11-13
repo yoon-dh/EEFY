@@ -14,6 +14,7 @@ import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.ViewHomeworkResponse;
+import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkType;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +42,8 @@ public interface HomeworkService {
 
     SolveHomeworkResponse solveHomework(Integer homeworkStudentId, Integer memberId);
 
-    HomeworkListResponse getHomeworkByTeacherId(Integer memberId, Pageable pageable);
+    HomeworkListResponse getHomeworkByTeacherId(Integer memberId, Pageable pageable,
+        HomeworkType type);
 
     MakeHomeworkResponse finishMakingHomework(Integer memberId, Integer homeworkId);
 }

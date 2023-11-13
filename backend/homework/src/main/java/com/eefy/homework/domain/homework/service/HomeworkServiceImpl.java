@@ -35,6 +35,7 @@ import com.eefy.homework.domain.homework.persistence.entity.Homework;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudent;
 import com.eefy.homework.domain.homework.persistence.entity.HomeworkStudentQuestion;
+import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkType;
 import com.eefy.homework.domain.homework.repository.ChoiceRepository;
 import com.eefy.homework.domain.homework.repository.ClassHomeworkRepository;
 import com.eefy.homework.domain.homework.repository.HomeworkCustomRepository;
@@ -239,8 +240,15 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
-    public HomeworkListResponse getHomeworkByTeacherId(Integer memberId, Pageable pageable) {
-        Page<Homework> byMemberId = homeworkRepository.findByMemberId(memberId, pageable);
+    public HomeworkListResponse getHomeworkByTeacherId(Integer memberId, Pageable pageable,
+        HomeworkType type) {
+        Page<Homework> byMemberId = null;
+        if (type == null) {
+            byMemberId = homeworkRepository.findByMemberId(memberId, pageable);
+        } else {
+            byMemberId = homeworkRepository.findByMemberIdAndType(memberId, pageable, type);
+        }
+
         List<HomeworkDto> homeworkDtos = new ArrayList<>();
 
         for (Homework homework : byMemberId) {
