@@ -3,7 +3,9 @@ package com.eefy.member.domain.alarm.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 @AllArgsConstructor
 @Builder

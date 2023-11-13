@@ -68,8 +68,8 @@ public class AlarmController {
 
     @Operation(summary = "메세지 읽음 처리", description = "알림 메세지를 읽음 처리 하기 위한 API")
     @DeleteMapping("/{messageId}")
-    public ResponseEntity<String> readAlarmMessage(@RequestHeader("Member-Id") int memberId,
+    public List<SavedMessageResponse> readAlarmMessage(@RequestHeader("Member-Id") int memberId,
                                                    @PathVariable String messageId) {
-        return ResponseEntity.ok().body(alarmService.readAlarmMessage(memberId, messageId));
+        return alarmService.readAlarmMessage(memberId, messageId);
     }
 }
