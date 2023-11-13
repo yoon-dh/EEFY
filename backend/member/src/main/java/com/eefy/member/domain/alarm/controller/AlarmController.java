@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -67,9 +68,9 @@ public class AlarmController {
     }
 
     @Operation(summary = "메세지 읽음 처리", description = "알림 메세지를 읽음 처리 하기 위한 API")
-    @DeleteMapping("/{messageId}")
+    @DeleteMapping
     public List<SavedMessageResponse> readAlarmMessage(@RequestHeader("Member-Id") int memberId,
-                                                   @PathVariable String messageId) {
+                                                   @RequestParam String messageId) {
         return alarmService.readAlarmMessage(memberId, messageId);
     }
 }
