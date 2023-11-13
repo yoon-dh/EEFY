@@ -1,12 +1,12 @@
 'use client';
 
-import React, { Children } from 'react';
+import React, { Children, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userData } from '@/recoil/Auth';
 
 export default function NormalTag() {
   const userDataObj = useRecoilValue(userData);
-  const userName = userDataObj?.nickname;
+  const userName = userDataObj?.role === 'TEACHER' ? userDataObj?.nickname : userDataObj?.name;
 
   return (
     <div
