@@ -64,7 +64,7 @@ public class MemberController {
     }
 
     @Operation(summary = "비밀번호 수정", description = "비밀번호를 수정 하는 API")
-    @PutMapping
+    @PutMapping("/password")
     public ResponseEntity<String> updatePassword(@RequestHeader("Member-Id") int memberId,
                                                  @Validated @RequestBody PasswordUpdateRequest passwordUpdateRequest) {
         return ResponseEntity.ok().body(memberService.updatePassword(memberId, passwordUpdateRequest));
