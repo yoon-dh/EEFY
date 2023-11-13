@@ -14,5 +14,5 @@ public interface AlarmService {
     SubscribeClassTopicResponse subscribeClassTopic(int classId, SubscribeClassTopicRequest request);
     String unsubscribeClassTopic(int classId);
     List<SavedMessageResponse> getAlarmMessages(int memberId);
-    String readAlarmMessage(int memberId, String messageId);
+    List<SavedMessageResponse> readAlarmMessage(int memberId, String messageId);
 }

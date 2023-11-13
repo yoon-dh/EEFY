@@ -127,12 +127,12 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     @Transactional
-    public String readAlarmMessage(int memberId, String messageId) {
+    public List<SavedMessageResponse> readAlarmMessage(int memberId, String messageId) {
         Optional<AlarmMessage> alarmMessageOptional = messageRedisRepository.findById(memberId);
         AlarmMessage alarmMessage = getValidAlarmMessage(alarmMessageOptional, messageId);
         alarmMessage.getMessages().remove(messageId);
         messageRedisRepository.save(alarmMessage);
-        return "SUCCESS";
+        return makeSavedMessageListResponse(alarmMessage.getMessages());
     }
 
     private void saveAlarmMessage(int memberId, SavedMessage savedMessage, String messageId) {
