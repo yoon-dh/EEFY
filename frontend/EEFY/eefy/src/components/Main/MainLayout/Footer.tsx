@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Thema } from '@/recoil/Thema';
+import { Theme } from '@/recoil/Theme';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { TbArrowBackUp } from 'react-icons/tb';
@@ -18,14 +18,14 @@ import { alarmList } from '@/api/Push/test';
 export default function Footer() {
   const router = useRouter();
   const [darkModeIsAcitive, setdarkModeIsAcitive] = useState(false);
-  const [thema, setThema] = useRecoilState(Thema);
+  const [theme, setTheme] = useRecoilState(Theme);
   const checkHandler = () => {
     const isActiv = !darkModeIsAcitive;
     setdarkModeIsAcitive(isActiv);
     if (!isActiv) {
-      setThema('winter');
+      setTheme('winter');
     } else {
-      setThema('dark');
+      setTheme('dark');
     }
   };
 
@@ -94,6 +94,8 @@ export default function Footer() {
       console.log('Message received. ', payload);
       console.log(payload.data?.title);
       setOnMessageTitle(payload.data?.title);
+      // console.log(payload.notification?.title);
+      // setOnMessageTitle(payload.notification?.title);
     });
   };
 
@@ -149,6 +151,7 @@ export default function Footer() {
 
           <div className={`indicator  ${startShake ? 'shake' : ''}`} onClick={() => setIsMessageModalOpen(true)}>
             {isNewMessage || RecoilAlarmList.length ? (
+              // {isNewMessage ? (
               <span
                 className='indicator-item badge badge-secondary w-1'
                 style={{ paddingLeft: '5px', paddingRight: '5px', left: '18px', height: '11.6px', bottom: '1px' }}
