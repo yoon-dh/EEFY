@@ -124,7 +124,7 @@ public class AlarmServiceImpl implements AlarmService {
         if (alarmMessageOptional.isEmpty()
                 || alarmMessageOptional.get().getMessages() == null) return new ArrayList<>();
         Map<String, SavedMessage> messages = alarmMessageOptional.get().getMessages();
-        log.info("요청받은 알림 메세지 목록: " + messages);
+        log.info("요청받은 알림 메세지 목록 수: " + messages.size());
         return makeSavedMessageListResponse(messages);
     }
 
@@ -258,7 +258,7 @@ public class AlarmServiceImpl implements AlarmService {
                     .createdAt(savedMessage.getCreatedAt())
                     .build());
         }
-        log.info("알림 응답 목록: {}", response);
+        log.info("알림 응답 목록 수: {}", response.size());
         return response;
     }
 
