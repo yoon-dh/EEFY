@@ -16,9 +16,11 @@ import com.eefy.homework.domain.homework.dto.request.SolveProblemRequest;
 import com.eefy.homework.domain.homework.dto.request.ViewHomeworkRequest;
 import com.eefy.homework.domain.homework.dto.response.AssignHomeworkToClassResponse;
 import com.eefy.homework.domain.homework.dto.response.GetProblemResponse;
+import com.eefy.homework.domain.homework.dto.response.HomeworkListResponse;
 import com.eefy.homework.domain.homework.dto.response.HomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkQuestionResponse;
 import com.eefy.homework.domain.homework.dto.response.MakeHomeworkResponse;
+import com.eefy.homework.domain.homework.dto.response.PageInfo;
 import com.eefy.homework.domain.homework.dto.response.SolveHomeworkResponse;
 import com.eefy.homework.domain.homework.dto.response.SolveProblemResponse;
 import com.eefy.homework.domain.homework.dto.response.StudyClassResponse;
@@ -50,6 +52,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -235,15 +239,17 @@ public class HomeworkServiceImpl implements HomeworkService {
     }
 
     @Override
-    public List<HomeworkDto> getHomeworkByTeacherId(Integer memberId) {
-        List<Homework> byMemberId = homeworkRepository.findByMemberId(memberId);
+    public HomeworkListResponse getHomeworkByTeacherId(Integer memberId, Pageable pageable) {
+        Page<Homework> byMemberId = homeworkRepository.findByMemberId(memberId, pageable);
         List<HomeworkDto> homeworkDtos = new ArrayList<>();
 
         for (Homework homework : byMemberId) {
             homeworkDtos.add(modelMapper.map(homework, HomeworkDto.class));
         }
 
-        return homeworkDtos;
+        return HomeworkListResponse.of(homeworkDtos,
+            PageInfo.of(byMemberId.getNumber(), byMemberId.getTotalPages(),
+                byMemberId.getTotalElements()));
     }
 
     @Override
