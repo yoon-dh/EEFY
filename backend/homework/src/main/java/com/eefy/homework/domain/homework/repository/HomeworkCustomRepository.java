@@ -10,7 +10,6 @@ import static com.eefy.homework.domain.homework.persistence.entity.QHomeworkStud
 import com.eefy.homework.domain.homework.dto.HomeworkDto;
 import com.eefy.homework.domain.homework.dto.HomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.QHomeworkDto;
-import com.eefy.homework.domain.homework.dto.QHomeworkQuestionDto;
 import com.eefy.homework.domain.homework.dto.QHomeworkStudentDto;
 import com.eefy.homework.domain.homework.dto.QQuestionCountDto;
 import com.eefy.homework.domain.homework.dto.QuestionCountDto;
@@ -18,6 +17,7 @@ import com.eefy.homework.domain.homework.persistence.entity.HomeworkQuestion;
 import com.eefy.homework.domain.homework.persistence.entity.enums.HomeworkType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -58,7 +58,7 @@ public class HomeworkCustomRepository {
             .orderBy(homework.modifiedAt.desc())
             .fetch();
 
-        long total = jpaQueryFactory
+        Long total = jpaQueryFactory
             .select(homework.count())
             .from(homework)
             .where(
@@ -83,59 +83,81 @@ public class HomeworkCustomRepository {
                 .fetch();
     }
 
-    public List<QuestionCountDto> getHomeworkProblemCount(Integer classId, Integer memberId) {
-        return
-            jpaQueryFactory.select(
-                    new QQuestionCountDto(
-                        homeworkStudent.id,
-                        homeworkQuestion.count()
-                    ))
-                .from(homework)
-                .join(classHomework)
-                .on(classHomework.homework.eq(homework))
-                .join(homeworkStudent)
-                .on(homeworkStudent.classHomework.eq(classHomework))
-                .join(homeworkQuestion)
-                .on(homeworkQuestion.homework.eq(homework))
-                .where(classIdEq(classId), homeworkStudent.memberId.eq(memberId))
-                .groupBy(homeworkStudent)
-                .fetch();
+    public List<QuestionCountDto> getSolvedHomeworkProblemCount(Integer[] homeworkStudentIds) {
+        if (homeworkStudentIds.length == 0){
+            return new ArrayList<>();
+        }
+
+        return jpaQueryFactory
+            .select(
+                new QQuestionCountDto(
+                    homeworkStudent.id,
+                    homeworkStudentQuestion.count()
+                )
+            )
+            .from(homeworkStudent)
+            .join(homeworkStudent.homeworkStudentQuestions, homeworkStudentQuestion)
+            .where(homeworkStudent.id.in(homeworkStudentIds))
+            .groupBy(homeworkStudent)
+            .fetch();
+
     }
 
-    public List<QuestionCountDto> getSolvedHomeworkProblemCount(Integer classId, Integer memberId) {
-        return
-            jpaQueryFactory.select(
-                    new QQuestionCountDto(
-                        homeworkStudent.id,
-                        homeworkStudentQuestion.count()
-                    ))
-                .from(classHomework)
-                .join(homeworkStudent)
-                .on(homeworkStudent.classHomework.eq(classHomework))
-                .join(homeworkStudentQuestion)
-                .on(homeworkStudentQuestion.homeworkStudent.eq(homeworkStudent))
-                .where(
-                    classIdEq(classId),
-                    homeworkStudent.memberId.eq(memberId))
-                .groupBy(homeworkStudent)
-                .fetch();
+    public List<QuestionCountDto> getHomeworkProblemCount(Integer[] homeworkStudentIds) {
+        if (homeworkStudentIds.length == 0){
+            return new ArrayList<>();
+        }
+
+        return jpaQueryFactory
+            .select(
+                new QQuestionCountDto(
+                    homeworkStudent.id,
+                    homeworkQuestion.count()
+                )
+            )
+            .from(homeworkStudent)
+            .join(homeworkStudent.classHomework, classHomework)
+            .join(classHomework.homework, homework)
+            .join(homeworkQuestion).on(homeworkQuestion.homework.id.eq(homework.id))
+            .where(homeworkStudent.id.in(homeworkStudentIds))
+            .groupBy(homeworkStudent.id)
+            .fetch();
     }
 
-    public List<HomeworkStudentDto> viewHomeworkByStudentId(Integer classId, Integer memberId) {
+    public Page<HomeworkStudentDto> viewHomeworkByStudentId(Integer classId, Integer memberId,
+        Pageable pageable, HomeworkType type, String searchWord) {
 
-        return jpaQueryFactory.select(new QHomeworkStudentDto(
-                homeworkStudent.id,
-                homeworkStudent.memberId,
-                homeworkStudent.classHomework.id,
-                homeworkStudent.doneDate,
-                homework.title
-            ))
+        List<HomeworkStudentDto> content = jpaQueryFactory.select(
+                new QHomeworkStudentDto(
+                    homeworkStudent.id,
+                    homeworkStudent.memberId,
+                    homeworkStudent.classHomework.id,
+                    homeworkStudent.doneDate,
+                    homework.title
+                ))
             .from(homeworkStudent)
             .join(homeworkStudent.classHomework, classHomework)
             .join(classHomework.homework, homework)
             .where(classIdEq(classId),
-                memberIdEq(memberId))
+                memberIdEq(memberId),
+                homeworkTitleContain(searchWord),
+                homeworkTypeEq(type))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .orderBy(homeworkStudent.doneDate.asc())
             .fetch();
+
+        Long total = jpaQueryFactory.select(homeworkStudent.count())
+            .from(homeworkStudent)
+            .join(homeworkStudent.classHomework, classHomework)
+            .join(classHomework.homework, homework)
+            .where(classIdEq(classId),
+                memberIdEq(memberId),
+                homeworkTitleContain(searchWord),
+                homeworkTypeEq(type))
+            .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
     }
 
     private static BooleanExpression memberIdEq(Integer memberId) {

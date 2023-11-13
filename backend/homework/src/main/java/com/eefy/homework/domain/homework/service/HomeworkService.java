@@ -33,7 +33,7 @@ public interface HomeworkService {
         AssignHomeworkToClassRequest assignHomeworkToClassRequest, Integer memberId);
 
     ViewHomeworkResponse viewHomeworkByStudentId(ViewHomeworkRequest viewHomeworkRequest,
-        Integer memberId);
+        Integer memberId, Pageable pageable, HomeworkType type, String searchWord);
 
     GetProblemResponse getProblem(Integer classHomeworkId, Integer memberId);
 

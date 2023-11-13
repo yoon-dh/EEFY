@@ -9,5 +9,10 @@ import lombok.Data;
 @AllArgsConstructor
 public class ViewHomeworkResponse {
 
+    private PageInfo pageInfo;
     private List<HomeworkStudentDto> homeworks;
+
+    public static ViewHomeworkResponse of(PageInfo pageInfo, List<HomeworkStudentDto> homeworks){
+        return new ViewHomeworkResponse(pageInfo, homeworks);
+    }
 }

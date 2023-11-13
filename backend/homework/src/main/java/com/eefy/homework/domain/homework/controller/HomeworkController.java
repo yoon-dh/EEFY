@@ -112,10 +112,14 @@ public class HomeworkController {
     @GetMapping("/view")
     public ResponseEntity<ViewHomeworkResponse> viewHomework(
         ViewHomeworkRequest viewHomeworkRequest,
+        Pageable pageable,
+        @RequestParam(required = false) HomeworkType homeworkType,
+        @RequestParam(required = false) String searchWord,
         @RequestHeader("Member-Id") Integer memberId) {
 
         return new ResponseEntity<>(
-            homeworkService.viewHomeworkByStudentId(viewHomeworkRequest, memberId),
+            homeworkService.viewHomeworkByStudentId(viewHomeworkRequest, memberId, pageable,
+                homeworkType, searchWord),
             HttpStatus.OK);
     }
 

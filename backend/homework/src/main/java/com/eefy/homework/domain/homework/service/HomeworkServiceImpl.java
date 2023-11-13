@@ -165,17 +165,31 @@ public class HomeworkServiceImpl implements HomeworkService {
 
     @Override
     public ViewHomeworkResponse viewHomeworkByStudentId(ViewHomeworkRequest viewHomeworkRequest,
-        Integer memberId) {
-        List<HomeworkStudentDto> homeworkStudentDtos = homeworkCustomRepository.viewHomeworkByStudentId(
-            viewHomeworkRequest.getClassId(), memberId);
-        List<QuestionCountDto> solvedHomeworkProblemCount = homeworkCustomRepository.getSolvedHomeworkProblemCount(
-            viewHomeworkRequest.getClassId(), memberId);
-        List<QuestionCountDto> homeworkProblemCount = homeworkCustomRepository.getHomeworkProblemCount(
-            viewHomeworkRequest.getClassId(), memberId);
+        Integer memberId, Pageable pageable, HomeworkType type, String searchWord) {
+        Page<HomeworkStudentDto> homeworkStudentDtos = homeworkCustomRepository.viewHomeworkByStudentId(
+            viewHomeworkRequest.getClassId(), memberId, pageable, type, searchWord);
 
-        insertTotalCount(homeworkStudentDtos, homeworkProblemCount);
-        insertSolvedCount(homeworkStudentDtos, solvedHomeworkProblemCount);
-        return new ViewHomeworkResponse(homeworkStudentDtos);
+        List<HomeworkStudentDto> content = homeworkStudentDtos.getContent();
+
+        Integer[] homeworkStudentIds = new Integer[content.size()];
+        int index = 0;
+        for (HomeworkStudentDto homeworkStudentDto : content) {
+            homeworkStudentIds[index++] = homeworkStudentDto.getHomeworkStudentId();
+        }
+
+        List<QuestionCountDto> solvedHomeworkProblemCount =
+            homeworkCustomRepository.getSolvedHomeworkProblemCount(homeworkStudentIds);
+        List<QuestionCountDto> homeworkProblemCount =
+            homeworkCustomRepository.getHomeworkProblemCount(homeworkStudentIds);
+
+        homeworkCustomRepository.getHomeworkProblemCount(homeworkStudentIds);
+
+        insertTotalCount(content, homeworkProblemCount);
+        insertSolvedCount(content, solvedHomeworkProblemCount);
+
+        return ViewHomeworkResponse.of(
+            PageInfo.of(homeworkStudentDtos.getNumber(), homeworkStudentDtos.getTotalPages(),
+                homeworkStudentDtos.getTotalElements()), content);
     }
 
     @Override

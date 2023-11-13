@@ -1,5 +1,6 @@
 package com.eefy.homework.domain.homework.persistence.entity;
 
+import com.eefy.homework.global.entity.BaseEntity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class HomeworkStudent {
+public class HomeworkStudent extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
