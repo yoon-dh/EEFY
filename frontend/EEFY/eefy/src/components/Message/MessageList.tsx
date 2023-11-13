@@ -1,13 +1,27 @@
+'use client';
+
 import Modal from 'react-modal';
 import { MessageModalOpen } from '@/recoil/PushNotification';
 import { useRecoilState } from 'recoil';
 import MessageItem from './MessageItem';
+import { useEffect, useState } from 'react';
+import { alarmList } from '@/api/Push/test';
+
+import { AlarmList } from '@/recoil/PushNotification';
+
+interface alarmArrData {
+  messageId: string;
+  classId: number;
+  link: string;
+  className: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+}
 
 function MessageList() {
-  const dummy = [
-    { notificationTitle: '공지사항이 등록되었습니다.', classTitle: '토익 900완성반', createDate: '16분 전' },
-    { notificationTitle: '질문에 답변이 등록되었습니다.', classTitle: '토익 900완성반', createDate: '30분 전' },
-  ];
+  const [alarmArr, setAlarmArr] = useState<Array<alarmArrData>>([]);
+  const [RecoilAlarmArr, setRecoilAlarmArr] = useRecoilState(AlarmList);
 
   const modalStyle = {
     overlay: {
@@ -42,21 +56,45 @@ function MessageList() {
     setIsMessageModalOpen(false);
   }
 
+  useEffect(() => {
+    const alarmListArr = async () => {
+      const res = await alarmList();
+      setAlarmArr(res?.data);
+      // test
+      setRecoilAlarmArr(res?.data);
+    };
+    alarmListArr();
+  }, []);
+
   return (
     <Modal style={modalStyle} isOpen={isMessageModalOpen} onRequestClose={() => closeModal()}>
       <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
-        <div style={{ flex: '1.5' }}>
-          <b>Notice ({dummy.length})</b>
+        <div style={{ flex: '1' }}>
+          <b>Notice ({alarmArr.length})</b>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flex: '8.5', flexDirection: 'column' }}>
-          {dummy ? (
-            dummy.map((item, idx) => {
-              return <MessageItem key={idx} notificationTitle={item.notificationTitle} classTitle={item.classTitle} createDate={item.createDate} />;
-            })
-          ) : (
+
+        {alarmArr.length ? (
+          <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flex: '9', flexDirection: 'column' }}>
+            {alarmArr.map(item => {
+              return (
+                <MessageItem
+                  key={item.messageId}
+                  messageId={item.messageId}
+                  notificationTitle={item.title}
+                  classTitle={item.className}
+                  createDate={item.createdAt}
+                  content={item.content}
+                  setAlarmArr={setAlarmArr}
+                  setRecoilAlarmArr={setRecoilAlarmArr}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: '8.5', flexDirection: 'column' }}>
             <div>알림이 없습니다.</div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </Modal>
   );
