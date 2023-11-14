@@ -9,8 +9,4 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
     Optional<Member> findMemberByEmail(String email);
-    List<Member> findByEmailContainingAndRoleOrderByEmail(String email, MemberRole role);
-    List<Member> findByNameContainingAndRoleOrderByName(String name, MemberRole role);
-    List<Member> findByEmailContainingAndRoleAndIdNotInOrderByEmail(String email, MemberRole role, List<Integer> ids);
-    List<Member> findByNameContainingAndRoleAndIdNotInOrderByName(String name, MemberRole role, List<Integer> ids);
 }
