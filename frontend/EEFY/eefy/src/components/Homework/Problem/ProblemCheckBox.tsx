@@ -25,7 +25,7 @@ function ProblemCheckBox() {
         {Object.values(problem).map((item:any, index:number) => (
           <S.Checkbox key={index} onClick={()=>handleNextClick(index+1)}
           style={{
-            backgroundColor: solved[index] != problem[index].homeworkQuestion.answer ? 'red' : (solved[index] ? 'gray' : '')
+            backgroundColor: solved[index].answer != problem[index].homeworkQuestion.answer ? 'red' : (solved[index] ? 'gray' : '')
           }}
           >
             {index+1}

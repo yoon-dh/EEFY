@@ -12,7 +12,7 @@ const { persistAtom } = recoilPersist(
 
 export const CanvasData = atom({
   key: 'CanvasData',
-  default: {},
+  default: [],
   effects_UNSTABLE: [persistAtom],
 });
 export const CanvasVarData = atom({

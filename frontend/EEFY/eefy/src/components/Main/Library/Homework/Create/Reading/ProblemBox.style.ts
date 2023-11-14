@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-width: 95%;
+width: 100%;
 height: 100%;
 font-size: 18px;
 border-radius: 20px;
@@ -9,7 +9,7 @@ border-radius: 20px;
 export const Wrappe = styled.div`
 `
 export const Title = styled.div`
-width: 70%;
+width: 50%;
 position: relative;
 margin: 0px auto 0px auto;
 display: flex;
@@ -30,7 +30,7 @@ font-size: 14px;
 min-height: 10px;
 `
 export const ContentBox = styled.div`
-width: 70%;
+width: 50%;
 height: 100%;
 margin: 20px auto 20px auto;
 `
@@ -49,7 +49,7 @@ font-size: 14px;
   }
 `
 export const NumberBox = styled.div`
-width: 70%;
+width: 50%;
 height: 80%;
 margin: 10px auto 0px auto;
 `

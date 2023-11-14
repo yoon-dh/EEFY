@@ -88,7 +88,7 @@ function CanvasModal() {
   },[varData.redo])
 
   useEffect(()=>{
-    getPdfUrl()
+    // getPdfUrl()
     if(page.btnType === 'before'){
       handleSketchData(page.pageNumber+1)
       const clearCanvas = canvasRef.current?.clearCanvas;
@@ -102,6 +102,7 @@ function CanvasModal() {
             const jsonData = JSON.parse(data[page.pageNumber]);
             console.log(jsonData)
             canvasRef.current?.loadPaths(jsonData);
+            // getPdfUrl()
           // },500)
         }
       }
@@ -119,6 +120,7 @@ function CanvasModal() {
             const jsonData = JSON.parse(data[page.pageNumber]);
             console.log(jsonData)
             canvasRef.current?.loadPaths(jsonData);
+            getPdfUrl()
           // },500)
         }
       }
@@ -133,14 +135,20 @@ function CanvasModal() {
       if(sketchData.length > 0){
         const sketchDataJSON = JSON.stringify(sketchData);
           const newdata = {
-            ...data, [pageNumber]:sketchDataJSON
-          }
-          setData(newdata);
+              'pageNum':pageNumber,
+              'drawInfo':sketchDataJSON
+            }
+          
+          console.log(newdata,'newdata')
+          setData([...data,{
+            'pageNum':pageNumber,
+            'drawInfo':sketchDataJSON
+          }]);
       } else if(sketchData.length === 0){
-        const newdata = {
-          ...data, [pageNumber]:''
-        }
-        setData(newdata);
+        // const newdata = {
+        //   ...data, [pageNumber]:''
+        // }
+        // setData(newdata);
       }
       // const newdata = {
       //   ...data,
@@ -223,7 +231,7 @@ function CanvasModal() {
                     onStroke={handleStroke}
                     allowOnlyPointerType='all'
                     id='reactSketchCanvas'
-                    withTimestamp={true}
+                    withTimestamp={false}
                   />
                 </>
               ) : (
@@ -247,7 +255,7 @@ function CanvasModal() {
                       onStroke={handleStroke}
                       allowOnlyPointerType='all'
                       id='reactSketchCanvas'
-                      withTimestamp={true}
+                      withTimestamp={false}
                     />
                   </>
                 )}

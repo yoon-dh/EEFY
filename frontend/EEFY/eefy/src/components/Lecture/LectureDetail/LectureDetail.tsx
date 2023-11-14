@@ -92,9 +92,9 @@ function LectureDetail() {
           flex: 8,
         }}
       >
-        {notice?.title && (
+        {!notice?.title && (
           <>
-            <Wrappe style={{ boxShadow: 'none', padding: '2% 5%' }} className='flex flex-col'>
+            {/* <Wrappe style={{ boxShadow: 'none', padding: '2% 5%' }} className='flex flex-col'>
               <div style={{ flex: 9 }}>
                 <Header>
                   <div className='flex'>
@@ -129,7 +129,7 @@ function LectureDetail() {
                 </ContentBox>
               </div>
 
-            </Wrappe>
+            </Wrappe> */}
               <BtnBox>
                 <ViewerBtn 
                 id="imgInput" 

@@ -84,7 +84,51 @@ function NoteRigth() {
                     // boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                   }}
                 >
-                  <NoticeCreate />
+
+                  {NoticePageUrl === 'detail' && (
+                    <>
+                      {!data ? (
+                      <>
+                        <LectureDetail/>
+                      </>
+                      ) : (
+                      <>
+                      <NoticeDetail />  
+                      </>
+                      )}
+                    </>
+                  )}
+                  {NoticePageUrl === 'create' && (
+                    <>
+                      <div style={{
+                            flex:8,
+                            display:'flex',
+                            height: '100%',  
+                            width: '97%', 
+                            backgroundColor:'white',
+                            borderRadius:'20px',
+                            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                          }}>
+                        <NoticeCreate/>
+                      </div>
+                    </>
+                  )}
+
+                  {NoticePageUrl === 'updata' && (
+                    <>
+                      <div style={{
+                        flex:8,
+                        display:'flex',
+                        height: '100%',  
+                        width: '97%', 
+                        backgroundColor:'white',
+                        borderRadius:'20px',
+                        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                      }}>
+                      <NoticeUpdata/>
+                    </div>
+                    </>
+                  )}
                 </div>
               </>
             )}
