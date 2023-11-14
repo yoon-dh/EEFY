@@ -1,46 +1,32 @@
 import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
-interface paginationType {
-  totalPage: number;
-  requestPage: number;
-}
+const { persistAtom } = recoilPersist();
 
-export const PaginationAtom = atom<paginationType>({
-  key: 'PaginationAtom',
-  default: {
-    totalPage: 0,
-    requestPage: 1,
-  },
+export const CurrentPage = atom<number>({
+  key: 'CurrentPage',
+  default: 1,
+  effects_UNSTABLE: [persistAtom],
 });
 
-export const AllListPaginationAtom = atom<paginationType>({
-  key: 'AllListPaginationAtom',
-  default: {
-    totalPage: 0,
-    requestPage: 1,
-  },
+export const AllListSavePage = atom<number>({
+  key: 'AllListSavePage',
+  default: 1,
+  effects_UNSTABLE: [persistAtom],
+});
+export const SpeakingListSavePage = atom<number>({
+  key: 'SpeakingListSavePage',
+  default: 1,
+  effects_UNSTABLE: [persistAtom],
+});
+export const ReadingListSavePage = atom<number>({
+  key: 'ReadingListSavePage',
+  default: 1,
+  effects_UNSTABLE: [persistAtom],
 });
 
-export const SpeakingListPaginationAtom = atom<paginationType>({
-  key: 'SpeakingListPaginationAtom',
-  default: {
-    totalPage: 0,
-    requestPage: 1,
-  },
-});
-
-export const ReadingListPaginationAtom = atom<paginationType>({
-  key: 'ReadingListPaginationAtom',
-  default: {
-    totalPage: 0,
-    requestPage: 1,
-  },
-});
-
-export const ListeningListPaginationAtom = atom<paginationType>({
-  key: 'ListeningListPaginationAtom',
-  default: {
-    totalPage: 0,
-    requestPage: 1,
-  },
+export const ListeningListSavePage = atom<number>({
+  key: 'ListeningListSavePage',
+  default: 1,
+  effects_UNSTABLE: [persistAtom],
 });

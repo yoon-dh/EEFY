@@ -1,46 +1,82 @@
 'use client';
 import { useEffect, useState } from 'react';
+
+import Pagination from '@mui/material/Pagination';
+import { ChangeEvent } from 'react';
+
 import { useRecoilState } from 'recoil';
-import { AllListPaginationAtom } from '@/recoil/Library/LibraryAtom';
+import { CurrentPage, ListeningListSavePage } from '@/recoil/Library/LibraryAtom';
 
 import ContainerBtn from '@/components/Main/Library/LibraryList/ContainerBtn';
-import PaginationComponent from '@/components/Main/Library/LibraryList/PaginationComponent';
 import LibraryListComponent from '@/components/Main/Library/LibraryList/LibraryListComponent';
+
+import { getHomeworkList } from '@/api/Library/LibraryListApi';
 
 import * as S from '@/styles/MainStyle.style';
 
 interface dataType {
-  homeworkId: number;
-  type: string;
+  content: string;
+  createdAt: Date;
+  id: number;
+  isFinish: boolean;
+  memberId: number;
+  modifiedAt: Date;
   title: string;
-  count: number;
+  type: string;
 }
 
 function LibraryListeningList() {
-  const [paginationAtom, setPaginationAtom] = useRecoilState(AllListPaginationAtom);
   const [libraryDatas, setLibraryDatas] = useState<dataType[] | null>(null);
+  const [totalPage, setTotalPage] = useState(1);
+
+  const [savePage, setSavePage] = useRecoilState(ListeningListSavePage);
+  const [currentPage, setCurrentPage] = useRecoilState(CurrentPage);
+
+  const handlePageChange = (event: ChangeEvent<unknown>, newPage: number) => {
+    setCurrentPage(newPage);
+    setSavePage(newPage);
+  };
+
+  const paginationStyle = {
+    '& .MuiPagination-ul .MuiPaginationItem-root.Mui-selected': {
+      backgroundColor: '#F4F5FA', // 선택된 페이지 배경색을 연보라색으로 변경
+    },
+    '& .MuiPagination-ul .MuiPaginationItem-root.Mui-selected:hover': {
+      backgroundColor: '#F4F5FA', // 선택된 페이지 호버 시 배경색도 연보라색으로 변경
+    },
+    '& .MuiPagination-ul .MuiPaginationItem-root.MuiPaginationItem-page:hover': {
+      backgroundColor: '#F4F5FA', // 페이지 호버 시 배경색도 연보라색으로 변경
+    },
+  };
+
+  const combinedStyles = {
+    ...paginationStyle, // paginationStyle 객체
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData(page: number) {
       const size = 7;
-      // 서버 요청 -> 현재 페이지, 타입 (없으면 전체), size (학생은 8, 선생은 7)
-      const responseData = {
-        data: [
-          {
-            homeworkId: 7,
-            type: 'LISTENING',
-            title: 'TOEIC 필수 Listening-part1',
-            count: 20,
-          },
-        ],
-        totalCount: 10,
+
+      const data = {
+        page: page - 1,
+        size: size,
+        homeworkType: 'LISTENING',
       };
-      const newTotalPage = responseData.totalCount % size === 0 ? Math.floor(responseData.totalCount / size) : Math.floor(responseData.totalCount / size) + 1;
-      setLibraryDatas(responseData.data);
-      setPaginationAtom(prev => ({ ...prev, totalPage: newTotalPage }));
+      const responseData = await getHomeworkList(data);
+      const newTotalPage = responseData.pageInfo.totalPageSize;
+      setLibraryDatas(responseData.homeworkDtos);
+      setTotalPage(newTotalPage);
     }
-    fetchData();
-  }, [paginationAtom.requestPage]);
+
+    if (currentPage !== savePage) {
+      setCurrentPage(savePage);
+    } else {
+      fetchData(currentPage);
+    }
+  }, [currentPage]);
 
   return (
     <div className='w-full h-full flex flex-col'>
@@ -52,7 +88,7 @@ function LibraryListeningList() {
           <LibraryListComponent role={'teacher'} libraryDatas={libraryDatas} />
         </div>
         <div className='flex justify-center items-center' style={{ flex: 1 }}>
-          <PaginationComponent totalPage={paginationAtom.totalPage} />
+          <Pagination count={totalPage} showFirstButton showLastButton page={currentPage} onChange={handlePageChange} sx={combinedStyles} />
         </div>
       </S.MainContainer>
     </div>

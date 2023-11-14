@@ -9,14 +9,20 @@ function RadioBtn() {
     <div className='h-full flex items-center gap-10'>
       <div>
         <label className='label cursor-pointer flex gap-4'>
-          <input type='radio' name='radio-work-info' className='radio ' checked={selectedOption === 'speak'} onChange={() => setSelectedOption('speak')} />
-          <span className='label-text'>Speak</span>
+          <input
+            type='radio'
+            name='radio-work-info'
+            className='radio '
+            checked={selectedOption === 'SPEAKING'}
+            onChange={() => setSelectedOption('SPEAKING')}
+          />
+          <span className='label-text'>Speaking</span>
         </label>
       </div>
       <div>
         <label className='label cursor-pointer flex gap-4'>
-          <input type='radio' name='radio-work-info' className='radio ' checked={selectedOption === 'read'} onChange={() => setSelectedOption('read')} />
-          <span className='label-text'>Read</span>
+          <input type='radio' name='radio-work-info' className='radio ' checked={selectedOption === 'READING'} onChange={() => setSelectedOption('READING')} />
+          <span className='label-text'>Reading</span>
         </label>
       </div>
       <div>
@@ -25,8 +31,8 @@ function RadioBtn() {
             type='radio'
             name='radio-work-info'
             className='radio '
-            checked={selectedOption === 'listening'}
-            onChange={() => setSelectedOption('listening')}
+            checked={selectedOption === 'LISTENING'}
+            onChange={() => setSelectedOption('LISTENING')}
           />
           <span className='label-text'>Listening</span>
         </label>
