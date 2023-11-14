@@ -59,6 +59,7 @@ function MessageList() {
   useEffect(() => {
     const alarmListArr = async () => {
       const res = await alarmList();
+      console.log(res?.data);
       setAlarmArr(res?.data);
       // test
       setRecoilAlarmArr(res?.data);
