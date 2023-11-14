@@ -197,7 +197,7 @@ function CanvasVar() {
         </PdfPageItemBox>
 
       <BackBtn onClick={() => {
-        setData({})
+        setData([])
         setOcr({ ...ocr, isSuccess: false, imgUrl:'',pdfFile:'' })
         setPage({...page,pageNumber:1,numPages:0})
       }}>

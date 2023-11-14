@@ -45,7 +45,7 @@ function NoteRigth() {
                     <>
                       {!data ? (
                       <>
-                        <NoneBox/>
+                        <LectureDetail/>
                       </>
                       ) : (
                       <>
