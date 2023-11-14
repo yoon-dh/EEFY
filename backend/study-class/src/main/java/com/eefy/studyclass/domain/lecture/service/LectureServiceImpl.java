@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,6 +53,7 @@ public class LectureServiceImpl implements LectureService {
     private final StudyClassValidator studyClassValidator;
     private final MemberServiceImpl memberService;
     private final MongoTemplate mongoTemplate;
+    private final AlarmService alarmService;
 
     @Override
     public void makeLectureNote(Integer teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException {
@@ -83,7 +82,6 @@ public class LectureServiceImpl implements LectureService {
                 .build();
 
         alarmService.pushAlarmToStudent(teacherId, pushAlarmRequest);
-
     }
 
     @Override
@@ -142,7 +140,6 @@ public class LectureServiceImpl implements LectureService {
 
             drawInfoList.addAll(collect);
         }
-
         return new NoteInfoResponse(lecture, drawInfoList);
     }
 }
