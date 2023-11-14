@@ -1,6 +1,11 @@
 import styled from "styled-components"
 
 export const Container = styled.div`
+height: 550px;
+overflow: auto;
+@media(max-width:1334px){
+  height: 430px;
+}
 `
 
 export const TitleBox = styled.div`

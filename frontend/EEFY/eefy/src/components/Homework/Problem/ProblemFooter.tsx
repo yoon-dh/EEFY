@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/navigation';
-import { useRecoilState } from 'recoil'
-import {problemData, homeworkPage} from '@/recoil/Problem'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { homeworkPage} from '@/recoil/Problem'
+import { MySolved } from '@/recoil/Homework';
 import { useParams } from 'next/navigation';
+import {postSolveProblem} from '@/api/Homework/Problem'
+import {HomeworkIds, Problems} from '@/recoil/Homework'
 
 const Box = styled.div`
   width: 50px;
@@ -20,19 +23,22 @@ const Box = styled.div`
 function ProblemFooter() {
   const router = useRouter();
   const [count, setCount] = useState(1);
-  const [problem, setProblem] = useRecoilState(problemData)
+  const [problem, setProblem] = useRecoilState(Problems)
   const [page, setPage] = useRecoilState(homeworkPage)
-
+  const mySolved = useRecoilValue(MySolved)
+  const ids = useRecoilValue(HomeworkIds)
   const pageInfo = useParams();
   const pageNum = pageInfo.problemid;
   
   useEffect(() => {
     console.log(count);
     console.log(pageNum);
-    setCount(1)
-  }, [page]);
+    console.log(page);
+    setCount(Number(pageNum))
+  }, [pageNum]);
 
   const handlePrevClick = () => {
+    console.log('이전',count, page)
     if(count > 1){
       const newCount = count - 1;
       setCount(newCount);
@@ -45,10 +51,12 @@ function ProblemFooter() {
   };
 
   const handleNextClick = () => {
+    console.log('다음',count, page)
     if(problem.length > count){
       const newCount = count + 1;
       setCount(newCount);
       if(page==='problem'){
+        postSolve()
         router.push(`/class/studylist/reading/1/problem/${newCount}`);
       } else if(page==='explanation'){
         router.push(`/class/studylist/reading/1/explanation/${newCount}`);
@@ -62,6 +70,21 @@ function ProblemFooter() {
     }
   };
 
+  // 제출
+  const postSolve = async()=>{
+    const formData = new FormData();
+    const solveProblemRequest = {
+      homeworkQuestionId:mySolved[Number(pageNum)-1].homeworkQuestionId,
+      homeworkStudentId:ids.homeworkStudentId,
+      submitAnswer:mySolved[Number(pageNum)-1].answer
+    }
+    const jsonBlob = new Blob([JSON.stringify(solveProblemRequest)], {
+      type: "application/json",
+    });
+      formData.append("solveProblemRequest", jsonBlob);
+    const res = await postSolveProblem(formData)
+    console.log(res)
+  }
   return (
     <div style={{ flex: 1, border: '1px solid black', display: 'flex' }}>
       <Box onClick={handlePrevClick}>
