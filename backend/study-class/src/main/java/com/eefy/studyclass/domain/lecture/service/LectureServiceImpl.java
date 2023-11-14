@@ -1,5 +1,7 @@
 package com.eefy.studyclass.domain.lecture.service;
 
+import com.eefy.studyclass.domain.alarm.dto.request.PushAlarmRequest;
+import com.eefy.studyclass.domain.alarm.service.AlarmService;
 import com.eefy.studyclass.domain.lecture.persistence.entity.CanvasData;
 import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.NoteInfoResponse;
@@ -57,7 +59,6 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public void makeLectureNote(Integer teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException {
 
-
         Member member = memberService.getMemberInfo(teacherId, teacherId);
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(lectureNoteRequest.getClassId()));
 
@@ -71,7 +72,18 @@ public class LectureServiceImpl implements LectureService {
                 .content(lectureNoteRequest.getContent())
                 .build();
 
-        lectureRepository.save(lecture);
+        Integer lectureId = lectureRepository.save(lecture).getId();
+
+        PushAlarmRequest pushAlarmRequest = PushAlarmRequest.builder()
+                .classId(studyClass.getId())
+                .link("https://k9b306.p.ssafy.io/class/" + studyClass.getId() + "/lecture/" + lectureId)
+                .className(studyClass.getTitle())
+                .title("새로운 강의자료가 등록되었습니다.")
+                .content(member.getNickname() + "강사님이 " + studyClass.getTitle() + "강좌에 새로운 강의자료를 등록했습니다.")
+                .build();
+
+        alarmService.pushAlarmToStudent(teacherId, pushAlarmRequest);
+
     }
 
     @Override

@@ -21,6 +21,11 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
+    public void createTopic(Integer classId) {
+        alarmClientApi.createTopic(classId);
+    }
+
+    @Override
     public void subscribeStudyClassTopic(Integer classId, StudentIdsRequest request) {
         alarmClientApi.subscribeStudyClassTopic(classId, request);
     }

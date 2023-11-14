@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.studyclass.service;
 
+import com.eefy.studyclass.domain.alarm.dto.request.PushAlarmPersonalRequest;
 import com.eefy.studyclass.domain.alarm.dto.request.PushAlarmRequest;
 import com.eefy.studyclass.domain.alarm.dto.request.StudentIdsRequest;
 import com.eefy.studyclass.domain.alarm.service.AlarmService;
@@ -72,7 +73,8 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .type(studyClassCreateRequest.getType())
                 .build();
 
-        studyClassRepository.save(studyClass);
+        Integer studyClassId = studyClassRepository.save(studyClass).getId();
+        alarmService.createTopic(studyClassId);
     }
 
     @Override
@@ -123,24 +125,27 @@ public class StudyClassServiceImpl implements StudyClassService {
 
             studyClassValidator.alreadyJoinStudyClass(participateRepository.findByMemberIdAndStudyClassId(studentRequest.getMemberId(), inviteMemberRequest.getClassId()));
 
+
             Participate participate = Participate.builder()
                     .memberId(studentRequest.getMemberId())
                     .studyClass(studyClass).build();
+
+            PushAlarmPersonalRequest personalAlarm = PushAlarmPersonalRequest.builder()
+                    .targetMemberId(studentRequest.getMemberId())
+                    .classId(studyClass.getId())
+                    .link("https://k9b306.p.ssafy.io/main/classlist")
+                    .className(studyClass.getTitle())
+                    .title("학습 강좌 초대 알람")
+                    .content(studyClass.getTitle() + "강좌에 초대되었습니다.").build();
+
+            alarmService.pushAlarmToPersonal(studentRequest.getMemberId(), personalAlarm);
+
             participateRepository.save(participate);
         }
 
         ArrayList<Integer> studentIds = (ArrayList<Integer>) inviteMemberRequest.getMemberList().stream().map(StudyClassStudentRequest::getMemberId).collect(Collectors.toList());
 
         alarmService.subscribeStudyClassTopic(studyClass.getId(), StudentIdsRequest.builder().studentIds(studentIds).build());
-
-        PushAlarmRequest pushAlarmRequest = PushAlarmRequest.builder()
-                .classId(studyClass.getId())
-                .link("")
-                .className(studyClass.getTitle())
-                .title("학습 강좌 초대 알람")
-                .content(studyClass.getTitle() +"강좌에 초대되었습니다.")
-                .build();
-        alarmService.pushAlarmToStudent(studyClass.getMemberId(), pushAlarmRequest);
     }
 
     @Override
@@ -195,17 +200,19 @@ public class StudyClassServiceImpl implements StudyClassService {
                 .hit(0)
                 .build();
 
+        Integer noticeId = noticeRepository.save(notice).getId();
         PushAlarmRequest pushAlarmRequest = PushAlarmRequest.builder()
                 .classId(studyClass.getId())
-                .link("")
+                .link("https://k9b306.p.ssafy.io/class/" + studyClass.getId() + "/notice/" + noticeId)
                 .className(studyClass.getTitle())
                 .title("새로운 공지사항이 등록되었습니다.")
                 .content(notice.getContent())
                 .build();
+
         alarmService.pushAlarmToStudent(teacherId, pushAlarmRequest);
 
         return NoticeIdResponse.builder()
-                .id(noticeRepository.save(notice).getId()).build();
+                .id(noticeId).build();
     }
 
     @Override
