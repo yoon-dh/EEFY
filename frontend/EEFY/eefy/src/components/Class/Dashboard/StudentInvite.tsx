@@ -123,7 +123,7 @@ function StudentInvite({ CLASS_ID }: any) {
           <div style={{ flex: '0.2' }}></div>
           <S.CreateInput type='text' value={keyWord} onChange={handleKeywordChange} style={{ flex: '6.6', height: '100%' }} />
           <div style={{ flex: '0.2' }}></div>
-          <S.CreateBtn style={{ flex: '1' }} onClick={searchBtnClick}>
+          <S.CreateBtn className='text-base-100 rounded-lg' style={{ flex: '1' }} onClick={searchBtnClick}>
             search
           </S.CreateBtn>
         </div>

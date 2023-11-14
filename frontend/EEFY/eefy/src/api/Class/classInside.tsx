@@ -10,8 +10,6 @@ export const classInsideStudent = async (Id: number) => {
 
     const res = await privateApi.get('/study-class/member', { params });
 
-    console.log(res);
-
     return res;
   } catch (err) {
     console.log(err);

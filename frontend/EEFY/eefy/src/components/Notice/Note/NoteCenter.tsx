@@ -4,7 +4,13 @@ const LeftBox = styled.div`
   width: 40%;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
-  box-shadow: 4px 4px 4px rgba(70, 70, 70, 0.25);
+  /* box-shadow: 4px 4px 4px rgba(70, 70, 70, 0.25); */
+  background: rgba(255, 255, 255, 0.06);
+  z-index: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: transparent;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
 `;
 const RigthBox = styled.div`
   height: 100%;
@@ -12,7 +18,13 @@ const RigthBox = styled.div`
   margin: 0px 0px 0px auto;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  box-shadow: 0px 4px 4px rgba(70, 70, 70, 0.25);
+  /* box-shadow: 0px 4px 4px rgba(70, 70, 70, 0.25); */
+  background: rgba(255, 255, 255, 0.06);
+  z-index: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: none;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
 `;
 const Box = styled.div`
   position: absolute;
@@ -36,7 +48,7 @@ const Ellipse = styled.div`
   width: 22%;
   height: 100%;
   border-radius: 50%;
-  background-color: white;
+  /* background-color: white; */
   box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.25);
   @media (max-width: 1334px) {
     width: 27%;
@@ -46,7 +58,7 @@ const Line = styled.div`
   position: absolute;
   top: 20%;
   left: 5%;
-  background-color: #fafafa;
+  /* background-color: #fafafa; */
   height: 50%;
   width: 90%;
   border-radius: 50px;
@@ -60,37 +72,37 @@ function NoteCenter() {
       <Box className='flex flex-col'>
         <Spring>
           <SpringBox>
-            <Ellipse />
-            <Line />
-            <Ellipse style={{ margin: '0px 0px 0px auto' }} />
+            <Ellipse className='bg-base-100' />
+            <Line className='bg-base-300' />
+            <Ellipse className='bg-base-100' style={{ margin: '0px 0px 0px auto' }} />
           </SpringBox>
         </Spring>
         <Spring>
           <SpringBox style={{ top: '40%' }}>
-            <Ellipse />
-            <Line />
-            <Ellipse style={{ margin: '0px 0px 0px auto' }} />
+            <Ellipse className='bg-base-100' />
+            <Line className='bg-base-300' />
+            <Ellipse className='bg-base-100' style={{ margin: '0px 0px 0px auto' }} />
           </SpringBox>
         </Spring>
         <Spring>
           <SpringBox style={{ top: '30%' }}>
-            <Ellipse />
-            <Line />
-            <Ellipse style={{ margin: '0px 0px 0px auto' }} />
+            <Ellipse className='bg-base-100' />
+            <Line className='bg-base-300' />
+            <Ellipse className='bg-base-100' style={{ margin: '0px 0px 0px auto' }} />
           </SpringBox>
         </Spring>
         <Spring>
           <SpringBox style={{ top: '20%' }}>
-            <Ellipse />
-            <Line />
-            <Ellipse style={{ margin: '0px 0px 0px auto' }} />
+            <Ellipse className='bg-base-100' />
+            <Line className='bg-base-300' />
+            <Ellipse className='bg-base-100' style={{ margin: '0px 0px 0px auto' }} />
           </SpringBox>
         </Spring>
         <Spring>
           <SpringBox style={{ top: '10%' }}>
-            <Ellipse />
-            <Line />
-            <Ellipse style={{ margin: '0px 0px 0px auto' }} />
+            <Ellipse className='bg-base-100' />
+            <Line className='bg-base-300' />
+            <Ellipse className='bg-base-100' style={{ margin: '0px 0px 0px auto' }} />
           </SpringBox>
         </Spring>
       </Box>
