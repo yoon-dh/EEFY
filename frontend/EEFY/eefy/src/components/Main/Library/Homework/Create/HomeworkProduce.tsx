@@ -11,9 +11,9 @@ function HomeworkProduce() {
 
   return (
     <>
-      {homeworkCategory === 'speak' && <CreateSpeakingComponent />}
-      {homeworkCategory === 'read' && <CreateReadingComponent />}
-      {homeworkCategory === 'listening' && <CreateListeningComponent />}
+      {homeworkCategory === 'SPEAKING' && <CreateSpeakingComponent />}
+      {homeworkCategory === 'READING' && <CreateReadingComponent />}
+      {homeworkCategory === 'LISTENING' && <CreateListeningComponent />}
     </>
   );
 }
