@@ -8,6 +8,7 @@ import com.eefy.member.domain.member.dto.response.StudentResponse;
 import com.eefy.member.domain.member.event.UploadProfileImageEvent;
 import com.eefy.member.domain.member.exception.validator.MemberValidator;
 import com.eefy.member.domain.member.persistence.EmailConfirmRedisRepository;
+import com.eefy.member.domain.member.persistence.MemberQueryDslRepository;
 import com.eefy.member.domain.member.persistence.MemberRepository;
 import com.eefy.member.domain.member.persistence.entity.Member;
 import com.eefy.member.domain.member.persistence.entity.enums.MemberRole;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+    private final MemberQueryDslRepository memberQueryDslRepository;
     private final EmailConfirmRedisRepository emailConfirmRedisRepository;
 
     private final MemberValidator memberValidator;
@@ -51,15 +54,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<StudentResponse> getStudent(String key, String value, int classId, String jwtToken) {
-        // studyClassId != 0인 경우 클래스에 참여중인 학생 목록 조회
-        // 목록 조회해서 멤버아이디 캐싱하고 내가 캐싱하고있는 데이터가 study-class쪽에서 변화된다면 리프레시하게 하고십다!
-        // 이벤트 기반으로 수정(서비스 분리)
         List<SearchStudentResponse> studentList = studyClassService.searchStudentList(classId, jwtToken);
-        if (studentList == null || studentList.isEmpty()) return makeStudentResponse(selectMembers(key, value), classId);
 
+        if (studentList == null) studentList = new ArrayList<>();
         List<Integer> studentIds = studentList.stream()
                 .map(SearchStudentResponse::getMemberId).collect(Collectors.toList());
-        List<Member> members = selectMembers(key, value, studentIds);
+        List<Member> members = memberQueryDslRepository.findMembersByEmailOrName(key, value, studentIds);
         return makeStudentResponse(members, classId);
     }
 
@@ -102,23 +102,5 @@ public class MemberServiceImpl implements MemberService {
         else return members.stream()
                 .map(m -> new StudentResponse(m, classId, false))
                 .collect(Collectors.toList());
-    }
-
-    private List<Member> selectMembers(String key, String value) {
-        memberValidator.checkSelectMemersKey(key);
-        if (key.equals("email"))
-            return memberRepository.findByEmailContainingAndRoleOrderByEmail(value, MemberRole.STUDENT);
-        else if (key.equals("name"))
-            return memberRepository.findByNameContainingAndRoleOrderByName(value, MemberRole.STUDENT);
-        else return null;
-    }
-
-    private List<Member> selectMembers(String key, String value, List<Integer> ids) {
-        memberValidator.checkSelectMemersKey(key);
-        if (key.equals("email"))
-            return memberRepository.findByEmailContainingAndRoleAndIdNotInOrderByEmail(value, MemberRole.STUDENT, ids);
-        else if (key.equals("name"))
-            return memberRepository.findByNameContainingAndRoleAndIdNotInOrderByName(value, MemberRole.STUDENT, ids);
-        else return null;
     }
 }
