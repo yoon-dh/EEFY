@@ -97,54 +97,39 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public void noteLecture(Integer memberId, NoteInfoRequest noteInfoRequest) {
+        Lecture lecture = lectureValidator.existLecture(lectureRepository.findById(noteInfoRequest.getLectureId()));
 
-        boolean existLectureNoteInfoById = lectureNoteInfoRepository.existsByMemberIdAndLectureId(memberId, noteInfoRequest.getLectureId());
-        if(!existLectureNoteInfoById) {
-            LectureNoteInfo lectureNoteInfo = new LectureNoteInfo(memberId, noteInfoRequest);
+        LectureNoteInfo lectureNoteInfo = new LectureNoteInfo(memberId, noteInfoRequest);
 
-            lectureNoteInfoRepository.save(lectureNoteInfo);
-        } else {
-            LectureNoteInfo lectureNoteInfo = lectureNoteInfoRepository.findByMemberIdAndLectureId(memberId, noteInfoRequest.getLectureId());
-
-            for(CanvasData canvasData: lectureNoteInfo.getCanvasData()) {
-                Optional<LectureNoteInfo> optionalLectureNoteInfo = lectureNoteInfoRepository.existsByMemberIdAndLectureIdAndCanvasDataPageNum(memberId, noteInfoRequest.getLectureId(), canvasData.getPageNum());
-
-                if(!optionalLectureNoteInfo.isEmpty()) {
-                    Criteria criteria = Criteria.where("memberId").is(memberId).and("lectureId").is(lectureNoteInfo.getLectureId());
-                    Query query = new Query(criteria);
-
-                    Update update = new Update().push("canvasData", canvasData.getDrawInfo());
-
-                    mongoTemplate.updateFirst(query, update, LectureNoteInfo.class);
-                } else {
-                    Criteria criteria = Criteria.where("memberId").is(memberId).and("lectureId").is(lectureNoteInfo.getLectureId()).and("canvasData.pageNum").is(canvasData.getPageNum());
-                    Query query = new Query(criteria);
-                    Update update = new Update().push("canvasData.drawInfo", canvasData);
-                    mongoTemplate.updateFirst(query, update, LectureNoteInfo.class);
-                }
-            }
-        }
+        lectureNoteInfoRepository.save(lectureNoteInfo);
     }
 
     @Override
     public NoteInfoResponse getLectureNoteDetailPage(int memberId, int lectureId, int pageNum) {
         Lecture lecture = lectureValidator.existLecture(lectureRepository.findById(lectureId));
 
-        LectureNoteInfo lectureNoteInfo = lectureNoteInfoRepository.findByMemberIdAndLectureId(memberId, lecture.getId());
+        ArrayList<LectureNoteInfo> lectureNoteInfoList = lectureNoteInfoRepository.findByMemberIdAndLectureId(memberId, lecture.getId());
 
-        if(lectureNoteInfo == null) return new NoteInfoResponse(lecture, new ArrayList<>());
+        if(lectureNoteInfoList.size() == 0) return new NoteInfoResponse(lecture, new ArrayList<>());
 
-        Criteria criteria = Criteria.where("lectureId").is(lectureId)
-                .and("memberId").is(memberId)
-                .and("canvasData.pageNum").is(pageNum);
+        List<DrawInfo> drawInfoList = new ArrayList<>();
 
-        Query query = new Query(criteria);
-        query.fields().exclude("_id").include("canvasData.drawInfo");
+        for (LectureNoteInfo lectureNoteInfo: lectureNoteInfoList) {
 
-        List<DrawInfo> drawInfoList = mongoTemplate.find(query, LectureNoteInfo.class).stream()
-                .flatMap(lectureNote -> lectureNote.getCanvasData().stream())
-                .flatMap(canvasData -> canvasData.getDrawInfo().stream())
-                .collect(Collectors.toList());
+            Criteria criteria = Criteria.where("lectureId").is(lectureId)
+                    .and("memberId").is(memberId)
+                    .and("canvasData.pageNum").is(pageNum);
+
+            Query query = new Query(criteria);
+            query.fields().exclude("_id").include("canvasData.drawInfo");
+
+            List<DrawInfo> collect = mongoTemplate.find(query, LectureNoteInfo.class).stream()
+                    .flatMap(lectureNote -> lectureNoteInfo.getCanvasData().stream())
+                    .flatMap(canvasData -> canvasData.getDrawInfo().stream())
+                    .collect(Collectors.toList());
+
+            drawInfoList.addAll(collect);
+        }
 
         return new NoteInfoResponse(lecture, drawInfoList);
     }
