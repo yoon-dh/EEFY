@@ -1,9 +1,12 @@
 package com.eefy.studyclass.domain.lecture.controller;
 
+import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureNoteListResponse;
 import com.eefy.studyclass.domain.lecture.dto.request.LectureNoteRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureResponse;
+import com.eefy.studyclass.domain.lecture.dto.response.NoteInfoResponse;
 import com.eefy.studyclass.domain.lecture.service.LectureService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -42,5 +45,21 @@ public class LectureController {
     public ResponseEntity<LectureResponse> getLecture(@RequestHeader("Member-Id") Integer memberId,
                                                       @PathVariable Integer lectureId) {
         return ResponseEntity.ok(lectureService.getLecture(lectureId));
+    }
+    
+    @Operation(summary = "강의자료 필기", description = "강의자료에서 필기한 데이터를 저장하는 API")
+    @PostMapping
+    public ResponseEntity<Void> noteLecture(@RequestHeader("Member-Id") Integer memberId,
+                                            @RequestBody NoteInfoRequest noteInfoRequest) {
+        lectureService.noteLecture(memberId, noteInfoRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "강의자료 상세 뷰어", description = "강의자료에서 필기한 데이터를 조회하는 API")
+    @GetMapping
+    public ResponseEntity<NoteInfoResponse> getLectureNoteDetailPage(@RequestHeader("Member-Id") Integer memberId,
+                                                                     @RequestParam Integer lectureId,
+                                                                     @RequestParam Integer pageNum) {
+        return ResponseEntity.ok(lectureService.getLectureNoteDetailPage(memberId, lectureId, pageNum));
     }
 }
