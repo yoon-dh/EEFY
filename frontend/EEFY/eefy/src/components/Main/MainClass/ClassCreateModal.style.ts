@@ -6,7 +6,7 @@ export const CreateBtn = styled.button`
   padding: 8px 12px;
   border: 0;
   text-decoration: none;
-  border-radius: 15px;
+  border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(30px);

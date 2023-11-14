@@ -3,16 +3,17 @@ import styled from 'styled-components';
 export const CreateBtn = styled.div`
   padding: 5px 20px;
   height: 50px;
-  background: #999bd5;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  /* background: transparent; */
+  /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
   border-radius: 8px;
-  color: white;
+  /* color: white; */
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1% 20px 0px 0px;
+  /* margin: 1% 20px 0px 0px; */
   margin-left: auto;
-  @media(max-width:1334px){
+  letter-spacing: 2px;
+  @media (max-width: 1334px) {
     height: 40px;
     margin: 0.5% 20px 0px 0px;
     margin-left: auto;
@@ -26,15 +27,15 @@ export const NoticeTitle = styled.div`
   }
 `;
 export const Tab = styled.div`
-width: 160px;
-height: 50px;
-font-size: 25px;
-@media(max-width:1340px){
-  width: 120px;
-height: 40px;
-font-size: 20px;
-}
-`
+  width: 160px;
+  height: 50px;
+  font-size: 25px;
+  @media (max-width: 1340px) {
+    width: 120px;
+    height: 40px;
+    font-size: 20px;
+  }
+`;
 export const TabBox = styled.div`
-  margin:'0px 0px 0px 10px'
-`
+  margin: '0px 0px 0px 10px';
+`;

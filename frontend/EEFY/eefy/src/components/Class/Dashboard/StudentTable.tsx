@@ -30,7 +30,6 @@ function StudentTable({ CLASS_ID }: any) {
   useEffect(() => {
     const ClassStudentResult = async () => {
       const res = await classInsideStudent(CLASS_ID);
-      console.log(res?.data);
       setClassInsideStudentArr(res?.data);
     };
 
@@ -68,11 +67,13 @@ function StudentTable({ CLASS_ID }: any) {
           </thead>
           {classInsideStudentArr?.length ? (
             <tbody style={{ display: 'block', width: '100%' }}>
-              <tr style={{ width: '100%', display: 'flex', justifyContent: 'center' }} onClick={() => setSearchState(true)} className='bg-base-200 rounded-lg'>
-                <td colSpan={5} className='text-xl rounded-xl' style={{ textAlign: 'center' }}>
-                  + 초대하기
-                </td>
-              </tr>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <tr style={{ width: '95%', display: 'flex', justifyContent: 'center' }} onClick={() => setSearchState(true)} className='bg-base-200 rounded-lg'>
+                  <td colSpan={5} className='text-xl rounded-xl' style={{ textAlign: 'center' }}>
+                    + 초대하기
+                  </td>
+                </tr>
+              </div>
               {classInsideStudentArr?.map(item => (
                 <StudentTableItem
                   key={item.memberId}
