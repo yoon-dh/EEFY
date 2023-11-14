@@ -14,7 +14,7 @@ function ContainerBtn() {
         </div>
       </TabBox>
 
-      <CreateBtn className='text-xl text-info' onClick={() => setNoticePageUrl('create')}>
+      <CreateBtn className='text-xl bg-info text-white' onClick={() => setNoticePageUrl('create')}>
         CREATE
       </CreateBtn>
     </div>

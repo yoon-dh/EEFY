@@ -130,8 +130,10 @@ function NoticeListBoard() {
             }}
             onClick={() => handleClick(item.id)}
           >
-            <Title>{item.title.slice(0, 30) + '...'}</Title>
-            <Time>{dayjs(item.createdAt).format('YYYY.MM.DD')}</Time>
+            <Title>{item.title.slice(0, 30)}</Title>
+            <Time>
+              <b>{dayjs(item.createdAt).format('YYYY.MM.DD')}</b>
+            </Time>
           </Card>
         ))}
       </Wrappe>

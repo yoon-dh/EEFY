@@ -57,6 +57,7 @@ function NoticeCreate() {
     <S.Container className='flex flex-col'>
       <S.Wrappe>
         <S.Box className='flex flex-col'>
+          {/* titleBox */}
           <S.TitleBox>
             <S.Title>title</S.Title>
             <div style={{ flex: 1 }}></div>
@@ -68,6 +69,7 @@ function NoticeCreate() {
               spellCheck={false}
             />
           </S.TitleBox>
+          {/* content */}
           <S.ContentBox>
             <S.content>content</S.content>
             <S.ContentInput
@@ -78,6 +80,8 @@ function NoticeCreate() {
               spellCheck={false}
             />
           </S.ContentBox>
+
+          {/* Btn section */}
           <S.BtnBox>
             <S.CancelBtn className=' text-error text-xl' onClick={handleCancel}>
               cancel
