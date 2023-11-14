@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,11 +61,8 @@ public class LectureServiceImpl implements LectureService {
         Member member = memberService.getMemberInfo(teacherId, teacherId);
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(lectureNoteRequest.getClassId()));
 
-        log.info(">>> 강의자료 s3Uploader 실행 이전");
         String filename = s3Uploader.upload(filePath, dir);
 
-        log.info(">>>>>>>>>>>>>>>> study class title" + studyClass.getTitle());
-        log.info(">>> 강의자료 s3Uploader 실행 이후");
         Lecture lecture = Lecture.builder()
                 .memberId(member.getMemberId())
                 .studyClass(studyClass)
@@ -132,29 +130,22 @@ public class LectureServiceImpl implements LectureService {
     public NoteInfoResponse getLectureNoteDetailPage(int memberId, int lectureId, int pageNum) {
         Lecture lecture = lectureValidator.existLecture(lectureRepository.findById(lectureId));
 
-//        Criteria criteria = Criteria.where("lectureId").is(lectureId)
-//                .and("memberId").is(memberId)
-//                .and("canvasData.pageNum").is(pageNum);
-//
-//        Query query = new Query(criteria);
-//        query.fields().exclude("_id").include("canvasData.drawInfo");
-//
-//        List<DrawInfo> drawInfoList = mongoTemplate.find(query, LectureNoteInfo.class).stream()
-//                .flatMap(lectureNoteInfo -> lectureNoteInfo.getCanvasData().stream())
-//                .flatMap(canvasData -> canvasData.getDrawInfo().stream())
-//                .collect(Collectors.toList());
+        LectureNoteInfo lectureNoteInfo = lectureNoteInfoRepository.findByMemberIdAndLectureId(memberId, lecture.getId());
 
-        log.info(">>>>>>>>>>>>>>" + lecture.getId());
-        LectureNoteInfo lectureNoteInfo = lectureNoteInfoRepository.findByMemberIdAndLectureIdAndCanvasDataPageNum(memberId, lecture, pageNum).get();
+        if(lectureNoteInfo == null) return new NoteInfoResponse(lecture, new ArrayList<>());
 
-        log.info(">>>>>>>>>>>>>> lectureNoteInfo id: " + lectureNoteInfo.get_id());
-        List<CanvasData> canvasData = lectureNoteInfo.getCanvasData();
+        Criteria criteria = Criteria.where("lectureId").is(lectureId)
+                .and("memberId").is(memberId)
+                .and("canvasData.pageNum").is(pageNum);
 
-        for(int i = 0; i < canvasData.size(); i++) {
-            log.info(canvasData.get(i).toString());
-        }
-        log.info("==================== ERROR ====================");
-//        return new NoteInfoResponse(lecture, drawInfoList);
-        return null;
+        Query query = new Query(criteria);
+        query.fields().exclude("_id").include("canvasData.drawInfo");
+
+        List<DrawInfo> drawInfoList = mongoTemplate.find(query, LectureNoteInfo.class).stream()
+                .flatMap(lectureNote -> lectureNote.getCanvasData().stream())
+                .flatMap(canvasData -> canvasData.getDrawInfo().stream())
+                .collect(Collectors.toList());
+
+        return new NoteInfoResponse(lecture, drawInfoList);
     }
 }
