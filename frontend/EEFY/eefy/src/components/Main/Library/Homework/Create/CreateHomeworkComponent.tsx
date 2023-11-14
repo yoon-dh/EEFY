@@ -2,9 +2,11 @@
 import HomeworkInfo from './HomeworkInfo';
 import HomeworkProduce from './HomeworkProduce';
 
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { CreateHomeworkStepAtom } from '@/recoil/Library/CreateHomework/CreateHomework';
-import { HomeworkCategoryAtom, HomeworkInfoDataAtom } from '@/recoil/Library/CreateHomework/CreateHomework';
+import { HomeworkCategoryAtom, HomeworkInfoDataAtom, HomeworkIdAtom } from '@/recoil/Library/CreateHomework/CreateHomework';
+
+import { postMakeHomework } from '@/api/Library/CreateHomeworkApi';
 
 import { TfiArrowLeft, TfiArrowRight } from 'react-icons/tfi';
 import * as S from '@/styles/MainStyle.style';
@@ -13,21 +15,35 @@ function CreateHomeworkComponent() {
   const [createHomeworkStep, setCreateHomeworkStep] = useRecoilState(CreateHomeworkStepAtom);
   const homeworkInfoDataAtom = useRecoilValue(HomeworkInfoDataAtom);
   const homeworkCategory = useRecoilValue(HomeworkCategoryAtom);
+  const setHomeworkId = useSetRecoilState(HomeworkIdAtom);
 
-  const NextHandler = () => {
-    console.log('homeworkcategry', homeworkInfoDataAtom);
+  const NextHandler = async () => {
+    if (homeworkInfoDataAtom.title !== '' && homeworkInfoDataAtom.description !== '') {
+      const data = {
+        title: homeworkInfoDataAtom.title,
+        content: homeworkInfoDataAtom.description,
+        type: homeworkCategory,
+      };
+      const requestData = await postMakeHomework(data);
+      if (requestData) {
+        setHomeworkId(requestData.homeworkId);
+        setCreateHomeworkStep(1);
+      } else {
+        alert('문제 생성에 실패하였습니다.');
+      }
+    } else {
+      alert('정보를 입력하세요');
+    }
     // homeworkCategory 정보 확인 // title 입력 되었는지, 설명 입력되었는지, category 설정 되어 있는지
     // axios 연결
-
-    setCreateHomeworkStep(1);
   };
 
   const CompleteHandler = () => {
-    if (homeworkCategory === 'speak') {
+    if (homeworkCategory === 'SPEAKING') {
       console.log(homeworkCategory);
-    } else if (homeworkCategory === 'read') {
+    } else if (homeworkCategory === 'READING') {
       console.log(homeworkCategory);
-    } else if (homeworkCategory === 'listening') {
+    } else if (homeworkCategory === 'LISTENING') {
       console.log(homeworkCategory);
     }
   };

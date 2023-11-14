@@ -10,10 +10,14 @@ interface LibraryListComponentProps {
   role: string;
   libraryDatas:
     | {
-        homeworkId: number;
-        type: string;
+        content: string;
+        createdAt: Date;
+        id: number;
+        isFinish: boolean;
+        memberId: number;
+        modifiedAt: Date;
         title: string;
-        count: number;
+        type: string;
       }[]
     | null;
 }
@@ -72,7 +76,7 @@ function LibraryListComponent({ role, libraryDatas }: LibraryListComponentProps)
                 <HiPlus />
               </div>
               <div className='prim' style={{ fontSize: '20px' }}>
-                자료 등록
+                과제 생성
               </div>
             </WorkbookBox>
           </Link>

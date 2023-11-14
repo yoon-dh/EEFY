@@ -1,24 +1,16 @@
 'use client';
 import { privateApi } from '..';
 
-interface postMakeHomeworkDataType {
-  title: string;
-  content: string;
-  type: string;
-}
-
-// 공통
-export const postMakeHomework = async (data: postMakeHomeworkDataType) => {
+// 페이지네이션
+export const getHomeworkList = async (data: any) => {
   try {
-    const res = await privateApi.post('/homework/make', data);
+    const res = await privateApi.get('/homework/teacher/homework', { params: data });
     return res.data;
   } catch (err) {
-    console.error(err);
-    return false;
+    console.log(err);
   }
 };
 
-// Speaking
 // 파일 업로드 시 STT 요청
 export const postSTT = async (data: FormData) => {
   try {

@@ -1,3 +1,4 @@
+'use client';
 import { StyledBookContainer, StyledBookCover } from './LibraryList.style';
 import { BsInfoSquare } from 'react-icons/bs';
 import { CgExport } from 'react-icons/cg';
@@ -7,14 +8,24 @@ interface LibraryItemType {
   shadow: string;
   role: string;
   libraryData: {
-    homeworkId: number;
-    type: string;
+    content: string;
+    createdAt: Date;
+    id: number;
+    isFinish: boolean;
+    memberId: number;
+    modifiedAt: Date;
     title: string;
-    count: number;
+    type: string;
   };
 }
 
 function LibraryItem({ main, shadow, role, libraryData }: LibraryItemType) {
+  const originalDate = new Date(libraryData.modifiedAt);
+  const year = originalDate.getFullYear();
+  const month = String(originalDate.getMonth() + 1).padStart(2, '0');
+  const day = String(originalDate.getDate()).padStart(2, '0');
+
+  const formattedDate = `${year}-${month}-${day}`;
   return (
     <div className='relative flex justify-center items-center' style={{ width: '25%', height: '50%' }}>
       <StyledBookContainer>
@@ -126,7 +137,8 @@ function LibraryItem({ main, shadow, role, libraryData }: LibraryItemType) {
             {libraryData.title}
           </div>
           <div className='absolute text-md text-neutral font-bold' style={{ right: '20%', bottom: '15%' }}>
-            {libraryData.count} 문항
+            {/* {formattedDate} */}
+            20 문항
           </div>
         </div>
         <div

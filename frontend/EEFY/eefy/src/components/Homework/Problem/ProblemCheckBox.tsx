@@ -1,12 +1,13 @@
 import * as S from './ProblemCheckBox.style';
 import { useRecoilValue } from 'recoil';
-import {problemData, SolvedProblem, homeworkPage} from '@/recoil/Problem'
+import {homeworkPage} from '@/recoil/Problem'
+import {MySolved, Problems} from '@/recoil/Homework'
 import { useRouter } from 'next/navigation';
 
 function ProblemCheckBox() {
   const router = useRouter();
-  const problem = useRecoilValue(problemData)
-  const solved = useRecoilValue<any>(SolvedProblem)
+  const problem = useRecoilValue(Problems)
+  const solved = useRecoilValue<any>(MySolved)
   const page= useRecoilValue(homeworkPage)
 
   const handleNextClick = (id:any) => {
@@ -21,10 +22,10 @@ function ProblemCheckBox() {
     <S.Container>
       {page === 'explanation' ? (
         <>
-        {problem.map((item:String, index:number) => (
+        {Object.values(problem).map((item:any, index:number) => (
           <S.Checkbox key={index} onClick={()=>handleNextClick(index+1)}
           style={{
-            backgroundColor: solved[index].submitAnswer != problem[index].homeworkQuestion.answer ? 'red' : (solved[index].submitAnswer ? 'gray' : '')
+            backgroundColor: solved[index] != problem[index].homeworkQuestion.answer ? 'red' : (solved[index] ? 'gray' : '')
           }}
           >
             {index+1}
@@ -33,10 +34,10 @@ function ProblemCheckBox() {
         </>
       ) : (
         <>
-        {problem.map((item:String, index:number) => (
+        {Object.values(problem).map((item:any, index:number) => (
           <S.Checkbox key={index} onClick={()=>handleNextClick(index+1)}
           style={{
-            backgroundColor: (solved[index].submitAnswer ? 'gray' : '')
+            backgroundColor: (solved[index] ? 'gray' : '')
           }}
           >
             {index+1}
