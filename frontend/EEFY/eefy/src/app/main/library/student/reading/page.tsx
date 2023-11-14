@@ -1,58 +1,82 @@
 'use client';
 import { useEffect, useState } from 'react';
+
+import Pagination from '@mui/material/Pagination';
+import { ChangeEvent } from 'react';
+
 import { useRecoilState } from 'recoil';
-import { ReadingListPaginationAtom } from '@/recoil/Library/LibraryAtom';
+import { CurrentPage, ReadingListSavePage } from '@/recoil/Library/LibraryAtom';
 
 import ContainerBtn from '@/components/Main/Library/LibraryList/ContainerBtn';
-import PaginationComponent from '@/components/Main/Library/LibraryList/PaginationComponent';
 import LibraryListComponent from '@/components/Main/Library/LibraryList/LibraryListComponent';
+
+import { getHomeworkList } from '@/api/Library/LibraryListApi';
 
 import * as S from '@/styles/MainStyle.style';
 
 interface dataType {
-  homeworkId: number;
-  type: string;
+  content: string;
+  createdAt: Date;
+  id: number;
+  isFinish: boolean;
+  memberId: number;
+  modifiedAt: Date;
   title: string;
-  count: number;
+  type: string;
 }
 
 function LibraryReadingList() {
-  const [paginationAtom, setPaginationAtom] = useRecoilState(ReadingListPaginationAtom);
   const [libraryDatas, setLibraryDatas] = useState<dataType[] | null>(null);
+  const [totalPage, setTotalPage] = useState(1);
+
+  const [savePage, setSavePage] = useRecoilState(ReadingListSavePage);
+  const [currentPage, setCurrentPage] = useRecoilState(CurrentPage);
+
+  const handlePageChange = (event: ChangeEvent<unknown>, newPage: number) => {
+    setCurrentPage(newPage);
+    setSavePage(newPage);
+  };
+
+  const paginationStyle = {
+    '& .MuiPagination-ul .MuiPaginationItem-root.Mui-selected': {
+      backgroundColor: '#F4F5FA', // 선택된 페이지 배경색을 연보라색으로 변경
+    },
+    '& .MuiPagination-ul .MuiPaginationItem-root.Mui-selected:hover': {
+      backgroundColor: '#F4F5FA', // 선택된 페이지 호버 시 배경색도 연보라색으로 변경
+    },
+    '& .MuiPagination-ul .MuiPaginationItem-root.MuiPaginationItem-page:hover': {
+      backgroundColor: '#F4F5FA', // 페이지 호버 시 배경색도 연보라색으로 변경
+    },
+  };
+
+  const combinedStyles = {
+    ...paginationStyle, // paginationStyle 객체
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
 
   useEffect(() => {
-    async function fetchData() {
-      const size = 7;
-      // 서버 요청 -> 현재 페이지, 타입 (없으면 전체), size (학생은 8, 선생은 7)
-      const responseData = {
-        data: [
-          {
-            homeworkId: 4,
-            type: 'READING',
-            title: 'TOEIC 필수 Grammer-part1',
-            count: 20,
-          },
-          {
-            homeworkId: 5,
-            type: 'READING',
-            title: 'TOEIC 필수 Reading 20제-part1',
-            count: 20,
-          },
-          {
-            homeworkId: 6,
-            type: 'READING',
-            title: 'TOEIC 필수 Reading 20제-part2',
-            count: 20,
-          },
-        ],
-        totalCount: 3,
+    async function fetchData(page: number) {
+      const size = 8;
+
+      const data = {
+        page: page - 1,
+        size: size,
+        homeworkType: 'READING',
       };
-      const newTotalPage = responseData.totalCount % size === 0 ? Math.floor(responseData.totalCount / size) : Math.floor(responseData.totalCount / size) + 1;
-      setLibraryDatas(responseData.data);
-      setPaginationAtom(prev => ({ ...prev, totalPage: newTotalPage }));
+      const responseData = await getHomeworkList(data);
+      const newTotalPage = responseData.pageInfo.totalPageSize;
+      setLibraryDatas(responseData.homeworkDtos);
+      setTotalPage(newTotalPage);
     }
-    fetchData();
-  }, [paginationAtom.requestPage]);
+
+    if (currentPage !== savePage) {
+      setCurrentPage(savePage);
+    } else {
+      fetchData(currentPage);
+    }
+  }, [currentPage]);
 
   return (
     <div className='w-full h-full flex flex-col'>
@@ -64,7 +88,7 @@ function LibraryReadingList() {
           <LibraryListComponent role={'student'} libraryDatas={libraryDatas} />
         </div>
         <div className='flex justify-center items-center' style={{ flex: 1 }}>
-          <PaginationComponent totalPage={paginationAtom.totalPage} />
+          <Pagination count={totalPage} showFirstButton showLastButton page={currentPage} onChange={handlePageChange} sx={combinedStyles} />
         </div>
       </S.MainContainer>
     </div>

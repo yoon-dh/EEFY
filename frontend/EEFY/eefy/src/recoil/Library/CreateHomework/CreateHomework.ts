@@ -12,7 +12,7 @@ export const CreateHomeworkStepAtom = atom<number>({
 
 export const HomeworkCategoryAtom = atom<string>({
   key: 'HomeworkCategory',
-  default: 'speak',
+  default: 'SPEAKING',
 });
 
 export const HomeworkInfoDataAtom = atom<HomeworkInfoType>({
@@ -21,4 +21,9 @@ export const HomeworkInfoDataAtom = atom<HomeworkInfoType>({
     title: '',
     description: '',
   },
+});
+
+export const HomeworkIdAtom = atom<number | undefined>({
+  key: 'HomeworkIdAtom',
+  default: undefined,
 });

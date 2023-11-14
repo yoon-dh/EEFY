@@ -36,6 +36,8 @@ export default function Footer() {
 
   //   test
   const RecoilAlarmList = useRecoilValue(AlarmList);
+  console.log(RecoilAlarmList);
+  console.log(RecoilAlarmList.length);
 
   useEffect(() => {
     console.log('딸랑딸랑 진입 직전');
