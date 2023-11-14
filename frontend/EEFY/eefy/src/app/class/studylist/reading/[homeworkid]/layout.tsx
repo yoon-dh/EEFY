@@ -3,19 +3,25 @@ import styled from "styled-components"
 import ProblemCheckBox from "@/components/Homework/Problem/ProblemCheckBox"
 import ProblemFooter from "@/components/Homework/Problem/ProblemFooter"
 import { useRouter } from 'next/navigation';
-import { useRecoilState } from "recoil";
-import {problemData, SolvedProblem, homeworkPage} from '@/recoil/Problem'
+import { useRecoilState, useRecoilValue } from "recoil";
+import { homeworkPage} from '@/recoil/Problem'
+import {Problems, MySolved, HomeworkIds, SolvedProblem} from '@/recoil/Homework'
 import { useParams } from 'next/navigation';
-
+import {getProblem, postSolveProblem} from '@/api/Homework/Problem'
+import '@/styles/swal.css'
 import Swal from 'sweetalert2'
 function Homework({ children }: { children: React.ReactNode }){
   const router = useRouter();
-  const [problem, setProblem] = useRecoilState(problemData);
-  const [solved, setSolved] = useRecoilState(SolvedProblem)
+  const [problem, setProblem] = useRecoilState(Problems);
+  const [mySolved, setMySolved] = useRecoilState<any>(MySolved)
   const [page, setPage] = useRecoilState(homeworkPage)
+  const [solved, setSolved] = useRecoilState(SolvedProblem)
+  const ids = useRecoilValue(HomeworkIds)
   const pageInfo = useParams();
   const pageNum = pageInfo.problemid;
-  const pageNumber = Array.isArray(pageNum) ? pageNum[0] : pageNum;
+  const classId = pageInfo.classId;
+  const pageNumber: string = Array.isArray(pageNum) ? pageNum[0] : pageNum;
+  
   const handleExit = ()=>{
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -33,32 +39,81 @@ function Homework({ children }: { children: React.ReactNode }){
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        router.push("/class/studylist")
+        router.push(`/class/${classId}/dashboard`)
+        setSolved({})
+        setMySolved({})
+        setProblem({})
+        setPage('problem')
       } 
     });
   }
   const handleSave = ()=>{
     console.log('채점하기')
-    for(let i = 0;i<solved.length;i++){
-      if (solved[i].solvedProblem===null){
-        setPage("problem")
-        Swal.fire({
-          icon: "warning",
-          title: "아직 못푼 문제가 있습니다",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        return
-      }
+    console.log(mySolved)
+    if ( Object.values(mySolved).length!=problem.length){
+      setPage("problem")
+      Swal.fire({
+        icon: "warning",
+        title: "아직 못푼 문제가 있습니다",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }else{
+      Swal.fire({
+        title: "Are you sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "마치시겠습니까?",
+        customClass: {
+          container: 'custom-swal-container',
+          popup: 'custom-swal-popup'
+        }
+      }).then((result) => {
+        document.body.classList.remove('swal2-shown');
+        if (result.isConfirmed) {
+          postSolve()
+        }
+      });
     }
-    setPage("explanation")
-    router.push("/class/studylist/reading/1/explanation/1")
   }
-  
+
+  // 제출
+  const postSolve = async()=>{
+    const formData = new FormData();
+    const solveProblemRequest = {
+      homeworkQuestionId:mySolved[Number(pageNumber)-1].homeworkQuestionId,
+      homeworkStudentId:ids.homeworkStudentId,
+      submitAnswer:mySolved[Number(pageNumber)-1].answer
+    }
+    const jsonBlob = new Blob([JSON.stringify(solveProblemRequest)], {
+      type: "application/json",
+    });
+      formData.append("solveProblemRequest", jsonBlob);
+    const res = await postSolveProblem(formData)
+    console.log(res)
+    if(res?.status===200){
+      getSolved()
+    }
+  }
+
+  // 해설 요청
+  const getSolved = async()=>{
+    const res = await getProblem(ids.classHomeworkId)
+    console.log(res)
+    if(res?.status===200){
+      setSolved(res.data.solvedProblem)
+      setProblem(res.data.problems)
+      setPage("explanation")
+      router.push("/class/studylist/reading/1/explanation/1")
+    }
+  }
+
   const handleSolved = ()=>{
     console.log(pageNum)
     Swal.fire({
-      title: `정답은 "${problem[parseInt(pageNumber)]?.homeworkQuestion.answer}"`,
+      title: `정답은 "${problem[Number(pageNumber)-1]?.homeworkQuestion.answer}"`,
       // showClass: {
       //   popup: `
       //     animate__animated
@@ -84,9 +139,13 @@ function Homework({ children }: { children: React.ReactNode }){
           <Title>
             문제집 이름
           </Title>
-          <SolvedBtn onClick={handleSolved}>
-            정답 보기
-          </SolvedBtn>
+          {page==='explanation' && (
+            <>
+              <SolvedBtn onClick={handleSolved}>
+                정답 보기
+              </SolvedBtn>
+            </>
+          )}
         </Header>
         <div className="h-full" 
         style={{
@@ -126,7 +185,7 @@ border: 1px solid black;
 `
 const Header = styled.div`
 border: 1px solid black;
-flex: 1;
+flex: 0.8;
 display: flex;
 `
 const Title = styled.div`
