@@ -1,15 +1,16 @@
 package com.eefy.studyclass.domain.lecture.persistence.entity;
 
-import com.eefy.studyclass.domain.lecture.dto.request.PathRequest;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class Path {
     private Double x;
     private Double y;
 
-    public Path(PathRequest pathRequest) {
-        this.x = pathRequest.getX();
-        this.y = pathRequest.getY();
+    public Path(Path path) {
+        this.x = path.x;
+        this.y = path.y;
     }
 }

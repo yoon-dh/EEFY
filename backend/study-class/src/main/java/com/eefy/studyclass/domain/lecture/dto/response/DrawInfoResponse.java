@@ -1,8 +1,11 @@
 package com.eefy.studyclass.domain.lecture.dto.response;
 
+import lombok.Getter;
+
 import java.util.List;
 
-public class NoteInfoDetailResponse {
+@Getter
+public class DrawInfoResponse {
     private boolean drawMode;
     private String strokeColor;
     private double strokeWidth;

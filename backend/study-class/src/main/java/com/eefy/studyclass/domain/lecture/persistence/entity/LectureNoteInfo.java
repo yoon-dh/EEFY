@@ -1,30 +1,25 @@
 package com.eefy.studyclass.domain.lecture.persistence.entity;
 
-import com.eefy.studyclass.domain.lecture.dto.request.CanvasData;
 import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Id;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 @Document(collection = "LectureNoteInfos")
+@Getter
 public class LectureNoteInfo {
-    @Id
     private String _id;
     private Integer lectureId;
     private Integer memberId;
-    private List<PageInfo> pageInfo;
+    private List<CanvasData> canvasData;
 
     public LectureNoteInfo(Integer memberId, NoteInfoRequest noteInfoRequest) {
         this.memberId = memberId;
         this.lectureId = noteInfoRequest.getLectureId();
-        this.pageInfo = noteInfoRequest.getCanvasData().stream().map(canvasData -> new PageInfo(canvasData)).collect(Collectors.toList());
+        this.canvasData = noteInfoRequest.getCanvasData().stream().map(canvasData -> new CanvasData(canvasData)).collect(Collectors.toList());
     }
-
-//    public LectureNoteInfo(Integer memberId, Integer lectureId, CanvasData canvasData) {
-//        this.lectureId = lectureId;
-//        this.memberId = memberId;
-//        this.pageInfo = new PageInfo(canvasData);
-//    }
 }

@@ -15,6 +15,5 @@ public interface LectureService {
     List<LectureNoteListResponse> getLectureNoteList(int classId);
     LectureResponse getLecture(int lectureId);
     void noteLecture(Integer memberId, NoteInfoRequest noteInfoRequest);
-    List<NoteInfoRequest> loadNoteInfo(int memberId, int lectureId);
-    List<NoteInfoResponse> getLectureNoteDetailPage(int memberId, int lectureId, int pageNum);
+    NoteInfoResponse getLectureNoteDetailPage(int memberId, int lectureId, int pageNum);
 }

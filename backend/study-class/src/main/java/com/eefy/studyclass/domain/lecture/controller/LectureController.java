@@ -55,10 +55,11 @@ public class LectureController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "강의자료 상세 뷰어", description = "강의자료에서 필기한 데이터를 조회하는 API")
     @GetMapping
-    public ResponseEntity<List<NoteInfoResponse>> getLectureNoteDetailPage(@RequestHeader("Member-Id") Integer memberId,
-                                                                           @RequestParam Integer lectureId,
-                                                                           @RequestParam Integer pageNum) {
+    public ResponseEntity<NoteInfoResponse> getLectureNoteDetailPage(@RequestHeader("Member-Id") Integer memberId,
+                                                                     @RequestParam Integer lectureId,
+                                                                     @RequestParam Integer pageNum) {
         return ResponseEntity.ok(lectureService.getLectureNoteDetailPage(memberId, lectureId, pageNum));
     }
 }

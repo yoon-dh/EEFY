@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.lecture.dto.request;
 
+import com.eefy.studyclass.domain.lecture.persistence.entity.CanvasData;
 import lombok.Getter;
 import lombok.ToString;
 
