@@ -30,10 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -162,9 +162,9 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     private AlarmMessage getValidAlarmMessage(Optional<AlarmMessage> alarmMessageOptional, int memberId) {
-        AlarmMessage alarmMessage = alarmMessageOptional.orElseGet(() -> new AlarmMessage(memberId, new HashMap<>()));
+        AlarmMessage alarmMessage = alarmMessageOptional.orElseGet(() -> new AlarmMessage(memberId, new TreeMap<>()));
         if (alarmMessage.getMessages() == null) {
-            alarmMessage.setMessages(new HashMap<>());
+            alarmMessage.setMessages(new TreeMap<>());
         }
         return alarmMessage;
     }
