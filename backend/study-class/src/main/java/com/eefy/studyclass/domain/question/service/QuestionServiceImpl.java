@@ -107,10 +107,12 @@ public class QuestionServiceImpl implements QuestionService {
                 .content(request.getContent())
                 .build();
 
+        Integer questionId = qnaQuestionRepository.save(question).getId();
+
         PushAlarmPersonalRequest alarmRequest = PushAlarmPersonalRequest.builder()
                 .targetMemberId(studyClass.getMemberId())
                 .classId(studyClass.getId())
-                .link("")
+                .link("https://k9b306.p.ssafy.io/class/" + studyClass.getId() + "/question/" + questionId)
                 .className(studyClass.getTitle())
                 .title("질문 등록")
                 .content(member.getName() + "학생이 " + studyClass.getTitle() + "강좌에 질문을 등록하였습니다.")
@@ -118,7 +120,6 @@ public class QuestionServiceImpl implements QuestionService {
 
         alarmService.pushAlarmToPersonal(memberId, alarmRequest);
 
-        qnaQuestionRepository.save(question);
     }
 
     @Override
@@ -155,7 +156,7 @@ public class QuestionServiceImpl implements QuestionService {
         int studyId = qnaQuestion.getStudyClass().getId();
         String studyTitle = qnaQuestion.getStudyClass().getTitle();
         int targetId = 0;
-        String link = "";
+        String link = "https://k9b306.p.ssafy.io/class/" + studyId + "/question/" + qnaQuestion.getId();
         String title = "";
         String content = "";
 
