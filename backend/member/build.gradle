@@ -61,6 +61,7 @@ dependencies {
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
 querydsl {
 	jpa = true
 	querydslSourcesDir = querydslDir
@@ -87,7 +88,6 @@ dependencyManagement {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
-
 
 tasks.named('test') {
 	useJUnitPlatform()
