@@ -50,7 +50,7 @@ function NoteRigth() {
         borderLeft: 'none',
       }}
     >
-      {lastWord === 'notice' && (
+      {/* {lastWord === 'notice' && (
         <>
           <div
             className='w-full h-full'
@@ -301,7 +301,7 @@ function NoteRigth() {
             )}
           </div>
         </>
-      )}
+      )} */}
     </div>
   );
 }

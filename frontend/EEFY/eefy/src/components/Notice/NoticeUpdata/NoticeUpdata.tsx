@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { putNoticeUpdata, getNoticeDetail } from '@/api/Notice/Notice';
+import { putNoticeUpdata, getNoticeList } from '@/api/Notice/Notice';
 import { useRecoilState } from 'recoil';
-import { NoticePage, DetailData } from '@/recoil/Notice';
+import { NoticePage, NoticeList } from '@/recoil/Notice';
 import * as S from '../NoticeCreate/NoticeCreate.style';
+import { useParams } from 'next/navigation';
 
-function NoticeUpdata() {
+function NoticeUpdata(props:any) {
+  const params = useParams()
+
+  const data = props.data
+  const [listItem, setListItem] = useRecoilState(NoticeList);
   const [noticePageUrl, setNoticePageUrl] = useRecoilState(NoticePage);
-  const [data, setData] = useRecoilState(DetailData);
   const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -28,13 +32,20 @@ function NoticeUpdata() {
     const res = await putNoticeUpdata(data);
     console.log(res, '작성 성공');
     if (res?.status === 200) {
-      const resDetail = await getNoticeDetail(id);
-      if (resDetail?.status === 200) {
-        setData(resDetail.data);
-        setNoticePageUrl('detail');
-      }
+      setNoticePageUrl('detail');
+      getList()
     }
   };
+
+  const getList = async()=>{
+    const classId = {
+      classId: params.classId,
+    };
+    const res = await getNoticeList(classId)
+    if(res?.status===200){
+      setListItem(res?.data)
+    }
+  }
 
   return (
     <S.Container className='flex flex-col'>
