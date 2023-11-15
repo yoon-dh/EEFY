@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 export const Container = styled.div`
 z-index: 10;
-/* position: absolute; */
-/* top: 0px; */
-/* left: 0px; */
+/* position: absolute;
+top: 0px;
+left: 0px; */
 width: 100%;
 height: 100%;
 `

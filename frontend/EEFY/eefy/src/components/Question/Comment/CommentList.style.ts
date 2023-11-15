@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 export const Container = styled.form`
-height: 81%;
+height: 520px;
+width: 100%;
 @media(max-width: 1334px){
-  height: 79%;
+  height: 455px;
 }
   &::-webkit-scrollbar {
     display: none;
@@ -45,12 +46,5 @@ export const Box = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
-&:hover{
-  transition: background-color 0.5s;
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  background-color: #EBEAEA;
-}
 `
 

@@ -88,7 +88,7 @@ function CanvasModal() {
   },[varData.redo])
 
   useEffect(()=>{
-    // getPdfUrl()
+    getPdfUrl()
     if(page.btnType === 'before'){
       handleSketchData(page.pageNumber+1)
       const clearCanvas = canvasRef.current?.clearCanvas;

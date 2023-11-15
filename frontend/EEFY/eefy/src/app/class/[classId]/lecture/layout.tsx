@@ -3,30 +3,40 @@ import ContainerBtn from '@/components/Lecture/ContainerBtn';
 import NoteLeft from '@/components/Notice/Note/NoteLeft';
 import NoteCenter from '@/components/Notice/Note/NoteCenter';
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
+import { OcrFileCheck } from '@/recoil/Homework';
+import CanvasModal from '@/components/Lecture/LectureDetail/CanvasModal';
 
 export default function NoticeLayout({ children }: { children: React.ReactNode }) {
+  const canvas = useRecoilValue(OcrFileCheck)
   return(
     <div className='w-full h-full'>
-      <div>
-        <ContainerBtn/>
-      </div>
-      <div className='flex w-full h-full rounded-lg' style={{
-          position:'relative',
-          top:'10px',
-          height:'89%', 
-        }}>
-        <div style={{flex:2}}>
-          <NoteLeft/>
+      {/* {!canvas.isSuccess ? (
+        <> */}
+        <div>
+          <ContainerBtn/>
         </div>
-        <div style={{flex:1}}>
-          <NoteCenter/>
+        <div className='flex w-full h-full rounded-lg' style={{
+            position:'relative',
+            top:'10px',
+            height:'89%', 
+          }}>
+          <div style={{flex:2}}>
+            <NoteLeft/>
+          </div>
+          <div style={{flex:1}}>
+            <NoteCenter/>
+          </div>
+          <div style={{flex:7}}>
+            <NoteRigth className='w-full h-full bg-base-200'>
+              {children}
+            </NoteRigth>
+          </div>
         </div>
-        <div style={{flex:7}}>
-          <NoteRigth className='w-full h-full bg-base-200'>
-            {children}
-          </NoteRigth>
-        </div>
-      </div>
+        {/* </>
+      ) : (
+        <CanvasModal/>
+      )} */}
     </div>
   )
 }

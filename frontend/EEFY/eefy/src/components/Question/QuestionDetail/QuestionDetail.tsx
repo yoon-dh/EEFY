@@ -17,7 +17,7 @@ function QuestionDetail(props:any) {
   const [listItem, setListItem] = useRecoilState(NoticeList);
 
   const handleDetele = async(id:any)=>{
-    const res = await deleteQuestionDelete(4)
+    const res = await deleteQuestionDelete(id)
     if (res?.status === 200) {
       getList()
     }
@@ -67,7 +67,7 @@ function QuestionDetail(props:any) {
                   </div>
                   <div className='flex' style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
                     <UpdataBtn onClick={()=>setQuestionPageUrl('updata')}>수정</UpdataBtn>
-                    <DeleteBtn onClick={()=>handleDetele(data.id)}>삭제</DeleteBtn>
+                    <DeleteBtn onClick={()=>handleDetele(data.questionId)}>삭제</DeleteBtn>
                   </div>
                 </div>
               </Header>

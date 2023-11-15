@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { NoticeTitle, Tab } from './ContainerBtn.style';
 import { useRecoilState } from 'recoil';
-
+import {QuestionWaitStatus} from '@/recoil/Question'
 
 function ContainerBtn() {
-  const [activeTab, setActiveTab] = useState<boolean>(true);
+  const [waitStatus, setWaitStatus] = useRecoilState(QuestionWaitStatus)
 
   return (
     <div className='flex mt-1'>
@@ -12,15 +12,15 @@ function ContainerBtn() {
         <div className="tabs" style={{
           margin:'0px 0px 0px 10px'
         }}>
-          <Tab className={`tab tab-bordered ${activeTab === true ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab(true)}
+          <Tab className={`tab tab-bordered ${waitStatus === false ? 'tab-active' : ''}`}
+          onClick={() => setWaitStatus(false)}
           >
             <NoticeTitle>
               답변 대기
             </NoticeTitle>
           </Tab> 
-          <Tab className={`tab tab-bordered ${activeTab === false ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab(false)}
+          <Tab className={`tab tab-bordered ${waitStatus === true ? 'tab-active' : ''}`}
+          onClick={() => setWaitStatus(true)}
           >
             <NoticeTitle>
               답변 완료
