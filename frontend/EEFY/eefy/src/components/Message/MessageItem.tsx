@@ -12,9 +12,20 @@ interface MessageItemProps {
   link: string;
   setAlarmArr: Function;
   setRecoilAlarmArr: Function;
+  setIsMessageModalOpen: Function;
 }
 
-function MessageItem({ messageId, notificationTitle, content, link, classTitle, createDate, setAlarmArr, setRecoilAlarmArr }: MessageItemProps) {
+function MessageItem({
+  messageId,
+  notificationTitle,
+  content,
+  link,
+  classTitle,
+  createDate,
+  setAlarmArr,
+  setRecoilAlarmArr,
+  setIsMessageModalOpen,
+}: MessageItemProps) {
   function dateFormat(createDate: Date): string {
     const currentTime = new Date();
     const elapsedMilliseconds = currentTime.getTime() - new Date(createDate).getTime();
@@ -45,6 +56,7 @@ function MessageItem({ messageId, notificationTitle, content, link, classTitle, 
       style={{ display: 'flex', width: '100%', marginBottom: '8px', alignItems: 'center' }}
       onClick={() => {
         deleteAlarm(messageId);
+        setIsMessageModalOpen(false);
       }}
     >
       <div style={{ flex: '1' }}>
