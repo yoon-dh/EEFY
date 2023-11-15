@@ -1,6 +1,7 @@
 package com.eefy.studyclass.domain.lecture.controller;
 
 import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
+import com.eefy.studyclass.domain.lecture.dto.response.LectureIdResponse;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureNoteListResponse;
 import com.eefy.studyclass.domain.lecture.dto.request.LectureNoteRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureResponse;
@@ -26,12 +27,11 @@ public class LectureController {
     private final LectureService lectureService;
 
     @PostMapping(value = "/tutor",  consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> makeLecture(@RequestHeader("Member-Id") Integer teacherId,
-                                            @RequestPart(name = "request") LectureNoteRequest lectureNoteRequest,
-                                            @RequestPart(name = "file") MultipartFile filePath) throws IOException {
+    public ResponseEntity<LectureIdResponse> makeLecture(@RequestHeader("Member-Id") Integer teacherId,
+                                                         @RequestPart(name = "request") LectureNoteRequest lectureNoteRequest,
+                                                         @RequestPart(name = "file") MultipartFile filePath) throws IOException {
 
-        lectureService.makeLectureNote(teacherId, lectureNoteRequest, filePath);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(lectureService.makeLectureNote(teacherId, lectureNoteRequest, filePath));
     }
 
     @GetMapping("/list/{classId}")

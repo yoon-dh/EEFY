@@ -2,7 +2,7 @@ package com.eefy.studyclass.domain.lecture.service;
 
 import com.eefy.studyclass.domain.alarm.dto.request.PushAlarmRequest;
 import com.eefy.studyclass.domain.alarm.service.AlarmService;
-import com.eefy.studyclass.domain.lecture.persistence.entity.CanvasData;
+import com.eefy.studyclass.domain.lecture.dto.response.LectureIdResponse;
 import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.NoteInfoResponse;
 import com.eefy.studyclass.domain.lecture.persistence.entity.DrawInfo;
@@ -56,7 +56,7 @@ public class LectureServiceImpl implements LectureService {
     private final AlarmService alarmService;
 
     @Override
-    public void makeLectureNote(Integer teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException {
+    public LectureIdResponse makeLectureNote(Integer teacherId, LectureNoteRequest lectureNoteRequest, MultipartFile filePath) throws IOException {
 
         Member member = memberService.getMemberInfo(teacherId, teacherId);
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(lectureNoteRequest.getClassId()));
@@ -82,6 +82,9 @@ public class LectureServiceImpl implements LectureService {
                 .build();
 
         alarmService.pushAlarmToStudent(teacherId, pushAlarmRequest);
+
+        return LectureIdResponse.builder()
+                .id(lectureId).build();
     }
 
     @Override
