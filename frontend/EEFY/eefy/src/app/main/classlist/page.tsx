@@ -104,7 +104,7 @@ function ClassList() {
           </div>
         ) : (
           <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center', backdropFilter: 'blur(10px)', paddingLeft: '3%' }}>
-            수강 중인 클래스 <span style={{ color: '#4f4d4d81' }}>({classCnt})</span>
+            수강 중인 클래스 <span>({classCnt})</span>
           </div>
         )}
 

@@ -4,8 +4,8 @@ import { NoticePage } from '@/recoil/Notice';
 import { useRouter, useParams } from 'next/navigation';
 
 function ContainerBtn() {
-  const router = useRouter()
-  const params = useParams()
+  const router = useRouter();
+  const params = useParams();
   const [noticePageUrl, setNoticePageUrl] = useRecoilState(NoticePage);
 
   return (
@@ -18,12 +18,12 @@ function ContainerBtn() {
         </div>
       </TabBox>
 
-      <CreateBtn className='text-xl bg-info text-white' 
+      {/* <CreateBtn className='text-xl bg-info text-white' 
       onClick={() => 
       router.push(`/class/${params.classId}/notice/create`)
       }>
         CREATE
-      </CreateBtn>
+      </CreateBtn> */}
     </div>
   );
 }
