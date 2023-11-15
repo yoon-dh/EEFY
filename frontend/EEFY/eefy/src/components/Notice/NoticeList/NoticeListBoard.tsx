@@ -115,43 +115,73 @@ function NoticeListBoard() {
           height: '100%',
         }}
       >
-        {userDataObj?.role === 'TEACHER' ? (
-          <Card
-            className='bg-default'
-            style={{
-              margin: '3px auto 25px auto',
-            }}
-            onClick={() => router.push(`/class/${params.classId}/notice/create`)}
-          >
-            <Title className='text-info' style={{ fontSize: '20px' }}>
-              +
-            </Title>
-            <Time>
-              <b className='text-info' style={{ letterSpacing: '2px', fontSize: '15px' }}>
-                CREATE
-              </b>
-            </Time>
-          </Card>
-        ) : null}
+        {lastWord === 'notice' && (
+          <>
+          {userDataObj?.role === 'TEACHER' ? (
+            <Card
+              className='bg-default'
+              style={{
+                margin: '3px auto 25px auto',
+              }}
+              onClick={() => router.push(`/class/${params.classId}/notice/create`)}
+            >
+              <Title className='text-info' style={{ fontSize: '20px' }}>
+                +
+              </Title>
+              <Time>
+                <b className='text-info' style={{ letterSpacing: '2px', fontSize: '15px' }}>
+                  CREATE
+                </b>
+              </Time>
+            </Card>
+          ) : null}
+          </>
+        )}
+        {lastWord === 'lecture' && (
+          <>
+          {userDataObj?.role === 'TEACHER' ? (
+            <Card
+              className='bg-default'
+              style={{
+                margin: '3px auto 25px auto',
+              }}
+              onClick={() => router.push(`/class/${params.classId}/lecture/create`)}
+            >
+              <Title className='text-info' style={{ fontSize: '20px' }}>
+                +
+              </Title>
+              <Time>
+                <b className='text-info' style={{ letterSpacing: '2px', fontSize: '15px' }}>
+                  CREATE
+                </b>
+              </Time>
+            </Card>
+          ) : null}
+          </>
+        )}
+        {lastWord === 'question' && (
+          <>
+            {userDataObj?.role === 'STUDENT' ? (
+              <Card
+                className='bg-default'
+                style={{
+                  margin: '3px auto 25px auto',
+                }}
+                onClick={() => router.push(`/class/${params.classId}/question/create`)}
+              >
+                <Title className='text-info' style={{ fontSize: '20px' }}>
+                  +
+                </Title>
+                <Time>
+                  <b className='text-info' style={{ letterSpacing: '2px', fontSize: '15px' }}>
+                    CREATE
+                  </b>
+                </Time>
+              </Card>
+            ) : null}
+          </>
+        )}
 
-        {userDataObj?.role === 'TEACHER' ? (
-          <Card
-            className='bg-default'
-            style={{
-              margin: '3px auto 25px auto',
-            }}
-            onClick={() => router.push(`/class/${params.classId}/notice/create`)}
-          >
-            <Title className='text-info' style={{ fontSize: '20px' }}>
-              +
-            </Title>
-            <Time>
-              <b className='text-info' style={{ letterSpacing: '2px', fontSize: '15px' }}>
-                CREATE
-              </b>
-            </Time>
-          </Card>
-        ) : null}
 
         {listItem.map((item: any, index) => (
           <Card
