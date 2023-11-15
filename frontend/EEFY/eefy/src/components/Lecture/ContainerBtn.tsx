@@ -1,9 +1,6 @@
 import { CreateBtn, NoticeTitle, Tab } from './ContainerBtn.style';
-import { useRouter, useParams } from 'next/navigation';
 
 function ContainerBtn() {
-  const router = useRouter()
-  const params = useParams()
   return (
     <div className='flex mt-1'>
       <div>
@@ -17,11 +14,6 @@ function ContainerBtn() {
           </Tab> 
         </div>
       </div>
-        <CreateBtn onClick={() => 
-      router.push(`/class/${params.classId}/lecture/create`)
-      }>
-          자료 생성
-        </CreateBtn>
     </div>
   );
 }
