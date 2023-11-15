@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @Builder
-public class SavedMessageResponse {
+public class SavedMessageResponse implements Comparable<SavedMessageResponse> {
     private String messageId;
     private int classId;
     private String link;
@@ -19,4 +19,9 @@ public class SavedMessageResponse {
     private String title;
     private String content;
     private LocalDateTime createdAt;
+
+    @Override
+    public int compareTo(SavedMessageResponse o) {
+        return o.createdAt.compareTo(createdAt);
+    }
 }

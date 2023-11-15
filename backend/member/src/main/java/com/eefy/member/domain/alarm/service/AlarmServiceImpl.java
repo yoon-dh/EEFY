@@ -29,12 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -162,9 +157,9 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     private AlarmMessage getValidAlarmMessage(Optional<AlarmMessage> alarmMessageOptional, int memberId) {
-        AlarmMessage alarmMessage = alarmMessageOptional.orElseGet(() -> new AlarmMessage(memberId, new TreeMap<>()));
+        AlarmMessage alarmMessage = alarmMessageOptional.orElseGet(() -> new AlarmMessage(memberId, new HashMap<>()));
         if (alarmMessage.getMessages() == null) {
-            alarmMessage.setMessages(new TreeMap<>());
+            alarmMessage.setMessages(new HashMap<>());
         }
         return alarmMessage;
     }
@@ -252,6 +247,7 @@ public class AlarmServiceImpl implements AlarmService {
                     .build());
         }
         log.info("알림 응답 목록 수: {}", response.size());
+        Collections.sort(response);
         return response;
     }
 }
