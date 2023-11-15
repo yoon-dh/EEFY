@@ -15,6 +15,7 @@ public class LectureResponse {
     private LocalDateTime updatedAt;
     private String title;
     private String content;
+    private String lectureFilePath;
 
     public LectureResponse(Lecture lecture, Member member) {
         this.id = lecture.getId();
@@ -25,5 +26,6 @@ public class LectureResponse {
         this.updatedAt = lecture.getUpdatedAt();
         this.title = lecture.getTitle();
         this.content = lecture.getContent();
+        this.lectureFilePath = getLectureFilePath();
     }
 }

@@ -123,7 +123,7 @@ public class LectureServiceImpl implements LectureService {
 
         ArrayList<LectureNoteInfo> lectureNoteInfoList = lectureNoteInfoRepository.findByMemberIdAndLectureId(memberId, lecture.getId());
 
-        if(lectureNoteInfoList.size() == 0) return new NoteInfoResponse(lecture, new ArrayList<>());
+        if(lectureNoteInfoList.size() == 0) return new NoteInfoResponse(new ArrayList<>());
 
         List<DrawInfo> drawInfoList = new ArrayList<>();
 
@@ -143,6 +143,6 @@ public class LectureServiceImpl implements LectureService {
 
             drawInfoList.addAll(collect);
         }
-        return new NoteInfoResponse(lecture, drawInfoList);
+        return new NoteInfoResponse(drawInfoList);
     }
 }
