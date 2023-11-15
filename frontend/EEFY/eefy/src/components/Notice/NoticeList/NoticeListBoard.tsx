@@ -1,26 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { LecturePage } from '@/recoil/Lecture';
 import { QuestionPage } from '@/recoil/Question';
-import { NoticeList, DetailData, NoticePage, Name } from '@/recoil/Notice';
+import { NoticePage, Name, NoticeList } from '@/recoil/Notice';
 // 날짜 변환
 import dayjs from 'dayjs';
 import { Card, Title, Time, Container, Wrappe } from './NoticeListBoard.style';
-import { getNoticeList, getNoticeDetail } from '@/api/Notice/Notice';
-import { getLectureList, getLectureDetail } from '@/api/Lecture/Lecture';
-import { getQuestionList, getQuestionDetail } from '@/api/Question/Question';
+import { getNoticeList } from '@/api/Notice/Notice';
+import { getLectureList } from '@/api/Lecture/Lecture';
+import { getQuestionList } from '@/api/Question/Question';
+
+import { useRouter, useParams } from 'next/navigation';
 
 function NoticeListBoard() {
-  const [noticeList, setNoticeList] = useRecoilState(NoticeList);
-  const [num, setNum] = useRecoilState(DetailData);
+  const router = useRouter();
+  const params = useParams()
+
+  const [listItem, setListItem] = useRecoilState(NoticeList);
   const [lecturePageUrl, setLecturePageUrl] = useRecoilState(LecturePage);
-  const [noticePageUrl, setNoticePageUrl] = useRecoilState(NoticePage);
   const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage);
   const lastWord = useRecoilValue(Name);
 
   useEffect(() => {
     console.log(lastWord);
-    console.log(questionPageUrl, 'questionPageUrl');
+    console.log(params, 'params');
     if (lastWord === 'notice') {
       getNotice();
     } else if (lastWord === 'lecture') {
@@ -28,84 +31,56 @@ function NoticeListBoard() {
     } else if (lastWord === 'question') {
       getQuestion();
     }
-  }, [lastWord, noticePageUrl]);
+  }, []);
 
   // 공지사항 리스트
   const getNotice = async () => {
     const classId = {
-      classId: 27,
+      classId: Number(params.classId),
     };
-    if (noticePageUrl === 'detail') {
-      const res = await getNoticeList(classId);
-      console.log(res);
-      if (res?.status === 200) {
-        setNoticeList(res.data);
+    const res = await getNoticeList(classId);
+    console.log(res);
+    if (res?.status === 200) {
+      setListItem(res?.data)
+      if(params.noticeId===undefined){
+        if (res?.data.length > 0){
+          router.push(`/class/${params.classId}/notice/${res?.data[0].id}`)
+        }else {
+          router.push(`/class/${params.classId}/notice}`)
+        }
       }
     }
   };
 
   // 학습자료 리스트
   const getLecture = async () => {
-    const classId = {
-      classId: 27,
-    };
     if (lecturePageUrl === 'detail') {
-      const res = await getLectureList(27);
+      const res = await getLectureList(Number(params.classId));
       console.log(res);
       if (res?.status === 200) {
-        setNoticeList(res.data);
       }
     }
   };
 
   //질의응답 리스트
   const getQuestion = async () => {
-    const classId = 27;
     if (questionPageUrl === 'detail') {
-      const res = await getQuestionList(classId);
+      const res = await getQuestionList(Number(params.classId));
       console.log(res);
       if (res?.status === 200) {
-        setNoticeList(res.data);
       }
     }
   };
 
+  // 상세페이지로 이동
   const handleClick = (id: any) => {
     console.log(id);
     if (lastWord === 'notice') {
-      NoticeDetail(id);
+      router.push(`/class/${params.classId}/notice/${id}`)
     } else if (lastWord === 'lecture') {
-      LectureDetail(id);
+      router.push(`/class/${params.classId}/lecture/${id}`)
     } else if (lastWord === 'question') {
-      QuestionDetail(id);
-    }
-  };
-
-  // 공지사항 상세페이지
-  const NoticeDetail = async (id: any) => {
-    console.log(id);
-    const res = await getNoticeDetail(id);
-    if (res?.status === 200) {
-      setNum(res.data);
-      setNoticePageUrl('detail');
-    }
-  };
-  // 학습자료 상세페이지
-  const LectureDetail = async (id: any) => {
-    console.log(id);
-    const res = await getLectureDetail(id);
-    if (res?.status === 200) {
-      setNum(res.data);
-      setLecturePageUrl('detail');
-    }
-  };
-  //질의응답 상세페이지
-  const QuestionDetail = async (id: any) => {
-    console.log(id);
-    const res = await getQuestionDetail(id);
-    if (res?.status === 200) {
-      setNum(res.data);
-      setQuestionPageUrl('detail');
+      router.push(`/class/${params.classId}/question/${id}`)
     }
   };
 
@@ -121,18 +96,18 @@ function NoticeListBoard() {
           height: '100%',
         }}
       >
-        {noticeList.map((item, index) => (
+        {listItem.map((item:any, index) => (
           <Card
             className='bg-default'
             key={index}
             style={{
-              margin: index == noticeList.length - 1 ? '25px auto 4px auto' : index == 0 ? '3px auto 25px auto' : '',
+              margin: index == listItem.length - 1 ? '25px auto 4px auto' : index == 0 ? '3px auto 25px auto' : '',
             }}
             onClick={() => handleClick(item.id)}
           >
             <Title>{item.title.slice(0, 30)}</Title>
             <Time>
-              <b>{dayjs(item.createdAt).format('YYYY.MM.DD')}</b>
+              <b>{dayjs(item.createdAt).format('YYYY.MM.DD HH:MM')}</b>
             </Time>
           </Card>
         ))}
