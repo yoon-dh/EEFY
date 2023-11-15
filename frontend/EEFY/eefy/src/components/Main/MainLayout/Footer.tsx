@@ -103,6 +103,7 @@ export default function Footer() {
       setOnMessageTitle(payload.data?.title);
       // console.log(payload.notification?.title);
       // setOnMessageTitle(payload.notification?.title);
+      new Audio('/Sound/message.mp3').play();
     });
   };
 
