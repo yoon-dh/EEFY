@@ -1,13 +1,16 @@
 import React, {useState, useEffect} from 'react'
-import {putQuestionUpdata, getQuestionDetail} from '@/api/Question/Question'
+import {putQuestionUpdata, getQuestionList} from '@/api/Question/Question'
 import { useRecoilState } from "recoil";
-import { DetailData } from '@/recoil/Notice'
+import { NoticeList } from '@/recoil/Notice'
 import { QuestionPage } from '@/recoil/Question'
 import * as S from './QuestionUpdata.style'
+import { useParams } from 'next/navigation';
 
-function QuestionUpdata(){
+function QuestionUpdata(props:any){
+  const params = useParams()
+  const data = props.data
+  const [listItem, setListItem] = useRecoilState(NoticeList);
   const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage)
-  const [data, setData] = useRecoilState(DetailData)
   const [id, setId] = useState('')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -22,12 +25,22 @@ function QuestionUpdata(){
 
   const handlePost =async()=>{
     const data = {
-      id:3,
+      id:id,
       title:title,
       content:content
     }
     const res = await putQuestionUpdata(data)
-    console.log(res)
+    if (res?.status === 200) {
+      setQuestionPageUrl('detail');
+      getList()
+    }
+  }
+
+  const getList = async()=>{
+    const res = await getQuestionList(Number(params.classId))
+    if(res?.status===200){
+      setListItem(res?.data)
+    }
   }
 
   return(

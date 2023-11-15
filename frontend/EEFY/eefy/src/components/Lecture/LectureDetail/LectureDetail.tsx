@@ -1,7 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import { useRecoilState } from 'recoil';
-import { DetailData } from '@/recoil/Notice';
-import {LecturePage} from '@/recoil/Lecture'
 import dayjs from 'dayjs';
 import {
   Container,
@@ -34,11 +32,10 @@ type Notice = {
   content: string;
 };
 
-function LectureDetail() {
-  const [notice, setNotice] = useRecoilState<Notice | null>(DetailData);
-  const [targetFile, setTargetFile] = useState<FileList | null>(null);
-  const [lecturePage, setLecturePage] = useRecoilState(LecturePage);
+function LectureDetail(props:any) {
+  const data = props.data
 
+  const [targetFile, setTargetFile] = useState<FileList | null>(null);
   const [ocr, setOcr] = useRecoilState(OcrFileCheck)
 
   const fileType = ["application/pdf"];
@@ -92,14 +89,14 @@ function LectureDetail() {
           flex: 8,
         }}
       >
-        {!notice?.title && (
+        {data?.title && (
           <>
-            {/* <Wrappe style={{ boxShadow: 'none', padding: '2% 5%' }} className='flex flex-col'>
+            <Wrappe style={{ boxShadow: 'none', padding: '2% 5%' }} className='flex flex-col'>
               <div style={{ flex: 9 }}>
                 <Header>
                   <div className='flex'>
-                    <Title>{notice.title}</Title>
-                    <Time>{dayjs(notice.createTime).format('YYYY.MM.DD')}</Time>
+                    <Title>{data.title}</Title>
+                    <Time>{dayjs(data.createTime).format('YYYY.MM.DD')}</Time>
                   </div>
                   <div
                     style={{
@@ -115,8 +112,7 @@ function LectureDetail() {
                         width: '300px',
                       }}
                     >
-                      <Img src={notice.imgUrl} />
-                      <UseName>{notice.nickname}</UseName>
+                      <UseName>{data.nickname}</UseName>
                     </div>
 
                   </div>
@@ -124,12 +120,12 @@ function LectureDetail() {
                 <Line />
                 <ContentBox>
                   <Content>
-                    {notice.content}
+                    {data.content}
                   </Content>
                 </ContentBox>
               </div>
 
-            </Wrappe> */}
+            </Wrappe>
               <BtnBox>
                 <ViewerBtn 
                 id="imgInput" 

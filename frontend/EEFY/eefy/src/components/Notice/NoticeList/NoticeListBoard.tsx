@@ -46,7 +46,7 @@ function NoticeListBoard() {
         if (res?.data.length > 0){
           router.push(`/class/${params.classId}/notice/${res?.data[0].id}`)
         }else {
-          router.push(`/class/${params.classId}/notice}`)
+          router.push(`/class/${params.classId}/notice`)
         }
       }
     }
@@ -58,6 +58,14 @@ function NoticeListBoard() {
       const res = await getLectureList(Number(params.classId));
       console.log(res);
       if (res?.status === 200) {
+        setListItem(res?.data)
+        // if(params.lectureId===undefined){
+          if (res?.data.length > 0){
+            router.push(`/class/${params.classId}/lecture/${res?.data[0].id}`)
+          }else {
+            router.push(`/class/${params.classId}/lecture`)
+          }
+        // }
       }
     }
   };
@@ -68,6 +76,14 @@ function NoticeListBoard() {
       const res = await getQuestionList(Number(params.classId));
       console.log(res);
       if (res?.status === 200) {
+        setListItem(res?.data)
+        // if(params.lectureId===undefined){
+          if (res?.data.length > 0){
+            router.push(`/class/${params.classId}/question/${res?.data[0].id}`)
+          }else {
+            router.push(`/class/${params.classId}/question`)
+          }
+        // }
       }
     }
   };

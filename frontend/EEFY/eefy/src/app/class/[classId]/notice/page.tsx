@@ -1,6 +1,6 @@
 'use client';
 import NoneBox from "@/components/Notice/Note/NoneBox";
-function Home() {
+function Notice() {
   return (
     <div className='w-full h-full'>
       <NoneBox/>
@@ -8,4 +8,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Notice;

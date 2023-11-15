@@ -1,8 +1,9 @@
 import { CreateBtn, NoticeTitle, Tab } from './ContainerBtn.style';
-import { useRecoilState } from 'recoil';
-import {LecturePage} from '@/recoil/Lecture'
+import { useRouter, useParams } from 'next/navigation';
+
 function ContainerBtn() {
-  const [lecturePage, setLecturePage] = useRecoilState(LecturePage)
+  const router = useRouter()
+  const params = useParams()
   return (
     <div className='flex mt-1'>
       <div>
@@ -16,7 +17,9 @@ function ContainerBtn() {
           </Tab> 
         </div>
       </div>
-        <CreateBtn onClick={()=>setLecturePage('create')}>
+        <CreateBtn onClick={() => 
+      router.push(`/class/${params.classId}/lecture/create`)
+      }>
           자료 생성
         </CreateBtn>
     </div>

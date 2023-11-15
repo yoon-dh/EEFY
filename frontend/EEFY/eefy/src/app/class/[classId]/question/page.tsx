@@ -1,21 +1,11 @@
 'use client';
-import ContainerBtn from "@/components/Question/ContainerBtn";
-import Note from "@/components/Notice/Note/Note";
-function Home() {
+import NoneBox from "@/components/Notice/Note/NoneBox";
+function Question() {
   return (
     <div className='w-full h-full'>
-      <div>
-        <ContainerBtn />
-      </div>
-      <div style={{
-        position:'relative',
-        top:'10px',
-        height:'89%', 
-      }}>
-        <Note/>
-      </div>
+      <NoneBox/>
     </div>
   );
 }
 
-export default Home;
+export default Question;

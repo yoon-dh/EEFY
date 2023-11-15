@@ -1,12 +1,9 @@
 import { CreateBtn, NoticeTitle, Tab, TabBox } from './ContainerBtn.style';
-import { useRecoilState } from 'recoil';
-import { NoticePage } from '@/recoil/Notice';
 import { useRouter, useParams } from 'next/navigation';
 
 function ContainerBtn() {
   const router = useRouter()
   const params = useParams()
-  const [noticePageUrl, setNoticePageUrl] = useRecoilState(NoticePage);
 
   return (
     <div className='flex mt-1'>

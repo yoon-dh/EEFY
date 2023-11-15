@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { useRecoilState } from 'recoil';
 import { DetailData, NoticePage, NoticeList } from '@/recoil/Notice';
 import { userData } from '@/recoil/Auth';
@@ -16,10 +16,6 @@ function NoticeDetail(props:any) {
   const [user, setUser] = useRecoilState(userData);
 
   const data = props.data
-
-  useEffect(()=>{
-    console.log(data)
-  },[])
 
   const DeleteNotice = async (id: Number) => {
     const res = await deleteNoticeDelete(id);
@@ -39,7 +35,7 @@ function NoticeDetail(props:any) {
       if (res?.data.length > 0){
         router.push(`/class/${params.classId}/notice/${res?.data[0].id}`)
       }else {
-        router.push(`/class/${params.classId}/notice}`)
+        router.push(`/class/${params.classId}/notice`)
       }
     }
   }

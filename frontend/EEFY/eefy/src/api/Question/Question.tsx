@@ -6,7 +6,7 @@ interface data {
   content: string;
 }
 interface updata {
-  id:Number;
+  id:string;
   title: string;
   content: string;
 }
