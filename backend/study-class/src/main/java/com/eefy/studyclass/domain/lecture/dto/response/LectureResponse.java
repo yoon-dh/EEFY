@@ -26,6 +26,6 @@ public class LectureResponse {
         this.updatedAt = lecture.getUpdatedAt();
         this.title = lecture.getTitle();
         this.content = lecture.getContent();
-        this.lectureFilePath = getLectureFilePath();
+        this.lectureFilePath = lecture.getFilePath();
     }
 }
