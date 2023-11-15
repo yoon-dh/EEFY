@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { DetailData, NoticePage, NoticeList } from '@/recoil/Notice';
 import { userData } from '@/recoil/Auth';
@@ -7,38 +7,42 @@ import { Container, Header, Wrappe, Title, Time, Img, UseName, Line, ContentBox,
 import { deleteNoticeDelete, getNoticeList } from '@/api/Notice/Notice';
 import { useRouter, useParams } from 'next/navigation';
 
-function NoticeDetail(props:any) {
-  const params = useParams()
-  const router = useRouter()
+function NoticeDetail(props: any) {
+  const params = useParams();
+  const router = useRouter();
 
   const [noticePageUrl, setNoticePageUrl] = useRecoilState(NoticePage);
   const [listItem, setListItem] = useRecoilState(NoticeList);
   const [user, setUser] = useRecoilState(userData);
 
-  const data = props.data
+  const data = props.data;
+
+  useEffect(() => {
+    console.log(data);
+  }, []);
 
   const DeleteNotice = async (id: Number) => {
     const res = await deleteNoticeDelete(id);
     console.log(res);
     if (res?.status === 200) {
-      getList()
+      getList();
     }
   };
 
-  const getList = async()=>{
+  const getList = async () => {
     const classId = {
       classId: params.classId,
     };
-    const res = await getNoticeList(classId)
-    if(res?.status===200){
-      setListItem(res?.data)
-      if (res?.data.length > 0){
-        router.push(`/class/${params.classId}/notice/${res?.data[0].id}`)
-      }else {
-        router.push(`/class/${params.classId}/notice`)
+    const res = await getNoticeList(classId);
+    if (res?.status === 200) {
+      setListItem(res?.data);
+      if (res?.data.length > 0) {
+        router.push(`/class/${params.classId}/notice/${res?.data[0].id}`);
+      } else {
+        router.push(`/class/${params.classId}/notice`);
       }
     }
-  }
+  };
 
   return (
     <>

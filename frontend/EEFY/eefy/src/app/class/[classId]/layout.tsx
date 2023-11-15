@@ -1,12 +1,15 @@
 'use client';
 import TopNav from '@/components/Class/ClassLayout/TopNav';
 import SideNav from '@/components/Class/ClassLayout/SideNav';
-import Footer from '@/components/Class/ClassLayout/Footer';
+import Footer from '@/components/Main/MainLayout/Footer';
 import Image from 'next/image';
 
 import { useRecoilValue } from 'recoil';
 import { Theme } from '@/recoil/Theme';
+
 import BackgroundComponent from '@/components/Common/BackgroundComponent';
+
+import MessageList from '@/components/Message/MessageList';
 
 export default function ClassLayout({ children }: { children: React.ReactNode }) {
   const theme = useRecoilValue(Theme);
@@ -48,6 +51,8 @@ export default function ClassLayout({ children }: { children: React.ReactNode })
         {/* background */}
       </div>
       <BackgroundComponent />
+      {/* messageList */}
+      <MessageList />
     </>
   );
 }

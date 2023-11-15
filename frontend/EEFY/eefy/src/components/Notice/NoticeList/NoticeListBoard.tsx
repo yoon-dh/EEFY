@@ -11,15 +11,18 @@ import { getLectureList } from '@/api/Lecture/Lecture';
 import { getQuestionList } from '@/api/Question/Question';
 
 import { useRouter, useParams } from 'next/navigation';
+import { userData } from '@/recoil/Auth';
 
 function NoticeListBoard() {
   const router = useRouter();
-  const params = useParams()
+  const params = useParams();
 
   const [listItem, setListItem] = useRecoilState(NoticeList);
   const [lecturePageUrl, setLecturePageUrl] = useRecoilState(LecturePage);
   const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage);
   const lastWord = useRecoilValue(Name);
+
+  const userDataObj = useRecoilValue(userData);
 
   useEffect(() => {
     console.log(lastWord);
@@ -41,12 +44,12 @@ function NoticeListBoard() {
     const res = await getNoticeList(classId);
     console.log(res);
     if (res?.status === 200) {
-      setListItem(res?.data)
-      if(params.noticeId===undefined){
-        if (res?.data.length > 0){
-          router.push(`/class/${params.classId}/notice/${res?.data[0].id}`)
-        }else {
-          router.push(`/class/${params.classId}/notice`)
+      setListItem(res?.data);
+      if (params.noticeId === undefined) {
+        if (res?.data.length > 0) {
+          router.push(`/class/${params.classId}/notice/${res?.data[0].id}`);
+        } else {
+          router.push(`/class/${params.classId}/notice`);
         }
       }
     }
@@ -92,11 +95,11 @@ function NoticeListBoard() {
   const handleClick = (id: any) => {
     console.log(id);
     if (lastWord === 'notice') {
-      router.push(`/class/${params.classId}/notice/${id}`)
+      router.push(`/class/${params.classId}/notice/${id}`);
     } else if (lastWord === 'lecture') {
-      router.push(`/class/${params.classId}/lecture/${id}`)
+      router.push(`/class/${params.classId}/lecture/${id}`);
     } else if (lastWord === 'question') {
-      router.push(`/class/${params.classId}/question/${id}`)
+      router.push(`/class/${params.classId}/question/${id}`);
     }
   };
 
@@ -112,13 +115,35 @@ function NoticeListBoard() {
           height: '100%',
         }}
       >
-        {listItem.map((item:any, index) => (
+        {userDataObj?.role === 'TEACHER' ? (
+          <Card
+            className='bg-default'
+            style={{
+              margin: '3px auto 25px auto',
+            }}
+            onClick={() => router.push(`/class/${params.classId}/notice/create`)}
+          >
+            <Title className='text-info' style={{ fontSize: '20px' }}>
+              +
+            </Title>
+            <Time>
+              <b className='text-info' style={{ letterSpacing: '2px', fontSize: '15px' }}>
+                CREATE
+              </b>
+            </Time>
+          </Card>
+        ) : null}
+
+        {listItem.map((item: any, index) => (
           <Card
             className='bg-default'
             key={index}
             style={{
-              margin: index == listItem.length - 1 ? '25px auto 4px auto' : index == 0 ? '3px auto 25px auto' : '',
+              margin: index == listItem.length - 1 ? '25px auto 4px auto' : '',
             }}
+            // style={{
+            //   margin: index == listItem.length - 1 ? '25px auto 4px auto' : index == 0 ? '3px auto 25px auto' : '',
+            // }}
             onClick={() => handleClick(item.id)}
           >
             <Title>{item.title.slice(0, 30)}</Title>

@@ -24,11 +24,12 @@ export const BackgroundContainer = styled.div<themeType>`
   height: 100%;
   margin: auto;
   overflow: hidden;
+  /* test */
   ${props =>
     props.$theme === 'winter'
       ? css`
-          /* background: linear-gradient(90deg, rgba(224, 188, 243, 0.7) 0%, rgba(126, 231, 238, 0.7) 100%); */
-          background: rgba(255, 255, 255);
+          background: linear-gradient(90deg, rgba(224, 188, 243, 0.3) 0%, rgba(126, 231, 238, 0.3) 100%);
+          /* background: rgba(255, 255, 255); */
         `
       : css`
           background: rgba(29, 35, 42);

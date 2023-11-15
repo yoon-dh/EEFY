@@ -13,3 +13,8 @@ export const EnterClassNumber = atom<any>({
   default: null,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const EnterClassTitle = atom<string>({
+  key: 'EnterClassTitle',
+  default: '',
+});

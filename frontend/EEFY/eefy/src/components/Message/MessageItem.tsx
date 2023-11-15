@@ -12,9 +12,20 @@ interface MessageItemProps {
   link: string;
   setAlarmArr: Function;
   setRecoilAlarmArr: Function;
+  setIsMessageModalOpen: Function;
 }
 
-function MessageItem({ messageId, notificationTitle, content, link, classTitle, createDate, setAlarmArr, setRecoilAlarmArr }: MessageItemProps) {
+function MessageItem({
+  messageId,
+  notificationTitle,
+  content,
+  link,
+  classTitle,
+  createDate,
+  setAlarmArr,
+  setRecoilAlarmArr,
+  setIsMessageModalOpen,
+}: MessageItemProps) {
   function dateFormat(createDate: Date): string {
     const currentTime = new Date();
     const elapsedMilliseconds = currentTime.getTime() - new Date(createDate).getTime();
@@ -40,25 +51,45 @@ function MessageItem({ messageId, notificationTitle, content, link, classTitle, 
   };
 
   return (
-    <Link href={link}>
-      <div
-        style={{ display: 'flex', width: '100%', marginBottom: '8px', alignItems: 'center' }}
-        onClick={() => {
-          deleteAlarm(messageId);
-        }}
-      >
-        <div style={{ flex: '1' }}>
-          <div className='bg-primary' style={{ width: '8px', height: '8px', borderRadius: '50%' }}></div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', flex: '7' }}>
-          <div>{notificationTitle}</div>
-          <div style={{ color: 'rgba(0,0,0,0.5)' }}>{classTitle}</div>
-        </div>
-        <div style={{ color: 'rgba(0,0,0,0.5)', flex: '2', display: 'flex', justifyContent: 'flex-end' }}>
-          <div>{dateFormat(createDate)}</div>
-        </div>
+    <Link
+      href={link}
+      style={{ display: 'flex', width: '100%', marginBottom: '8px', alignItems: 'center' }}
+      onClick={() => {
+        deleteAlarm(messageId);
+        setIsMessageModalOpen(false);
+      }}
+    >
+      <div style={{ flex: '1' }}>
+        <div className='bg-primary' style={{ width: '8px', height: '8px', borderRadius: '50%' }}></div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', flex: '7' }}>
+        <div>{notificationTitle}</div>
+        <div style={{ color: 'rgba(0,0,0,0.5)' }}>{classTitle}</div>
+      </div>
+      <div style={{ color: 'rgba(0,0,0,0.5)', flex: '2', display: 'flex', justifyContent: 'flex-end' }}>
+        <div>{dateFormat(createDate)}</div>
       </div>
     </Link>
+
+    // <Link href={link}>
+    //   <div
+    //     style={{ display: 'flex', width: '100%', marginBottom: '8px', alignItems: 'center' }}
+    //     onClick={() => {
+    //       deleteAlarm(messageId);
+    //     }}
+    //   >
+    //     <div style={{ flex: '1' }}>
+    //       <div className='bg-primary' style={{ width: '8px', height: '8px', borderRadius: '50%' }}></div>
+    //     </div>
+    //     <div style={{ display: 'flex', flexDirection: 'column', flex: '7' }}>
+    //       <div>{notificationTitle}</div>
+    //       <div style={{ color: 'rgba(0,0,0,0.5)' }}>{classTitle}</div>
+    //     </div>
+    //     <div style={{ color: 'rgba(0,0,0,0.5)', flex: '2', display: 'flex', justifyContent: 'flex-end' }}>
+    //       <div>{dateFormat(createDate)}</div>
+    //     </div>
+    //   </div>
+    // </Link>
   );
 }
 
