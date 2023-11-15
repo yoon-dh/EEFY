@@ -2,15 +2,19 @@
 
 import Image from 'next/image';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { HomeworkIdAtom } from '@/recoil/Library/CreateHomework/CreateHomework';
 import { STTLoadingAtom, SpeakingFileInfoAtom, SpeakingAllFilesInfoAtom } from '@/recoil/Library/CreateHomework/CreateSpeaking';
+
+import { postHomeworkMakeQuestion } from '@/api/Library/CreateHomeworkApi';
 
 import * as S from '../CreateHomework.style';
 
 function CreateScript() {
-  const [sttLoading, setSttLoading] = useRecoilState(STTLoadingAtom);
+  const sttLoading = useRecoilValue(STTLoadingAtom);
+  const homeworkId = useRecoilValue(HomeworkIdAtom);
   const [speakingFileInfo, setSpeakingFileInfo] = useRecoilState(SpeakingFileInfoAtom);
-  const [speakingAllFilseInfo, setSpeakingAllFilseInfo] = useRecoilState(SpeakingAllFilesInfoAtom);
+  const setSpeakingAllFilseInfo = useSetRecoilState(SpeakingAllFilesInfoAtom);
 
   const InputHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setSpeakingFileInfo(prev => ({ ...prev, script: e.target.value }));
@@ -21,7 +25,26 @@ function CreateScript() {
   };
 
   const SaveHandler = async () => {
-    // api 요청 필요
+    if (speakingFileInfo.file !== undefined) {
+      const formData = new FormData();
+      const makeHomeworkQuestionRequest = {
+        homeworkId: homeworkId,
+        title: 'title',
+        field: 'VOICE',
+        content: speakingFileInfo.script,
+        answer: null,
+        choiceRequests: null,
+      };
+      const jsonBlob = new Blob([JSON.stringify(makeHomeworkQuestionRequest)], {
+        type: 'application/json',
+      });
+      formData.append('makeHomeworkQuestionRequest', jsonBlob);
+      formData.append('voiceFile', speakingFileInfo.file);
+      await postHomeworkMakeQuestion(formData);
+    } else {
+      alert('음성 파일이 존재하지 않습니다.');
+    }
+
     setSpeakingAllFilseInfo(prev => [...prev, speakingFileInfo]);
     setSpeakingFileInfo(prev => ({ ...prev, file: undefined, script: '' }));
   };

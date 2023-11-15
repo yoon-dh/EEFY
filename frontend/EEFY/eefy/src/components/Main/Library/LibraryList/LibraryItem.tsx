@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { StyledBookContainer, StyledBookCover } from './LibraryList.style';
 import { BsInfoSquare } from 'react-icons/bs';
 import { CgExport } from 'react-icons/cg';
@@ -150,10 +151,12 @@ function LibraryItem({ main, shadow, role, libraryData }: LibraryItemType) {
             <p>자료 정보</p>
           </div>
           {role === 'teacher' && (
-            <div className='flex justify-center items-center gap-5 hover:text-[#f5f5fb]'>
-              <CgExport className='text-2xl' />
-              <p>과제 등록</p>
-            </div>
+            <Link href={`/main/library/homework/assign/${libraryData.id}`}>
+              <div className='flex justify-center items-center gap-5 hover:text-[#f5f5fb]'>
+                <CgExport className='text-2xl' />
+                <p>과제 등록</p>
+              </div>
+            </Link>
           )}
         </div>
       </StyledBookContainer>

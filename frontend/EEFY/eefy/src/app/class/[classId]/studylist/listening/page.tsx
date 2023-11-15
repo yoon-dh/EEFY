@@ -12,7 +12,7 @@ import ContainerBtn from '@/components/Class/StudyList/ContainerBtn';
 import SpeakingStudyItem from '@/components/Class/StudyList/SpeakingStudyItem';
 
 import { useRecoilState } from 'recoil';
-import { SpeakingStudyListSavePage, StudyListCurrentPage } from '@/recoil/StudyList/pagination';
+import { ListeningStudyListSavePage, StudyListCurrentPage } from '@/recoil/StudyList/pagination';
 
 interface libraryDatasType {
   classHomeworkId: number;
@@ -24,15 +24,15 @@ interface libraryDatasType {
   totalCount: number;
 }
 
-function StudyList() {
+function SpeakingStudyList() {
   const CLASS_ID = useParams();
   const classId = typeof CLASS_ID.classId === 'string' ? parseInt(CLASS_ID.classId) : 0;
-  const homeworkType = 'speaking';
+  const homeworkType = 'listening';
 
   const [libraryDatas, setLibraryDatas] = useState<libraryDatasType[]>([]);
   const [totalPage, setTotalPage] = useState(1);
 
-  const [savePage, setSavePage] = useRecoilState(SpeakingStudyListSavePage); // 저장된 페이지
+  const [savePage, setSavePage] = useRecoilState(ListeningStudyListSavePage); // 저장된 페이지
   const [currentPage, setCurrentPage] = useRecoilState(StudyListCurrentPage); // 현재 페이지
 
   const [dataExist, setDataExist] = useState(true);
@@ -68,7 +68,7 @@ function StudyList() {
           classId: parseInt(CLASS_ID.classId),
           page: currentPage - 1,
           size: 5,
-          homeworkType: 'SPEAKING',
+          homeworkType: 'LISTENING',
         };
         const responseData = await getHomeworkView(data);
         const newTotalPage = responseData.pageInfo.totalPageSize;
@@ -89,7 +89,7 @@ function StudyList() {
   return (
     <div className='w-full h-full flex flex-col'>
       <div style={{ flex: 1 }}>
-        <ContainerBtn classId={classId} activeTab={'SPEAKING'} />
+        <ContainerBtn classId={classId} activeTab={'LISTENING'} />
       </div>
       <div className='w-full h-full relative' style={{ flex: 8, paddingTop: '2%', paddingBottom: '2%' }}>
         {libraryDatas.map((item, idx) => (
@@ -106,4 +106,4 @@ function StudyList() {
   );
 }
 
-export default StudyList;
+export default SpeakingStudyList;

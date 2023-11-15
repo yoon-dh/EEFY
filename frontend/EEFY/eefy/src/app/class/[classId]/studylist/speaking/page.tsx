@@ -24,7 +24,7 @@ interface libraryDatasType {
   totalCount: number;
 }
 
-function StudyList() {
+function SpeakingStudyList() {
   const CLASS_ID = useParams();
   const classId = typeof CLASS_ID.classId === 'string' ? parseInt(CLASS_ID.classId) : 0;
   const homeworkType = 'speaking';
@@ -106,4 +106,4 @@ function StudyList() {
   );
 }
 
-export default StudyList;
+export default SpeakingStudyList;

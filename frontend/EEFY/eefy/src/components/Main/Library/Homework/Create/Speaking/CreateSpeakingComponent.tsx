@@ -4,10 +4,11 @@ import FileUpload from './FileUpload';
 import CreateScript from './CreateScript';
 import SaveQuestions from './SaveQuestions';
 
-import { useRecoilValue } from 'recoil';
-import { SpeakingFileInfoAtom } from '@/recoil/Library/CreateHomework/CreateSpeaking';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { SpeakingFileInfoAtom, SpeakingAllFilesInfoAtom } from '@/recoil/Library/CreateHomework/CreateSpeaking';
 
 import * as S from '@/styles/MainStyle.style';
+import { useEffect } from 'react';
 
 function CreateSpeakingComponent() {
   const mainStyle = {
@@ -19,7 +20,14 @@ function CreateSpeakingComponent() {
     columnGap: '3%',
   };
 
-  const speakingFileInfo = useRecoilValue(SpeakingFileInfoAtom);
+  const [speakingFileInfo, setSpeakingFileInfo] = useRecoilState(SpeakingFileInfoAtom);
+  const setSpeakingAllFilseInfo = useSetRecoilState(SpeakingAllFilesInfoAtom);
+
+  useEffect(() => {
+    // 새로운 마운트시 데이터 초기화
+    setSpeakingFileInfo({ file: undefined, script: '' });
+    setSpeakingAllFilseInfo([]);
+  }, []);
 
   return (
     <div className='w-full h-full' style={{ padding: '2% 3%' }}>
