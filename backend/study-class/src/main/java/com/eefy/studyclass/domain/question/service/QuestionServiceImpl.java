@@ -132,10 +132,10 @@ public class QuestionServiceImpl implements QuestionService {
         Member member = memberService.getMemberInfo(memberId, memberId);
         qnaValidator.checkAuthorizationQuestion(qnaQuestion, member);
 
-        List<QnaAnswer> qnaAnswerList = qnaAnswerRepository.findByQuestionIdOrderByCreatedAtDesc(questionId);
+        List<QnaAnswer> qnaAnswerList = qnaAnswerRepository.findByQuestionId(questionId);
 
         return qnaAnswerList.stream().map(qnaAnswer ->
-            new AnswerListResponse(qnaAnswer, memberService.getMemberInfo(memberId, memberId))).collect(Collectors.toList());
+            new AnswerListResponse(qnaAnswer, memberService.getMemberInfo(memberId, qnaAnswer.getMemberId()))).collect(Collectors.toList());
     }
 
     @Override
