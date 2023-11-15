@@ -1,4 +1,7 @@
 'use client';
+
+import { useRouter } from 'next/navigation';
+
 import HomeworkInfo from './HomeworkInfo';
 import HomeworkProduce from './HomeworkProduce';
 
@@ -6,16 +9,27 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { CreateHomeworkStepAtom } from '@/recoil/Library/CreateHomework/CreateHomework';
 import { HomeworkCategoryAtom, HomeworkInfoDataAtom, HomeworkIdAtom } from '@/recoil/Library/CreateHomework/CreateHomework';
 
-import { postMakeHomework } from '@/api/Library/CreateHomeworkApi';
+import { postMakeHomework, putMakeHomework } from '@/api/Library/CreateHomeworkApi';
 
 import { TfiArrowLeft, TfiArrowRight } from 'react-icons/tfi';
 import * as S from '@/styles/MainStyle.style';
+import { useEffect } from 'react';
 
 function CreateHomeworkComponent() {
+  const router = useRouter();
+
   const [createHomeworkStep, setCreateHomeworkStep] = useRecoilState(CreateHomeworkStepAtom);
-  const homeworkInfoDataAtom = useRecoilValue(HomeworkInfoDataAtom);
+  const [homeworkInfoDataAtom, setHomeworkInfoDataAtom] = useRecoilState(HomeworkInfoDataAtom);
   const homeworkCategory = useRecoilValue(HomeworkCategoryAtom);
-  const setHomeworkId = useSetRecoilState(HomeworkIdAtom);
+  const [homeworkId, setHomeworkId] = useRecoilState(HomeworkIdAtom);
+  // const setHomeworkId = useSetRecoilState(HomeworkIdAtom);
+
+  useEffect(() => {
+    // 새로운 마운트 시 데이터 초기화
+    setHomeworkInfoDataAtom({ title: '', description: '' });
+    setHomeworkId(undefined);
+    setCreateHomeworkStep(0);
+  }, []);
 
   const NextHandler = async () => {
     if (homeworkInfoDataAtom.title !== '' && homeworkInfoDataAtom.description !== '') {
@@ -24,6 +38,8 @@ function CreateHomeworkComponent() {
         content: homeworkInfoDataAtom.description,
         type: homeworkCategory,
       };
+
+      // 문제집 생성 서버에 요청
       const requestData = await postMakeHomework(data);
       if (requestData) {
         setHomeworkId(requestData.homeworkId);
@@ -34,18 +50,28 @@ function CreateHomeworkComponent() {
     } else {
       alert('정보를 입력하세요');
     }
-    // homeworkCategory 정보 확인 // title 입력 되었는지, 설명 입력되었는지, category 설정 되어 있는지
-    // axios 연결
   };
 
-  const CompleteHandler = () => {
-    if (homeworkCategory === 'SPEAKING') {
-      console.log(homeworkCategory);
-    } else if (homeworkCategory === 'READING') {
-      console.log(homeworkCategory);
-    } else if (homeworkCategory === 'LISTENING') {
-      console.log(homeworkCategory);
+  const CancleHandler = () => {
+    alert('문제 생성을 취소합니다.');
+
+    setHomeworkInfoDataAtom({ title: '', description: '' });
+    setHomeworkId(undefined);
+    setCreateHomeworkStep(0);
+    router.push('/main/library/teacher');
+  };
+
+  const CompleteHandler = async () => {
+    if (homeworkId !== undefined) {
+      const requestData = { homeworkId: homeworkId };
+      const res = await putMakeHomework(requestData);
+      alert('문제가 성공적으로 생성되었습니다.');
     }
+
+    setHomeworkInfoDataAtom({ title: '', description: '' });
+    setHomeworkId(undefined);
+    setCreateHomeworkStep(0);
+    router.push('/main/library/teacher');
   };
 
   return (
@@ -53,17 +79,22 @@ function CreateHomeworkComponent() {
       {createHomeworkStep === 0 ? <HomeworkInfo /> : <HomeworkProduce />}
       <div className='absolute' style={{ bottom: '5%', right: '3%' }}>
         {createHomeworkStep === 0 ? (
-          <div className='text-xl uppercase flex items-center gap-2' onClick={NextHandler}>
-            <p>Next</p>
-            <TfiArrowRight className='text-2xl' />
+          <div className='flex items-center justify-end gap-10'>
+            <div className='text-xl uppercase flex items-center gap-2' onClick={CancleHandler}>
+              <p>Cancle</p>
+            </div>
+            <div className='text-xl uppercase flex items-center gap-2' onClick={NextHandler}>
+              <p>Next</p>
+              <TfiArrowRight className='text-2xl' />
+            </div>
           </div>
         ) : (
           <>
             {homeworkCategory !== 'read' && (
-              <div className='flex items-center justify-end gap-5'>
-                <div className='text-xl uppercase flex items-center gap-2' onClick={() => setCreateHomeworkStep(0)}>
-                  <TfiArrowLeft className='text-2xl' />
-                  <p>prev</p>
+              <div className='flex items-center justify-end gap-10'>
+                <div className='text-xl uppercase flex items-center gap-2' onClick={CancleHandler}>
+                  {/* <TfiArrowLeft className='text-2xl' /> */}
+                  <p>Cancle</p>
                 </div>
                 <div className='text-xl uppercase flex items-center gap-2' onClick={CompleteHandler}>
                   <p>Complete</p>

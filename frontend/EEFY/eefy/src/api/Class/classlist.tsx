@@ -20,7 +20,7 @@ export const createClass = async (data: Createdata) => {
 
 // 클래스 조회
 
-export const classCheck = async (pageNum: number, sizeNum: number) => {
+export const classCheck = async (pageNum: number, sizeNum: number | null) => {
   try {
     const params = {
       page: pageNum,
