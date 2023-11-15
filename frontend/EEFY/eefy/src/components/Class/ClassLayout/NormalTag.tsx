@@ -1,7 +1,12 @@
+'use client';
+
 import React, { Children } from 'react';
 import ProfileTag from './ProfileTag';
+import { useRecoilValue } from 'recoil';
+import { EnterClassTitle } from '@/recoil/ClassCreate';
 
 export default function NormalTag() {
+  const classTitle = useRecoilValue(EnterClassTitle);
   const dummyData = {
     title: 'TOEIC 900 완성반',
     content: 'Always stay updated in your student portal',
@@ -20,7 +25,7 @@ export default function NormalTag() {
       <div className='flex justify-between items-center h-full'>
         <div style={{ flex: '1' }} className='ml-5 flex flex-col'>
           <div>
-            <p className='text-3xl font-bold text-white'>{dummyData.title}</p>
+            <p className='text-3xl font-bold text-white'>{classTitle}</p>
           </div>
           <div>
             <p className='text-lg' style={{ color: 'rgba(255, 255, 255, 0.75)' }}>

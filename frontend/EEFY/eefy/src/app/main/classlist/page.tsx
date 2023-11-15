@@ -16,7 +16,7 @@ import { getMessaging, onMessage, getToken } from 'firebase/messaging';
 
 import { pushTest } from '@/api/Push/test';
 
-import * as style from '../../../styles/MainStyle.style';
+import * as styled from '../../../styles/MainStyle.style';
 
 import { EnterClassNumber } from '@/recoil/ClassCreate';
 
@@ -85,43 +85,56 @@ function ClassList() {
   }, [classCreated]);
 
   return (
-    <div className=' w-full h-full' style={{ display: 'flex', flexDirection: 'column' }}>
-      {userDataObj?.role === 'TEACHER' ? (
-        <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center' }}>
-          운영 중인 클래스 <span style={{ color: '#4f4d4d81' }}>({classCnt})</span>
-        </div>
-      ) : (
-        <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center' }}>
-          수강 중인 클래스 <span style={{ color: '#4f4d4d81' }}>({classCnt})</span>
-        </div>
-      )}
-
-      <div style={{ flex: '8.5', display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
-        {/* 강사면 보이고 아니면 안보이게 */}
+    <styled.MainContainer className='w-full h-full'>
+      <div className=' w-full h-full' style={{ display: 'flex', flexDirection: 'column' }}>
         {userDataObj?.role === 'TEACHER' ? (
-          <S.ClassBox
-            onClick={() => setIsCreateModalOpen(true)}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
+          <div
+            style={{
+              fontSize: '28px',
+              flex: '1.5',
+              display: 'flex',
+              alignItems: 'center',
+              backdropFilter: 'blur(10px)',
+              paddingLeft: '3%',
+              // background: 'rgba(70, 70, 70, 0.2)',
+              // background: 'rgba(240, 240, 240, 0.4)',
+            }}
           >
-            <div style={{ fontSize: '40px' }}>
-              <HiPlus />
-            </div>
-            <div className='prim' style={{ fontSize: '20px' }}>
-              클래스 개설
-            </div>
-          </S.ClassBox>
-        ) : null}
+            운영 중인 클래스 <span>({classCnt})</span>
+          </div>
+        ) : (
+          <div style={{ fontSize: '28px', flex: '1.5', display: 'flex', alignItems: 'center', backdropFilter: 'blur(10px)', paddingLeft: '3%' }}>
+            수강 중인 클래스 <span style={{ color: '#4f4d4d81' }}>({classCnt})</span>
+          </div>
+        )}
 
-        {/* 클래스 리스트 */}
-        {myClassArr?.map(item => (
-          <MainClassBox key={item.id} classId={item.id} title={item.title} cnt={item.studentCnt} />
-        ))}
+        <div style={{ flex: '8.5', display: 'flex', gap: '30px', flexWrap: 'wrap', padding: '3%' }}>
+          {/* 강사면 보이고 아니면 안보이게 */}
+          {userDataObj?.role === 'TEACHER' ? (
+            <S.ClassBox
+              onClick={() => setIsCreateModalOpen(true)}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
+            >
+              <div style={{ fontSize: '40px' }}>
+                <HiPlus />
+              </div>
+              <div className='prim' style={{ fontSize: '20px' }}>
+                클래스 개설
+              </div>
+            </S.ClassBox>
+          ) : null}
+
+          {/* 클래스 리스트 */}
+          {myClassArr?.map(item => (
+            <MainClassBox key={item.id} classId={item.id} title={item.title} cnt={item.studentCnt} />
+          ))}
+        </div>
+        {/* 메시지 리스트 */}
+        <MessageList />
+        {/* 클래스 생성 모달 */}
+        <ClassCreateModal setClassCreated={setClassCreated} />
       </div>
-      {/* 메시지 리스트 */}
-      <MessageList />
-      {/* 클래스 생성 모달 */}
-      <ClassCreateModal setClassCreated={setClassCreated} />
-    </div>
+    </styled.MainContainer>
   );
 }
 

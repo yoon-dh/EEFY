@@ -89,7 +89,7 @@ function StudentInvite({ CLASS_ID }: any) {
     <styled.MainContainer className='w-full h-full'>
       <div style={{ display: 'flex', flexDirection: 'column' }} className='w-full h-full overflow-auto no-scrollbar'>
         {/* invite Nav */}
-        <div className='flex justify-center items-center' style={{ padding: '8px 12px', flex: '1', position: 'relative' }}>
+        <div className='flex justify-center items-center' style={{ padding: '8px 12px', flex: '1', position: 'relative', backdropFilter: 'blur(10px)' }}>
           <div className='text-4xl' style={{ position: 'absolute', top: '50%', left: '10%', transform: 'translate(-50%, -50%)' }}>
             <IoMdArrowBack onClick={() => setSearchState(false)} />
           </div>

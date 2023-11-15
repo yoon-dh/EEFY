@@ -21,7 +21,7 @@ export default function SideNav() {
       <div className='h-full' style={{ display: 'flex', justifyContent: 'center' }}>
         <S.MainContainer>
           <ul
-            className='menu rounded-box w-3/6 w-full h-full'
+            className='menu rounded-box  w-full h-full'
             style={{
               display: 'flex',
               flexDirection: 'column',
