@@ -2,9 +2,13 @@ import { useState } from 'react';
 import { NoticeTitle, Tab } from './ContainerBtn.style';
 import { useRecoilState } from 'recoil';
 import {QuestionPage} from '@/recoil/Question'
+import { useRouter, useParams } from 'next/navigation';
 
 function ContainerBtn() {
+  const router = useRouter()
+  const params = useParams()
   const [activeTab, setActiveTab] = useState<boolean>(true);
+  const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage)
 
   return (
     <div className='flex mt-1'>
