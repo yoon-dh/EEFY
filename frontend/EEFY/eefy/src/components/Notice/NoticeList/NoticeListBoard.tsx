@@ -12,6 +12,7 @@ import { getQuestionList } from '@/api/Question/Question';
 
 import { useRouter, useParams } from 'next/navigation';
 import { userData } from '@/recoil/Auth';
+import {QuestionWaitStatus} from '@/recoil/Question'
 
 function NoticeListBoard() {
   const router = useRouter();
@@ -21,6 +22,7 @@ function NoticeListBoard() {
   const [lecturePageUrl, setLecturePageUrl] = useRecoilState(LecturePage);
   const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage);
   const lastWord = useRecoilValue(Name);
+  const waitStatus = useRecoilValue(QuestionWaitStatus)
 
   const userDataObj = useRecoilValue(userData);
 
@@ -182,25 +184,46 @@ function NoticeListBoard() {
           </>
         )}
 
-
-        {listItem.map((item: any, index) => (
-          <Card
-            className='bg-default'
-            key={index}
-            style={{
-              margin: index == listItem.length - 1 ? '25px auto 4px auto' : '',
-            }}
-            // style={{
-            //   margin: index == listItem.length - 1 ? '25px auto 4px auto' : index == 0 ? '3px auto 25px auto' : '',
-            // }}
-            onClick={() => handleClick(item.id)}
-          >
-            <Title>{item.title.slice(0, 30)}</Title>
-            <Time>
-              <b>{dayjs(item.createdAt).format('YYYY.MM.DD HH:MM')}</b>
-            </Time>
-          </Card>
-        ))}
+        {lastWord === 'question' ? (
+          <>
+            {listItem
+              .filter((item:any) => item.waitStatus === waitStatus) 
+              .map((item: any, index) => (
+                <Card
+                  className='bg-default'
+                  key={index}
+                  style={{
+                    margin: index === listItem.length - 1 ? '25px auto 4px auto' : '',
+                  }}
+                  onClick={() => handleClick(item.id)}
+                >
+                  <Title>{item.title.slice(0, 30)}</Title>
+                  <Time>
+                    <b>{dayjs(item.createdAt).format('YYYY.MM.DD HH:MM')}</b>
+                  </Time>
+                </Card>
+              ))
+            }
+          </>
+        ) : (
+          <>
+          {listItem.map((item: any, index) => (
+            <Card
+              className='bg-default'
+              key={index}
+              style={{
+                margin: index == listItem.length - 1 ? '25px auto 4px auto' : '',
+              }}
+              onClick={() => handleClick(item.id)}
+            >
+              <Title>{item.title.slice(0, 30)}</Title>
+              <Time>
+                <b>{dayjs(item.createdAt).format('YYYY.MM.DD HH:MM')}</b>
+              </Time>
+            </Card>
+          ))}
+          </>
+        )}
       </Wrappe>
     </Container>
   );

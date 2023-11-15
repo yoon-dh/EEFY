@@ -83,10 +83,10 @@ export const getCommemtList = async (id: Number) => {
   }
 };
 // 답변 작성
-export const getCommentCreate = async (id: Number) => {
+export const getCommentCreate = async (data:any) => {
   try {
-    console.log('질의응답 댓글 작성 진입', id)
-    const res = await privateApi.get(`/study-class/notice/${id}`);
+    console.log('질의응답 댓글 작성 진입', data)
+    const res = await privateApi.post(`/question/comment`,data);
     console.log('질의응답 댓글 작성 성공', res)
     return res;
   } catch (err) {

@@ -17,7 +17,7 @@ function QuestionUpdata(props:any){
 
   useEffect(()=>{
     if(data){
-      setId(data?.id)
+      setId(data?.questionId)
       setTitle(data?.title)
       setContent(data?.content)
     }
