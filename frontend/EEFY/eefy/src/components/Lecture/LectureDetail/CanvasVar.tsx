@@ -13,7 +13,6 @@ import { BiSolidLeftArrow, BiSolidRightArrow, BiSolidDoorOpen } from 'react-icon
 import { FaRegTrashCan } from 'react-icons/fa6';
 
 function CanvasVar() {
-
   const [data, setData] = useRecoilState(CanvasData);
   const [varData, setVarData] = useRecoilState(CanvasVarData);
   const [ocr, setOcr] = useRecoilState(OcrFileCheck);
@@ -94,24 +93,24 @@ function CanvasVar() {
   };
 
   const handleBeforePage = () => {
-    if(ocr.pdfFile){
+    if (ocr.pdfFile) {
       if (page.pageNumber > 1) {
-        setPage({ ...page, pageNumber: page.pageNumber - 1, btnType:'before' });
+        setPage({ ...page, pageNumber: page.pageNumber - 1, btnType: 'before' });
       }
     }
   };
 
   const handleNextPage = () => {
-    if(ocr.pdfFile){
+    if (ocr.pdfFile) {
       if (page.pageNumber < page.numPages) {
-        setPage({ ...page, pageNumber: page.pageNumber + 1, btnType:'next' });
+        setPage({ ...page, pageNumber: page.pageNumber + 1, btnType: 'next' });
       }
     }
   };
 
   return (
     <Container>
-      <div style={{borderBottom: "1px solid rgba(131, 129, 129, 0.5)"}}>
+      <div style={{ borderBottom: '1px solid rgba(131, 129, 129, 0.5)' }}>
         <BlockPicker
           triangle='hide'
           color={varData.color}
@@ -172,37 +171,43 @@ function CanvasVar() {
       </ItemDeleteBox>
 
       <ItemBox>
-        <UndoBtn onClick={()=>{
-          setVarData({ ...varData, undo: true});
-        }}>
+        <UndoBtn
+          onClick={() => {
+            setVarData({ ...varData, undo: true });
+          }}
+        >
           <HiArrowUturnLeft />
         </UndoBtn>
-        <RedoBtn onClick={()=>{
-          setVarData({ ...varData, redo: true});
-        }}>
+        <RedoBtn
+          onClick={() => {
+            setVarData({ ...varData, redo: true });
+          }}
+        >
           <HiArrowUturnRight />
         </RedoBtn>
       </ItemBox>
 
-        <PdfPageItemBox>
-          <BeforeBtn onClick={handleBeforePage} >
-            <BiSolidLeftArrow />
-          </BeforeBtn>
-          <PdfPageItem>
-            {page.pageNumber} / {page.numPages}
-          </PdfPageItem>
-          <NextBtn onClick={handleNextPage}>
-            <BiSolidRightArrow />
-          </NextBtn>
-        </PdfPageItemBox>
+      <PdfPageItemBox>
+        <BeforeBtn onClick={handleBeforePage}>
+          <BiSolidLeftArrow />
+        </BeforeBtn>
+        <PdfPageItem>
+          {page.pageNumber} / {page.numPages}
+        </PdfPageItem>
+        <NextBtn onClick={handleNextPage}>
+          <BiSolidRightArrow />
+        </NextBtn>
+      </PdfPageItemBox>
 
-      <BackBtn onClick={() => {
-        setData([])
-        setOcr({ ...ocr, isSuccess: false, imgUrl:'',pdfFile:'' })
-        setPage({...page,pageNumber:1,numPages:0})
-      }}>
+      <BackBtn
+        onClick={() => {
+          setData([]);
+          setOcr({ ...ocr, isSuccess: false, imgUrl: '', pdfFile: '' });
+          setPage({ ...page, pageNumber: 1, numPages: 0 });
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <BiSolidDoorOpen style={{fontSize:'21px'}}/>
+          <BiSolidDoorOpen style={{ fontSize: '21px' }} />
           BACK
         </div>
       </BackBtn>
@@ -330,7 +335,7 @@ const PdfPageItem = styled.div`
   }
 `;
 const NextBtn = styled.div`
-font-size: 23px;
+  font-size: 23px;
   flex: 1;
   display: flex;
   justify-content: center;
