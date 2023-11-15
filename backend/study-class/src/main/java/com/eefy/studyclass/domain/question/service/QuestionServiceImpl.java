@@ -16,6 +16,7 @@ import com.eefy.studyclass.domain.question.persistence.entity.QnaAnswer;
 import com.eefy.studyclass.domain.question.persistence.entity.QnaQuestion;
 import com.eefy.studyclass.domain.question.persistence.mysql.QnaAnswerRepository;
 import com.eefy.studyclass.domain.question.persistence.mysql.QnaQuestionRepository;
+import com.eefy.studyclass.domain.studyclass.dto.response.QuestionIdResponse;
 import com.eefy.studyclass.domain.studyclass.exception.validator.StudyClassValidator;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
@@ -96,7 +97,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void writeQuestion(int memberId, QuestionWriteRequest request) {
+    public QuestionIdResponse writeQuestion(int memberId, QuestionWriteRequest request) {
         Member member = memberService.getMemberInfo(memberId, memberId);
         StudyClass studyClass = studyClassValidator.existsStudyClassByClassId(studyClassRepository.findById(request.getClassId()));
 
@@ -120,6 +121,8 @@ public class QuestionServiceImpl implements QuestionService {
 
         alarmService.pushAlarmToPersonal(studyClass.getMemberId(), alarmRequest);
 
+        return QuestionIdResponse.builder()
+                .id(questionId).build();
     }
 
     @Override

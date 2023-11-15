@@ -8,6 +8,7 @@ import com.eefy.studyclass.domain.question.dto.response.AnswerListResponse;
 import com.eefy.studyclass.domain.question.dto.response.QuestionDetailResponse;
 import com.eefy.studyclass.domain.question.dto.response.QuestionListResponse;
 import com.eefy.studyclass.domain.question.service.QuestionService;
+import com.eefy.studyclass.domain.studyclass.dto.response.QuestionIdResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,9 @@ public class QuestionController {
 
     @Operation(summary = "질의응답(질문) 등록", description = "학생이 질문을 등록하는 API")
     @PostMapping("/student")
-    ResponseEntity<Void> writeQuestion(@RequestHeader("Member-Id") int memberId,
-                                       @RequestBody com.eefy.studyclass.domain.question.dto.request.QuestionWriteRequest request) {
-        questionService.writeQuestion(memberId, request);
-        return ResponseEntity.ok().build();
+    ResponseEntity<QuestionIdResponse> writeQuestion(@RequestHeader("Member-Id") int memberId,
+                                                     @RequestBody com.eefy.studyclass.domain.question.dto.request.QuestionWriteRequest request) {
+        return ResponseEntity.ok(questionService.writeQuestion(memberId, request));
     }
 
     @Operation(summary = "질의응답(질문) 수정", description = "학생이 질문을 수정하는 API")
