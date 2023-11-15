@@ -118,7 +118,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .content(member.getName() + "학생이 " + studyClass.getTitle() + "강좌에 질문을 등록하였습니다.")
                 .build();
 
-        alarmService.pushAlarmToPersonal(memberId, alarmRequest);
+        alarmService.pushAlarmToPersonal(studyClass.getMemberId(), alarmRequest);
 
     }
 
