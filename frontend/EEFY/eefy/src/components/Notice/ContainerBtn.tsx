@@ -10,13 +10,6 @@ function ContainerBtn() {
           </Tab>
         </div>
       </TabBox>
-
-      {/* <CreateBtn className='text-xl bg-info text-white' 
-      onClick={() => 
-      router.push(`/class/${params.classId}/notice/create`)
-      }>
-        CREATE
-      </CreateBtn> */}
     </div>
   );
 }
