@@ -11,16 +11,10 @@ const Container = styled.div`
   height: 100%;
 `;
 const Box = styled.div`
-  /* background-color: white; */
-  width: 94%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   border-radius: 12px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  background: rgba(255, 255, 255, 0.06);
   z-index: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  /* backdrop-filter: blur(10px); */
 `;
 const TitleBox = styled.div`
   text-align: center;

@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
-import { postNoticeCreate, getNoticeList, getNoticeDetail } from '@/api/Notice/Notice';
+import { postNoticeCreate, getNoticeList } from '@/api/Notice/Notice';
 import { useRecoilState } from 'recoil';
 import { DetailData, NoticePage, NoticeList } from '@/recoil/Notice';
 import * as S from './NoticeCreate.style';
 import swal from 'sweetalert';
+import { useRouter, useParams } from 'next/navigation';
 
 function NoticeCreate() {
+  const params = useParams()
+  const router = useRouter()
   const [noticePageUrl, setNoticePageUrl] = useRecoilState(NoticePage);
-  const [notice, setNotice] = useRecoilState<any | null>(DetailData);
-  const [listData, setListData] = useRecoilState(NoticeList);
+  const [listItem, setListItem] = useRecoilState(NoticeList);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   const handlePost = async () => {
     const data = {
-      classId: 27,
+      classId:  Number(params.classId),
       title: title,
       content: content,
     };
@@ -26,31 +28,24 @@ function NoticeCreate() {
     } else {
       const res = await postNoticeCreate(data);
       if (res?.status === 200) {
-        const classId = {
-          classId: 27,
-        };
-        const List = await getNoticeList(classId);
-        if (List?.status === 200) {
-          setListData(List.data);
-          if (List.data) {
-            const Detail = await getNoticeDetail(List.data[0].id);
-            if (Detail?.status === 200) {
-              setNotice(Detail.data);
-              setNoticePageUrl('detail');
-            }
-          }
-        }
-      }
+        getList()
+        router.push(`/class/${params.classId}/notice/${res?.data.id}`)
+      }    
     }
   };
 
-  const handleCancel = async () => {
-    const Detail = await getNoticeDetail(String(listData[0].id));
-    if (Detail?.status === 200) {
-      console.log(Detail, 'Detail');
-      setNotice(Detail.data);
-      setNoticePageUrl('detail');
-    }
+const getList = async()=>{
+  const classId = {
+    classId: Number(params.classId),
+  };
+  const res = await getNoticeList(classId)
+  if(res?.status===200){
+    setListItem(res?.data)
+  }
+}
+
+  const handleCancel = () => {
+    router.back();
   };
 
   return (
