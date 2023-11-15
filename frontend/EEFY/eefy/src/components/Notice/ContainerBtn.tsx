@@ -1,7 +1,6 @@
 import { CreateBtn, NoticeTitle, Tab, TabBox } from './ContainerBtn.style';
 
 function ContainerBtn() {
-
   return (
     <div className='flex mt-1'>
       <TabBox>
