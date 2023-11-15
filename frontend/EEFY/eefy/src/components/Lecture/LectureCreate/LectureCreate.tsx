@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as S from './LectureCreate.style'
 import { useRecoilState } from "recoil";
 import {LecturePage} from '@/recoil/Lecture'
-import { DetailData, NoticeList } from '@/recoil/Notice'
-import {postLectureCreate, getLectureList, getLectureDetail} from '@/api/Lecture/Lecture'
+import { NoticeList } from '@/recoil/Notice'
+import {postLectureCreate, getLectureList} from '@/api/Lecture/Lecture'
 import swal from "sweetalert";
+import { useRouter, useParams } from 'next/navigation';
 
 function LectureCreate(){
+  const params = useParams()
+  const router = useRouter()
 
   const [lecturePage, setLecturepage] = useRecoilState(LecturePage)
-  const [notice, setNotice] = useRecoilState<any | null>(DetailData);
-  const [listData, setListData] = useRecoilState(NoticeList);
+  const [listItem, setListItem] = useRecoilState(NoticeList);
 
   const [title, setTitle] = useState(''); 
   const [content, setContent] = useState(''); 
   const [file, setFile] = useState<File  | null>(null)
 
   const contentInfo = {
-    classId:27,
+    classId:Number(params.classId),
     title: title,
     content: content
   }
@@ -51,20 +53,16 @@ function LectureCreate(){
       
       const res = await postLectureCreate(formData)
       if (res?.status===200){
-        const classId = 27
-        const List = await getLectureList(classId);
-        if (List?.status===200){
-          setListData(List.data)
-          if(List.data){
-            const Detail = await getLectureDetail(List.data[0].id)
-            if(Detail?.status===200){
-              setNotice(Detail.data)
-              setLecturepage('detail')
-              swal("", "생성되었습니다!", "success");
-            }
-          }
-        }
+          getList()
+          router.push(`/class/${params.classId}/lecture/${res?.data.id}`)
       }
+    }
+  }
+
+  const getList = async()=>{
+    const res = await getLectureList(Number(params.classId))
+    if(res?.status===200){
+      setListItem(res?.data)
     }
   }
 

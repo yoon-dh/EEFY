@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
-import { postQuestionCreate, getQuestionList, getQuestionDetail } from '@/api/Question/Question';
+import { postQuestionCreate, getQuestionList } from '@/api/Question/Question';
 import { useRecoilState } from 'recoil';
-import { DetailData, NoticeList } from '@/recoil/Notice';
-import { QuestionPage } from '@/recoil/Question';
+import { NoticeList } from '@/recoil/Notice';
 import * as S from './QuestionCreate.style';
 import swal from 'sweetalert';
+import { useRouter, useParams } from 'next/navigation';
 
 function QuestionCreate() {
-  const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage);
-  const [notice, setNotice] = useRecoilState<any | null>(DetailData);
-  const [listData, setListData] = useRecoilState(NoticeList);
+  const params = useParams()
+  const router = useRouter()
+  const [listItem, setListItem] = useRecoilState(NoticeList);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   const handleCancel = async () => {
-    const Detail = await getQuestionDetail(Number(listData[0].id));
-    if (Detail?.status === 200) {
-      console.log(Detail, 'Detail');
-      setNotice(Detail.data);
-      setQuestionPageUrl('detail');
-    }
+    router.back();
   };
 
   const handlePost = async () => {
     const data = {
-      classId: 27,
+      classId: Number(params.classId),
       title: title,
       content: content,
     };
@@ -36,20 +31,17 @@ function QuestionCreate() {
     } else {
       const res = await postQuestionCreate(data);
       if (res?.status === 200) {
-        const classId = 27;
-        const List = await getQuestionList(classId);
-        if (List?.status === 200) {
-          setListData(List.data);
-          if (List.data) {
-            const Detail = await getQuestionDetail(List.data[0].id);
-            if (Detail?.status === 200) {
-              setNotice(Detail.data);
-              setQuestionPageUrl('detail');
-            }
-          }
-        }
+        getList()
+        router.push(`/class/${params.classId}/question/${res?.data.id}`)
       }
     }
+  };
+
+  const getList = async()=>{
+    const res = await getQuestionList(Number(params.classId))
+    if(res?.status===200){
+      setListItem(res?.data)
+    };
   };
 
   return (

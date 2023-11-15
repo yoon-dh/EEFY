@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { postNoticeCreate, getNoticeList } from '@/api/Notice/Notice';
 import { useRecoilState } from 'recoil';
-import { DetailData, NoticePage, NoticeList } from '@/recoil/Notice';
+import { NoticeList } from '@/recoil/Notice';
 import * as S from './NoticeCreate.style';
 import swal from 'sweetalert';
 import { useRouter, useParams } from 'next/navigation';
@@ -9,7 +9,6 @@ import { useRouter, useParams } from 'next/navigation';
 function NoticeCreate() {
   const params = useParams()
   const router = useRouter()
-  const [noticePageUrl, setNoticePageUrl] = useRecoilState(NoticePage);
   const [listItem, setListItem] = useRecoilState(NoticeList);
 
   const [title, setTitle] = useState('');

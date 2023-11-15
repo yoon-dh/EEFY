@@ -1,29 +1,39 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { DetailData } from '@/recoil/Notice';
+import { NoticeList } from '@/recoil/Notice';
 import {QuestionPage} from '@/recoil/Question'
-import {deleteQuestionDelete} from '@/api/Question/Question'
+import {deleteQuestionDelete, getQuestionList} from '@/api/Question/Question'
 
 import dayjs from 'dayjs';
 import { Container, Header, Wrappe, Title, Time, Img, UseName, Line, ContentBox, Content, UpdataBtn, DeleteBtn } from './QuestionDetail.style';
+import { useRouter, useParams } from 'next/navigation';
 
-type Notice = {
-  id: string;
-  title: string;
-  createTime: Date;
-  imgUrl: string;
-  useName: string;
-  content: string;
-};
 
-function QuestionDetail() {
-  const [notice, setNotice] = useRecoilState<Notice | null>(DetailData);
+function QuestionDetail(props:any) {
+  const data = props.data
+  const params = useParams()
+  const router = useRouter()
   const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage)
+  const [listItem, setListItem] = useRecoilState(NoticeList);
 
   const handleDetele = async(id:any)=>{
     const res = await deleteQuestionDelete(4)
-    console.log(res)
+    if (res?.status === 200) {
+      getList()
+    }
   }
+  const getList = async()=>{
+    const res = await getQuestionList(Number(params.classId))
+    if(res?.status===200){
+      setListItem(res?.data)
+      if (res?.data.length > 0){
+        router.push(`/class/${params.classId}/question/${res?.data[0].id}`)
+      }else {
+        router.push(`/class/${params.classId}/question`)
+      }
+    }
+  }
+
   return (
     <>
       <Container
@@ -31,13 +41,13 @@ function QuestionDetail() {
           flex: 8,
         }}
       >
-        {notice?.title && (
+        {data?.title && (
           <>
             <Wrappe style={{ boxShadow: 'none', padding: '2% 5%' }}>
               <Header>
                 <div className='flex'>
-                  <Title>{notice.title}</Title>
-                  <Time>{dayjs(notice.createTime).format('YYYY.MM.DD')}</Time>
+                  <Title>{data.title}</Title>
+                  <Time>{dayjs(data.createTime).format('YYYY.MM.DD')}</Time>
                 </div>
                 <div
                   style={{
@@ -53,20 +63,18 @@ function QuestionDetail() {
                       width: '300px',
                     }}
                   >
-                    <Img src={notice.imgUrl} />
-                    <UseName>{notice.useName}</UseName>
+                    <UseName>{data.useName}</UseName>
                   </div>
                   <div className='flex' style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
                     <UpdataBtn onClick={()=>setQuestionPageUrl('updata')}>수정</UpdataBtn>
-                    <DeleteBtn onClick={()=>handleDetele(notice.id)}>삭제</DeleteBtn>
+                    <DeleteBtn onClick={()=>handleDetele(data.id)}>삭제</DeleteBtn>
                   </div>
                 </div>
               </Header>
               <Line />
               <ContentBox>
                 <Content>
-                  {notice.content}
-                  {notice.content}
+                  {data.content}
                 </Content>
               </ContentBox>
             </Wrappe>

@@ -30,7 +30,6 @@ function NoticeUpdata(props:any) {
       content: content,
     };
     const res = await putNoticeUpdata(data);
-    console.log(res, '작성 성공');
     if (res?.status === 200) {
       setNoticePageUrl('detail');
       getList()

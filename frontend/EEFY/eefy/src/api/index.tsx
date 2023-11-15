@@ -43,7 +43,6 @@ export const privateApi = axios.create({
 // config에 오리지널 요청 저장
 // 모든 request요청이 실행되기 전에 호출 -> 모든 요청 헤더에 인증 토큰 추가
 privateApi.interceptors.request.use(config => {
-  // console.log('토큰 점검');
   const token = getLocalStorage('access_token');
   config.headers.Authorization = token;
   return config;
@@ -51,12 +50,10 @@ privateApi.interceptors.request.use(config => {
 
 // 리프레시 토큰을 통해 서버로부터 새로운 액세스 토근 가져오기
 export async function postRefreshToken() {
-  console.log('리프레시 토큰 재발급');
   const headers = {
     Authorization: getLocalStorage('access_token'),
   };
   const response = await publicApi.put('/auth/refresh', null, { headers });
-  console.log('리프레시 성공', response);
   return response;
 }
 
@@ -75,7 +72,6 @@ privateApi.interceptors.response.use(
     try {
       const response = await postRefreshToken();
       const newAccessToken = response.headers.authorization;
-      console.log(newAccessToken);
       setLocalStorage('access_token', response.headers.authorization);
       setLocalStorage('refresh_token', response.headers['authorization-refresh']);
       axios.defaults.headers.common.Authorization = `${newAccessToken}`;
