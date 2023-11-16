@@ -19,6 +19,13 @@ export const ImgBox = styled.div`
   height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
+  object-fit: contain;
+  @media(max-width:1334px){
+    height: 360px;
+  }
+  @media(max-height:1000px){
+    height: 360px;
+  }
   &::-webkit-scrollbar {
     display: none;
   }

@@ -6,8 +6,10 @@ import * as S from '@/styles/MainStyle.style';
 import ProblemBox from '@/components/Main/Library/Homework/Create/Reading/ProblemBox';
 import CropperModal from '@/components/Main/Library/Homework/Create/Reading/CropperModal';
 import SaveQuestions from './SaveQuestions'
+import {PdfPage} from '@/recoil/Canvas'
 function CreateReadingComponent() {
   const [ocrDatas, setOcrDatas] = useRecoilState(OcrData);
+  const [pdfPage, setPdfPage] = useRecoilState(PdfPage);
   const mainStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
@@ -22,6 +24,11 @@ function CreateReadingComponent() {
       pdfFile:null,
       imgUrl:"",
       isSuccess:false
+    })
+    setPdfPage({
+      numPages:0,
+      pageNumber:1,
+      btnType:''
     })
   },[])
 
