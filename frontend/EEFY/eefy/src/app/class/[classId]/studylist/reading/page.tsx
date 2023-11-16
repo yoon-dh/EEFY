@@ -23,6 +23,8 @@ interface libraryDatasType {
 }
 
 function HomeworkTest() {
+  const homeworkType = 'reading';
+
   const params = useParams();
   const router = useRouter();
   const classId = params.classId;
@@ -60,7 +62,7 @@ function HomeworkTest() {
     alignItems: 'center',
     justifyContent: 'center',
   };
-  
+
   useEffect(() => {
     if (currentPage !== savePage) {
       setCurrentPage(savePage);
@@ -87,7 +89,7 @@ function HomeworkTest() {
     }
   };
 
-  const hanbleClick = async (StudentId: number, HomeworkId: number, title:String) => {
+  const hanbleClick = async (StudentId: number, HomeworkId: number, title: String) => {
     console.log(StudentId, HomeworkId);
     const Ids = {
       homeworkStudentId: StudentId,
@@ -109,13 +111,13 @@ function HomeworkTest() {
       <div style={{ flex: 1 }}>
         <ContainerBtn classId={Number(classId)} activeTab={'READING'} />
       </div>
-      <div className='w-full h-full relative' style={{ flex: 9, paddingTop: '2%', paddingBottom: '2%', border:'1px solid black' }}>
-        {libraryDatas.map((item:any, idx) => (
-          <div key={idx} onClick={()=>hanbleClick(item.homeworkStudentId, item.classHomeworkId, item.title)}>
-             <SpeakingStudyItem key={idx} libraryData={item} classId={classId} homeworkType={'READING'} />
+      <div className='w-full h-full relative' style={{ flex: 9, paddingTop: '2%', paddingBottom: '2%', border: '1px solid black' }}>
+        {libraryDatas.map((item: any, idx) => (
+          <div key={idx} onClick={() => hanbleClick(item.homeworkStudentId, item.classHomeworkId, item.title)}>
+            <SpeakingStudyItem key={idx} libraryData={item} classId={classId} homeworkType={'READING'} />
           </div>
         ))}
-        {libraryDatas.length===0 && <div>과제가 등록되지 않았습니다.</div>}
+        {libraryDatas.length === 0 && <div>과제가 등록되지 않았습니다.</div>}
       </div>
       <div className='flex justify-center items-center' style={{ flex: 1 }}>
         <Pagination count={totalPage} showFirstButton showLastButton page={currentPage} onChange={handlePageChange} sx={combinedStyles} />
@@ -124,4 +126,3 @@ function HomeworkTest() {
   );
 }
 export default HomeworkTest;
-

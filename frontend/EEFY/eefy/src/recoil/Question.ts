@@ -2,8 +2,8 @@ import { atom } from 'recoil';
 
 export const QuestionNum = atom({
   key: 'QuestionNum',
-  default: {}
-})
+  default: {},
+});
 
 export const QuestionPage = atom<string>({
   key: 'QuestionPage',
@@ -11,6 +11,6 @@ export const QuestionPage = atom<string>({
 });
 
 export const QuestionWaitStatus = atom<boolean>({
-  key:'QuestionWaitStatus',
-  default:false,
-})
+  key: 'QuestionWaitStatus',
+  default: false,
+});

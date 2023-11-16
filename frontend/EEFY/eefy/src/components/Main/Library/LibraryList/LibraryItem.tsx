@@ -17,10 +17,11 @@ interface LibraryItemType {
     modifiedAt: Date;
     title: string;
     type: string;
+    problemCount: number;
   };
 }
 
-function LibraryItem({ main, shadow, role, libraryData }: LibraryItemType) {
+function LibraryItem({ main, shadow, role, libraryData }: any) {
   const originalDate = new Date(libraryData.modifiedAt);
   const year = originalDate.getFullYear();
   const month = String(originalDate.getMonth() + 1).padStart(2, '0');
@@ -135,11 +136,11 @@ function LibraryItem({ main, shadow, role, libraryData }: LibraryItemType) {
         </StyledBookCover>
         <div className='content'>
           <div className='absolute text-neutral font-bold' style={{ fontSize: '16px', top: '25%', left: '12%', right: '15%', bottom: '50%' }}>
-            {libraryData.title}
+            {libraryData?.title}
           </div>
           <div className='absolute text-md text-neutral font-bold' style={{ right: '20%', bottom: '15%' }}>
             {/* {formattedDate} */}
-            20 문항
+            {role === 'teacher' ? libraryData?.problemCount : libraryData?.totalCount} 문항
           </div>
         </div>
         <div
@@ -151,7 +152,7 @@ function LibraryItem({ main, shadow, role, libraryData }: LibraryItemType) {
             <p>자료 정보</p>
           </div>
           {role === 'teacher' && (
-            <Link href={`/main/library/homework/assign/${libraryData.id}`}>
+            <Link href={`/main/library/homework/assign/${libraryData?.id}`}>
               <div className='flex justify-center items-center gap-5 hover:text-[#f5f5fb]'>
                 <CgExport className='text-2xl' />
                 <p>과제 등록</p>
