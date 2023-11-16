@@ -7,9 +7,10 @@ import { EnterClassTitle } from '@/recoil/ClassCreate';
 
 export default function NormalTag() {
   const classTitle = useRecoilValue(EnterClassTitle);
+  console.log(classTitle);
   const dummyData = {
     title: 'TOEIC 900 완성반',
-    content: 'Always stay updated in your student portal',
+    content: 'English Education For You',
   };
   return (
     <div

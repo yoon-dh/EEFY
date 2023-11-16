@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import * as S from '../../../styles/MainStyle.style';
+import { useParams } from 'next/navigation';
 
 type BoardProps = {
   contentType: number;
 };
 
 function RightBoard({ contentType }: BoardProps) {
+  const CLASS_ID = useParams();
   const title = ['공지사항', '등록자료'];
 
   // 서버에 요청 필요
@@ -21,21 +23,16 @@ function RightBoard({ contentType }: BoardProps) {
         className='h-full flex flex-col rounded-xl min-w-[370px] min-h-[230px] '
         style={{
           padding: '5% 3%',
-          // background: 'rgba(255,255,255,0,06)',
-          // zIndex: '0',
-          // border: '1px solid rgba(255,255,255,0.1)',
-          // boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)',
-          // backdropFilter: 'blur(10px)',
-          // boxShadow: '0px 1px 4px 0px rgba(200, 200, 200, 0.25)',
-          // border: '1px solid rgba(62, 56, 56, 0.2)',
-          // boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)',
-          // backdropFilter: 'blur(10px)',
         }}
       >
         {/* 제목 */}
         <div className='flex justify-between text-xl font-bold 2xl:text-2xl' style={{ flex: 2 }}>
           <div>{title[contentType]}</div>
-          <Link href={'/'} className='text-info' style={{ fontSize: '20px' }}>
+          <Link
+            href={contentType === 0 ? `/class/${CLASS_ID?.classId}/notice` : `/class/${CLASS_ID?.classId}/lecture`}
+            className='text-info'
+            style={{ fontSize: '20px' }}
+          >
             View all
           </Link>
         </div>
@@ -43,7 +40,9 @@ function RightBoard({ contentType }: BoardProps) {
         {/* 게시글 목록 */}
         {data.map((item, idx) => (
           <div key={idx} className='flex justify-between items-center text-base' style={{ flex: 1 }}>
-            <div style={{ flex: 1 }}>o</div>
+            <div style={{ flex: 1 }}>
+              <div className='bg-success' style={{ width: '8px', height: '8px', borderRadius: '50%' }}></div>
+            </div>
             <div style={{ flex: 10 }}>{item.title}</div>
             <div className='text-right' style={{ flex: 5 }}>
               {item.date}

@@ -25,13 +25,17 @@ function HomeworkProgress({ progress }: any) {
   // FIXME: gradient로 변경?
 
   let progressColor;
+  let progressBorderColor;
 
   if (progress < 50) {
-    progressColor = 'rgb(248, 147, 107)';
+    progressBorderColor = 'rgb(248, 147, 107)';
+    progressColor = 'rgba(248, 147, 107, 0.7)';
   } else if (progress < 75) {
-    progressColor = '#FDF584';
+    progressBorderColor = '#FDF584';
+    progressColor = '#fdf584b5';
   } else {
-    progressColor = 'rgb(107, 248, 189)';
+    progressBorderColor = 'rgb(107, 248, 189)';
+    progressColor = 'rgba(107, 248, 189, 0.7)';
   }
 
   const data = {
@@ -41,7 +45,7 @@ function HomeworkProgress({ progress }: any) {
         data: [progress, 100 - progress],
         backgroundColor: [progressColor, 'rgba(255, 255, 255, 0)'],
         borderColor: [progressColor, progressBorder],
-        borderWidth: 5,
+        borderWidth: 3.5,
       },
     ],
   };
