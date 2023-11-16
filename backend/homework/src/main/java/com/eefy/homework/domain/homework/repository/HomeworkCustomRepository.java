@@ -43,16 +43,19 @@ public class HomeworkCustomRepository {
                     homework.content,
                     homework.type,
                     homework.isFinish,
+                    homeworkQuestion.count(),
                     homework.createdAt,
                     homework.modifiedAt
                 )
             )
             .from(homework)
+            .join(homeworkQuestion).on(homeworkQuestion.homework.id.eq(homework.id))
             .where(
                 homework.memberId.eq(memberId),
                 homeworkTypeEq(type),
                 homeworkTitleContain(searchWord)
             )
+            .groupBy(homework.id)
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .orderBy(homework.modifiedAt.desc())

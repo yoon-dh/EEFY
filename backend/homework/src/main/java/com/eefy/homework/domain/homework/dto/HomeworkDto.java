@@ -20,19 +20,21 @@ public class HomeworkDto {
     private String content;
     private HomeworkType type;
     private Boolean isFinish;
+    private Long problemCount;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     @QueryProjection
     public HomeworkDto(Integer id, Integer memberId, String title, String content,
         HomeworkType type,
-        Boolean isFinish, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        Boolean isFinish, Long problemCount, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.memberId = memberId;
         this.title = title;
         this.content = content;
         this.type = type;
         this.isFinish = isFinish;
+        this.problemCount = problemCount;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
