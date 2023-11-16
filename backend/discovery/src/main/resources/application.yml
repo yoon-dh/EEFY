@@ -6,7 +6,11 @@ spring:
     name: discovery-service
 
 eureka:
+  instance:
+    hostname: ${HOST_NAME}
   client:
     register-with-eureka: false
     fetch-registry: false
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL}
 

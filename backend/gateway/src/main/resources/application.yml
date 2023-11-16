@@ -6,23 +6,45 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_SERVER_URL}
+
 
 spring:
   application:
     name: gateway-service
+
+  zipkin:
+    base-url: ${ZIPKIN_URL}
+    enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_MEMBER_URL}
+    username: ${MYSQL_NAME}
+    password: ${MYSQL_PASSWORD}
+
   cloud:
     gateway:
       routes:
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
-            - Path=/api/member/**
+            - Path=/api/member/**, /api/auth/**, /api/alarm/**
         - id: homework-service
           uri: lb://HOMEWORK-SERVICE
           predicates:
             - Path=/api/homework/**
         - id: study-class-service
-          uri: lb://STUDY-CLASS-SERTICE
+          uri: lb://STUDY-CLASS-SERVICE
           predicates:
-            - Path=/api/study-class/**
+            - Path=/api/study-class/**, /api/lecture/**, /api/question/**
+        - id: ai-service
+          uri: lb://AI-SERVICE
+          predicates:
+            - Path=/api/ai/**
+
+jwt:
+  secret: ${SECRET_KEY}
