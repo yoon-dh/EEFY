@@ -153,7 +153,8 @@ public class HomeworkServiceImpl implements HomeworkService {
         return AlarmSendRequest.builder()
             .classId(classHomework.getClassId())
             .className(classDetail.getTitle())
-            .link(null)
+            .link(String.format("https://k9b306.p.ssafy.io/class/%s/studylist/%s",
+                classDetail.getId(), homework.getType().getValue()))
             .title("새로운 과제가 할당되었습니다.")
             .content(
                 String.format("%s 클래스 : %s 제출기한 -> %s", classDetail.getTitle(), homework.getTitle(),
