@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 export const Header = styled.div``;
 export const Wrappe = styled.div`
-  /* width: 100%; */
+  width: 100%;
   height: 90%;
   box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -28,7 +28,7 @@ export const UseName = styled.div`
   margin: 2px 0px 0px 3%;
   font-size: 15px;
   width: 100%;
-  min-width: 100px;
+  /* min-width: 100px; */
 `;
 export const Img = styled.img`
   width: 32px;

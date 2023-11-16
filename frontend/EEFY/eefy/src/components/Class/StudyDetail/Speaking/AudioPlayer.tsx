@@ -1,7 +1,8 @@
+'use client';
 import React from 'react';
 
 interface PropsType {
-  url: null | string;
+  url: string | any;
 }
 
 function AudioPlayer({ url }: PropsType) {

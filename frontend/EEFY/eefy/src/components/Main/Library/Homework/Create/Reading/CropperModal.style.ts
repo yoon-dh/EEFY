@@ -11,7 +11,7 @@ export const Container = styled.div`
 export const Wrappe = styled.div`
   width: 100%;
   height: 100%;
-  flex: 12;
+  flex: 10;
 `;
 export const ImgBox = styled.div`
   border-radius: 12px;
@@ -34,15 +34,18 @@ export const ImgBox = styled.div`
   }
 `;
 export const BtnBox = styled.div`
-  width: 90%;
+  width: 100%;
   height: 100%;
   flex: 1;
   display: flex;
-  justify-content: flex-end;
+  padding: 10px 0px;
+  justify-content: center;
 `;
 export const PdfBtn = styled.div`
   font-size: 20px;
   text-align: center;
   justify-content: center;
   align-items: center;
+  display: flex;
+  flex: 9;
 `;

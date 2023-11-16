@@ -116,7 +116,7 @@ function CanvasVar() {
   }
 
   return (
-    <Container>
+    <Container className="flex flex-col">
       <div style={{ borderBottom: '1px solid rgba(131, 129, 129, 0.5)' }}>
         <BlockPicker
           triangle='hide'
@@ -139,85 +139,93 @@ function CanvasVar() {
           onChangeComplete={handleChangeComplete}
         />
       </div>
-      <ItemPenBox>
-        <PenBox
-          onClick={exportCanvasPenMode}
-          style={{
-            borderRight: '1px solid rgba(131, 129, 129, 0.5)',
-            backgroundColor: varData.mode ? '' : varData.penSize === 4 ? 'rgba(200, 200, 200, 0.5)' : '',
-          }}
-        >
-          <LuPenLine style={{ fontSize: '23px', color: varData.color }} />
-        </PenBox>
-        <PenBox
-          onClick={exportCanvasHighlighterMode}
-          style={{
-            backgroundColor: varData.mode ? '' : varData.penSize === 10 ? 'rgba(200, 200, 200, 0.5)' : '',
-          }}
-        >
-          <LiaHighlighterSolid style={{ fontSize: '23px' }} />
-        </PenBox>
-      </ItemPenBox>
 
-      <ItemDeleteBox>
-        <EraserBox
-          onClick={exportCanvasEraseMode}
-          style={{
-            backgroundColor: varData.mode ? 'rgba(200, 200, 200, 0.5)' : '',
-          }}
-        >
-          <LuEraser style={{ fontSize: '23px' }} />
-        </EraserBox>
-        <ClearBox
-          onClick={() => {
-            setVarData({ ...varData, clear: true });
-          }}
-        >
-          <FaRegTrashCan />
-        </ClearBox>
-      </ItemDeleteBox>
-
-      <ItemBox>
-        <UndoBtn
-          onClick={() => {
-            setVarData({ ...varData, undo: true });
-          }}
-        >
-          <HiArrowUturnLeft />
-        </UndoBtn>
-        <RedoBtn
-          onClick={() => {
-            setVarData({ ...varData, redo: true });
-          }}
-        >
-          <HiArrowUturnRight />
-        </RedoBtn>
-      </ItemBox>
-
-      <PdfPageItemBox>
-        <BeforeBtn onClick={handleBeforePage}>
-          <BiSolidLeftArrow />
-        </BeforeBtn>
-        <PdfPageItem>
-          {page.pageNumber} / {page.numPages}
-        </PdfPageItem>
-        <NextBtn onClick={handleNextPage}>
-          <BiSolidRightArrow />
-        </NextBtn>
-      </PdfPageItemBox>
-
-      <BackBtn
-        onClick={() => {
-          postSaveLecture()
-          setOcr({ ...ocr, isSuccess: false, imgUrl: '', pdfFile: '' });
-          setPage({ ...page, pageNumber: 1, numPages: 0 });
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <BiSolidDoorOpen style={{ fontSize: '21px' }} />
-          BACK
+        <div style={{flex:1, height:'100%'}}>    
+        <ItemPenBox>
+          <PenBox
+            onClick={exportCanvasPenMode}
+            style={{
+              borderRight: '1px solid rgba(131, 129, 129, 0.5)',
+              backgroundColor: varData.mode ? '' : varData.penSize === 4 ? 'rgba(200, 200, 200, 0.5)' : '',
+            }}
+          >
+            <LuPenLine style={{ fontSize: '23px', color: varData.color }} />
+          </PenBox>
+          <PenBox
+            onClick={exportCanvasHighlighterMode}
+            style={{
+              backgroundColor: varData.mode ? '' : varData.penSize === 10 ? 'rgba(200, 200, 200, 0.5)' : '',
+            }}
+          >
+            <LiaHighlighterSolid style={{ fontSize: '23px' }} />
+          </PenBox>
+        </ItemPenBox>
         </div>
-      </BackBtn>
+        <div style={{flex:1, height:'100%'}}>
+          <ItemDeleteBox>
+            <EraserBox
+              onClick={exportCanvasEraseMode}
+              style={{
+                backgroundColor: varData.mode ? 'rgba(200, 200, 200, 0.5)' : '',
+              }}
+            >
+              <LuEraser style={{ fontSize: '23px' }} />
+            </EraserBox>
+            <ClearBox
+              onClick={() => {
+                setVarData({ ...varData, clear: true });
+              }}
+            >
+              <FaRegTrashCan />
+            </ClearBox>
+          </ItemDeleteBox>
+        </div>
+        <div style={{flex:1, height:'100%'}}>
+          <ItemBox>
+            <UndoBtn
+              onClick={() => {
+                setVarData({ ...varData, undo: true });
+              }}
+            >
+              <HiArrowUturnLeft />
+            </UndoBtn>
+            <RedoBtn
+              onClick={() => {
+                setVarData({ ...varData, redo: true });
+              }}
+            >
+              <HiArrowUturnRight />
+            </RedoBtn>
+          </ItemBox>
+        </div>
+        <div style={{flex:1, height:'100%'}}>
+          <PdfPageItemBox>
+            <BeforeBtn onClick={handleBeforePage}>
+              <BiSolidLeftArrow />
+            </BeforeBtn>
+            <PdfPageItem>
+              {page.pageNumber} / {page.numPages}
+            </PdfPageItem>
+            <NextBtn onClick={handleNextPage}>
+              <BiSolidRightArrow />
+            </NextBtn>
+          </PdfPageItemBox>
+        </div>
+
+        <div style={{flex:1, height:'100%'}}>
+          <BackBtn
+            onClick={() => {
+              postSaveLecture()
+              setOcr({ ...ocr, isSuccess: false, imgUrl: '', pdfFile: '' });
+              setPage({ ...page, pageNumber: 1, numPages: 0 });
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent:'center', border:'1px soild black'}}>
+              <BiSolidDoorOpen style={{ fontSize: '21px' }} />
+              BACK
+            </div>
+          </BackBtn>
+        </div>
     </Container>
   );
 }
@@ -227,7 +235,7 @@ export default CanvasVar;
 const Container = styled.div`
   margin: 0px 0px auto 0px;
   width: 100%;
-  /* height: 100%; */
+  height: 100%;
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(131, 129, 129, 0.25);
   border-radius: 12px;
@@ -237,82 +245,83 @@ const PenBox = styled.div`
   color: rgba(70, 70, 70, 0.8);
   display: flex;
   flex: 1;
-  height: 62px;
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(131, 129, 129, 0.5);
   @media (max-width: 1334px) {
     padding: 8px 5px;
   }
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;
 const EraserBox = styled.div`
   background-color: rgba(255, 255, 255, 0.5);
   color: rgba(70, 70, 70, 0.8);
   display: flex;
-  height: 62px;
   justify-content: center;
   align-items: center;
   flex: 1;
+  height: 100%;
   border-bottom: 1px solid rgba(131, 129, 129, 0.5);
   border-right: 1px solid rgba(131, 129, 129, 0.5);
   @media (max-width: 1334px) {
     padding: 8px 5px;
   }
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;
 const ClearBox = styled.div`
   background-color: rgba(255, 255, 255, 0.5);
   color: rgba(70, 70, 70, 0.8);
   display: flex;
-  height: 62px;
   justify-content: center;
   align-items: center;
   flex: 1;
+  height: 100%;
   border-bottom: 1px solid rgba(131, 129, 129, 0.5);
   @media (max-width: 1334px) {
     padding: 8px 5px;
   }
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;
 const BackBtn = styled.div`
   background-color: rgba(255, 255, 255, 0.5);
   color: #dc4c64;
   display: flex;
-  height: 62px;
   justify-content: center;
   align-items: center;
   font-size: 16px;
+  height: 100%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  cursor: pointer;
   @media (max-width: 1334px) {
-    padding: 12px 5px;
   }
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;
 const ItemPenBox = styled.div`
   display: flex;
+   height:100%;
 `;
 const ItemDeleteBox = styled.div`
   display: flex;
+   height:100%;
 `;
 const ItemBox = styled.div`
   display: flex;
+  height:100%;
   background-color: rgba(255, 255, 255, 0.5);
   color: rgba(70, 70, 70, 0.8);
-  height: 62px;
 `;
 const PdfPageItemBox = styled.div`
   display: flex;
-  height: 61px;
+   height:100%;
   background-color: rgba(255, 255, 255, 0.5);
   font-weight: 550;
   color: rgba(70, 70, 70, 0.8);
@@ -325,9 +334,9 @@ const BeforeBtn = styled.div`
   align-items: center;
   border-right: 1px solid rgba(131, 129, 129, 0.5);
   border-bottom: 1px solid rgba(131, 129, 129, 0.5);
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;
 const PdfPageItem = styled.div`
   flex: 1;
@@ -337,9 +346,9 @@ const PdfPageItem = styled.div`
   font-size: 12px;
   border-right: 1px solid rgba(131, 129, 129, 0.5);
   border-bottom: 1px solid rgba(131, 129, 129, 0.5);
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;
 const NextBtn = styled.div`
   font-size: 23px;
@@ -348,9 +357,9 @@ const NextBtn = styled.div`
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(131, 129, 129, 0.5);
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;
 const UndoBtn = styled.div`
   flex: 1;
@@ -360,9 +369,9 @@ const UndoBtn = styled.div`
   align-items: center;
   border-bottom: 1px solid rgba(131, 129, 129, 0.5);
   border-right: 1px solid rgba(131, 129, 129, 0.5);
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;
 const RedoBtn = styled.div`
   flex: 1;
@@ -371,7 +380,7 @@ const RedoBtn = styled.div`
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(131, 129, 129, 0.5);
-  &:hover {
+  /* &:hover {
     background-color: rgba(200, 200, 200, 0.5);
-  }
+  } */
 `;

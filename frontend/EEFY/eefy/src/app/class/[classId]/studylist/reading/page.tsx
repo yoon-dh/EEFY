@@ -109,10 +109,11 @@ function HomeworkTest() {
       <div style={{ flex: 1 }}>
         <ContainerBtn classId={Number(classId)} activeTab={'READING'} />
       </div>
-      <div className='w-full h-full relative' style={{ flex: 8, paddingTop: '2%', paddingBottom: '2%' }}>
+      <div className='w-full h-full relative' style={{ flex: 9, paddingTop: '2%', paddingBottom: '2%', border:'1px solid black' }}>
         {libraryDatas.map((item:any, idx) => (
           <div key={idx} onClick={()=>hanbleClick(item.homeworkStudentId, item.classHomeworkId, item.title)}>
-            <SpeakingStudyItem libraryData={item} />
+             <SpeakingStudyItem key={idx} libraryData={item} classId={classId} homeworkType={'READING'} />
+            {/* <SpeakingStudyItem key={idx} libraryData={item} classId={CLASS_ID.classId} homeworkType={homeworkType} /> */}
           </div>
         ))}
         {libraryDatas.length===0 && <div>과제가 등록되지 않았습니다.</div>}

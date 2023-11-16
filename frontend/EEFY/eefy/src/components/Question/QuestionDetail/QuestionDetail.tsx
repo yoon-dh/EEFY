@@ -82,13 +82,14 @@ function QuestionDetail(props:any) {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
+                      flex:5
                     }}
                   >
                     <UseName><b>{data.name}</b></UseName>
                   </div>
                     {user.memberId === data.memberId && (
                       <>
-                        <div className='flex' style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end' }}>
+                        <div className='flex' style={{ margin: '10px 0px 0px 0px', justifyContent: 'flex-end', flex:5 }}>
                           {data.waitStatus === false && (
                             <>
                               <UpdataBtn className='text-info' onClick={Solving}>
