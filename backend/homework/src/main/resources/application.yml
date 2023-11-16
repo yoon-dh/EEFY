@@ -1,0 +1,57 @@
+server:
+  port: 64419
+
+spring:
+  application:
+    name: homework-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_HOMEWORK_URL}
+    username: ${MYSQL_NAME}
+    password: ${MYSQL_PASSWORD}
+  zipkin:
+    base-url: ${ZIPKIN_URL}
+    enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    open-in-view: false
+
+eureka:
+  instance:
+    hostname: ${HOST_NAME}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL}
+
+springdoc:
+  swagger-ui:
+    path: /api/homework/swagger-ui
+  api-docs:
+    path: /api/homework/swagger-ui.html
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: eefy-bucket
+      profileDir: profile-images
+      lectureDir: study-class-lecture
+      voiceDir: homework-voice
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
