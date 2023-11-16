@@ -226,7 +226,7 @@ public class HomeworkServiceImpl implements HomeworkService {
             homeworkQuestion, homeworkStudent, solveProblemRequest.getSubmitAnswer(), uploadPath);
 
         if (hasVoice(voiceFile)) {
-            updateVoiceProblemScore(homeworkStudentQuestion);
+            updateVoiceProblemScore(homeworkStudentQuestion, homeworkQuestion.getAnswer());
         } else {
             updateChoiceAndWriteProblemScore(homeworkQuestion, homeworkStudentQuestion);
         }
@@ -412,10 +412,11 @@ public class HomeworkServiceImpl implements HomeworkService {
         return voiceFile != null && !voiceFile.isEmpty();
     }
 
-    private void updateVoiceProblemScore(HomeworkStudentQuestion homeworkStudentQuestion) {
+    private void updateVoiceProblemScore(HomeworkStudentQuestion homeworkStudentQuestion,
+        String answer) {
         String score = aiServiceFeignClient.getAnnounceScore(
-            new EvaluateAnnounceRequest(homeworkStudentQuestion.getFilePath()));
-        homeworkStudentQuestion.updateScore(Character.getNumericValue(score.charAt(1)) * 20);
+            new EvaluateAnnounceRequest(homeworkStudentQuestion.getFilePath(), answer));
+        homeworkStudentQuestion.updateScore(Integer.parseInt(score.substring(1, 4)) * 20);
     }
 
 }
