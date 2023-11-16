@@ -109,7 +109,7 @@ function HomeworkTest() {
       <div style={{ flex: 1 }}>
         <ContainerBtn classId={Number(classId)} activeTab={'READING'} />
       </div>
-      <div className='w-full h-full relative' style={{ flex: 8, paddingTop: '2%', paddingBottom: '2%' }}>
+      <div className='w-full h-full relative' style={{ flex: 9, paddingTop: '2%', paddingBottom: '2%', border:'1px solid black' }}>
         {libraryDatas.map((item:any, idx) => (
           <div key={idx} onClick={()=>hanbleClick(item.homeworkStudentId, item.classHomeworkId, item.title)}>
             <SpeakingStudyItem libraryData={item} />
