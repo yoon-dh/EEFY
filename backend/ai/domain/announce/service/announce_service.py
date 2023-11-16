@@ -18,7 +18,7 @@ def evaluate_announce(voice_file, script):
     requestJson = {
         "argument": {
             "language_code": languageCode,
-            "script": script,
+            # "script": script,
             "audio": audioContents
         }
     }

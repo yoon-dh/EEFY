@@ -14,4 +14,5 @@ router = APIRouter(
 @router.post("/evaluate")
 def get_document(voice_file_path: VoiceFilePath):
     print("announce" + voice_file_path.voice_file_path)
+    print(voice_file_path.script)
     return evaluate_announce(voice_file_path.voice_file_path, voice_file_path.script)
