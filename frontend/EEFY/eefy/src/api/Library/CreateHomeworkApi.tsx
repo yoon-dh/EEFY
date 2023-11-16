@@ -53,7 +53,9 @@ export const getHomeworkMakeQuestion = async (data: any) => {
 // 파일 업로드 시 STT 요청
 export const postSTT = async (data: FormData) => {
   try {
+    console.log('stt 진입');
     const res = await privateApi.post('/ai/stt', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+    console.log('stt 성공', res);
     return res.data;
   } catch (err) {
     console.error(err);

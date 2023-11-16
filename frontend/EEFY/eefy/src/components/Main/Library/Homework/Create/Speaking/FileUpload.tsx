@@ -14,6 +14,7 @@ function FileUpload() {
   useEffect(() => {
     async function fetchData() {
       if (speakingFileInfo.file !== undefined && fileInputRef.current) {
+        console.log(speakingFileInfo.file);
         const formData = new FormData();
         formData.append('file', speakingFileInfo.file);
         const data = await postSTT(formData);

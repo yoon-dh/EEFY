@@ -1,16 +1,16 @@
 import { atom } from 'recoil';
 
 interface WorkbookInfoTypes {
-  id: number;
+  id: number | null;
   title: string;
   pages: number;
 }
 
 interface QuestionInfoTypes {
-  id: number;
+  id: number | null;
   page: number;
   script: string;
-  url: string;
+  url: any;
 }
 
 interface StudentQuestionInfoTypes {
@@ -19,25 +19,24 @@ interface StudentQuestionInfoTypes {
   data: null | { script: string; url: string; pScore: number; sScore: number };
 }
 
-// 문제집 정보
+// 과제 정보
 export const WorkbookInfo = atom<WorkbookInfoTypes>({
   key: 'WorkbookInfo',
   default: {
-    id: 12, // 문제집 아이디
-    title: 'TOEIC 필수 훈련문장 - part3', // 문제집 제목
-    pages: 3, // 문제수
+    id: null, // 과제 Id
+    title: '', // 과제 title
+    pages: 0, // 과제 문제수
   },
 });
 
-// 문제 정보
+// 현재 페이지의 문제 정보
 export const QuestionInfo = atom<QuestionInfoTypes>({
   key: 'QuestionInfo',
   default: {
-    id: 0, // 현재 문제 아이디
-    page: 0, // 현재 문제 번호
-    script:
-      "The vast expanse of the Grand Canyon in Arizona, USA, is a sight to behold. Carved by the Colorado River over millions of years, the canyon's layered red rock formations tell a geological story that stretches back eons. Visitors from around the world come to admire its breathtaking beauty and hike its rugged trails, offering a deep connection with nature and a profound sense of wonder. The vast expanse of the Grand Canyon in Arizona, USA, is a sight to behold. Carved by the Colorado River over millions of years, the canyon's layered red rock formations tell a geological story that stretches back eons. Visitors from around the world come to admire its breathtaking beauty and hike its rugged trails, offering a deep connection with nature and a profound sense of wonder.",
-    url: 'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/4.mp3',
+    id: null, // 현재 문제 Id
+    page: 0, // 현재 문제 페이지 번호
+    script: '',
+    url: '',
   },
 });
 
@@ -54,6 +53,23 @@ export const StudentQuestionInfo = atom<StudentQuestionInfoTypes>({
       pScore: 0, // 발음 평가 점수
       sScore: 0, // 단어 유사도 점수
     },
+  },
+});
+
+interface RequestHomeworkInfoTypes {
+  homeworkQuestionId: number;
+  homeworkStudentId: number;
+  submitAnswer: string;
+  voiceFile: any;
+}
+// 학생 풀이
+export const RequestHomeworkInfo = atom<RequestHomeworkInfoTypes>({
+  key: 'RequestHomeworkInfo',
+  default: {
+    homeworkQuestionId: 0,
+    homeworkStudentId: 0,
+    submitAnswer: '',
+    voiceFile: undefined,
   },
 });
 
@@ -76,7 +92,12 @@ export const IsModalOpen = atom<boolean>({
 });
 
 // 학생이 녹음한 음성 파일 - 제출 전
-export const RecordAudioUrl = atom<null | string>({
+export const RecordAudioUrl = atom<undefined | any | File>({
   key: 'RecordAudioUrl',
-  default: null,
+  default: 'string',
+});
+
+export const SolvedProblemInfo = atom<any>({
+  key: 'SolvedProblemInfo',
+  default: {},
 });

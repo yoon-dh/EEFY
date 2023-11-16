@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
@@ -20,7 +19,7 @@ import * as S from '@/styles/MainStyle.style';
 import * as I from '@/components/Class/StudyDetail/Speaking/ImageComponents';
 import { CurrentHomeworkInfo } from '@/recoil/StudyList/StudyList';
 
-function SpeakingProblemId() {
+function SpeakingProblem() {
   const router = useRouter();
   const mainStyle = {
     display: 'grid',
@@ -29,9 +28,7 @@ function SpeakingProblemId() {
     gridTemplateAreas: "'a' 'a' 'a' 'a' 'b' 'b' 'b' 'b' 'c' ",
     gap: '3%',
   };
-
   const homeworkType = 'speaking';
-
   const paramsObj: any = useParams(); //예시 {classId: '46', homeworkId: '24'}
   const userInfo = useRecoilValue(userData); // {memberId: 21, email: '-@naver.com', name: '김민균', nickname: null, role: 'STUDENT'}
   const currentHomeworkInfo = useRecoilValue(CurrentHomeworkInfo);
@@ -54,6 +51,7 @@ function SpeakingProblemId() {
       const prevPage = questionData.page - 1;
       const prevHomeworkId = problemsData[prevPage].homeworkQuestion.id;
       router.push(`/class/${paramsObj.classId}/studylist/${homeworkType}/${paramsObj.homeworkId}/problem/${prevHomeworkId}`);
+      setIsSolved(false);
 
       // 서버에 prevPage 페이지 요청 -> { ProblemInfo, StudentIsSolved, IsSolved } 다음의 recoil 정보 최신화
       // setQuestionData(prev => ({ ...prev, page: prevPage })); // 임시
@@ -62,12 +60,12 @@ function SpeakingProblemId() {
 
   // Link로 바꿀 예정
   const goNext = () => {
-    if (!isRecording && questionData?.page !== workbookData.pages - 1) {
-      const nextPage = questionData?.page + 1;
+    if (!isRecording && questionData.page !== workbookData.pages - 1) {
+      const nextPage = questionData.page + 1;
       const nextHomeworkId = problemsData[nextPage].homeworkQuestion.id;
       router.push(`/class/${paramsObj.classId}/studylist/${homeworkType}/${paramsObj.homeworkId}/problem/${nextHomeworkId}`);
+      setIsSolved(false);
 
-      // const nextPage = questionData.page + 1;
       // 서버에 nextPage 페이지 요청 -> { ProblemInfo, StudentIsSolved, IsSolved } 다음의 recoil 정보 최신화
       // setQuestionData(prev => ({ ...prev, page: nextPage })); // 임시
     }
@@ -80,9 +78,9 @@ function SpeakingProblemId() {
   };
 
   useEffect(() => {
-    async function fetchData(classHomeworkId: number, problemId: number) {
+    async function fetchData(classHomeworkId: number) {
       const responseData = await getHomeworkGetProblem(classHomeworkId);
-      const newProblemId = problemId; // 현재 문제 아이디 - params로 대체
+      const newProblemId = responseData.problems[0].homeworkQuestion.id; // 현재 문제 아이디 - params로 대체
       console.log('responseData', responseData);
       // 과제의 문제 정보
       const initialQuestionInfo = responseData.problems
@@ -124,8 +122,8 @@ function SpeakingProblemId() {
       console.log('---------------------------------------------');
     }
     const homeworkId = parseInt(paramsObj.homeworkId);
-    const problemId = parseInt(paramsObj.problemId);
-    fetchData(homeworkId, problemId);
+    const problemId = 0; // params로 대체 예정
+    fetchData(homeworkId);
   }, [isSolved]);
 
   return (
@@ -149,7 +147,7 @@ function SpeakingProblemId() {
           <div className='relative bg-base-200 rounded-2xl' style={{ gridArea: 'b' }}>
             {/* SolvedComponent - 역할이 강사 || 문제를 푼 경우 , SolvingComponent - 역할이 학생 && 문제를 풀지 않은 경우 */}
             {(userInfo && userInfo.role === 'TEACHER') || isSolved ? <SolvedQuestion solvedProblemData={solvedProblemData} /> : <SolvingQuestion />}
-            {userInfo && userInfo.role === 'STUDENT' && !isSolved && !isRecording && !isModalOpen && solvedProblemData && (
+            {userInfo && userInfo.role === 'STUDENT' && !isSolved && !isRecording && !isModalOpen && (
               <div className='absolute bottom-5 right-5 w-44 h-12 bg-secondary rounded-md flex justify-center items-center' onClick={submitFileHandler}>
                 <p className='text-secondary-content'>제출한 파일</p>
               </div>
@@ -190,4 +188,4 @@ function SpeakingProblemId() {
   );
 }
 
-export default SpeakingProblemId;
+export default SpeakingProblem;
