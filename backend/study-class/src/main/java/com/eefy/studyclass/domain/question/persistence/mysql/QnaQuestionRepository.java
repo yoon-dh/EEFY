@@ -7,8 +7,7 @@ import java.util.List;
 
 
 public interface QnaQuestionRepository extends JpaRepository<QnaQuestion, Integer> {
-    List<QnaQuestion> findByMemberIdAndStudyClassId(Integer memberId, int classId);
-
     List<QnaQuestion> findByStudyClassIdOrderByCreatedAtDesc(int classId);
+    List<QnaQuestion> findByMemberIdAndStudyClassIdOrderByCreatedAtDesc(Integer memberId, int classId);
 }
 

@@ -202,7 +202,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private List<QuestionListResponse> makeQuestionListResponse(Member member, int classId) {
-        List<QnaQuestion> questions = qnaQuestionRepository.findByMemberIdAndStudyClassId(member.getMemberId(), classId);
+        List<QnaQuestion> questions = qnaQuestionRepository.findByMemberIdAndStudyClassIdOrderByCreatedAtDesc(member.getMemberId(), classId);
         return questions.stream().map(QuestionListResponse::new).collect(Collectors.toList());
     }
 }
