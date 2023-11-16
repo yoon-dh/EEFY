@@ -158,7 +158,12 @@ function Homework({ children }: { children: React.ReactNode }) {
           <div style={{ width: '80%', height: '100%', display: 'flex' }}>
             <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <Title className='text-xl'>
-                <b>{ids.title}</b> : <span className='text-warning'>{averageScore} 점</span>
+                <b>{ids.title}</b> 
+                {page === 'explanation' && (
+                  <>
+                : <span className='text-warning'>{averageScore} 점</span>
+                  </>
+                )}
               </Title>
               {page === 'explanation' && (
                 <>

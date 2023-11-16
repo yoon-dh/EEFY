@@ -23,7 +23,11 @@ function SpeakingStudyItem({ libraryData, classId, homeworkType }: { libraryData
   const setCurrentHomeworkInfo = useSetRecoilState(CurrentHomeworkInfo);
   const onClickHandler = () => {
     setCurrentHomeworkInfo(libraryData);
-    router.push(`/class/${classId}/studylist/${homeworkType}/${libraryData.classHomeworkId}/problem`);
+    if(homeworkType === 'reading'){
+      router.push(`/class/${classId}/studylist/${homeworkType}/${libraryData.classHomeworkId}/problem/1`);
+    } else {
+      router.push(`/class/${classId}/studylist/${homeworkType}/${libraryData.classHomeworkId}/problem/`);
+    }
   };
 
   return (
