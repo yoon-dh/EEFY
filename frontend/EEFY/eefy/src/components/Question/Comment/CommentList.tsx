@@ -12,7 +12,6 @@ function CommentList(props:any) {
   const params = useParams()
   const user = useRecoilValue(userData)
   const commentData = props.commentList
-  const [check, setCheck] = useState(true);
   const [comment, setComment] = useState('');
   const [commentList, setCommentList] = useState<{ comment: string; check: boolean }[]>([]);
 
@@ -41,10 +40,11 @@ function CommentList(props:any) {
   
 
   return (
-    <div className='w-full h-full'>
+    <div className='w-full h-full flex flex-col'>
       <Container
         style={{
           overflow: 'auto',
+          flex:10
         }}
       >
         {commentList.map((item:any,index)=>(
@@ -76,6 +76,7 @@ function CommentList(props:any) {
 
       <Wrappe
       onSubmit={handleSend}
+      style={{flex:1}}
       >
         <CreateInput
           id='commemt'

@@ -94,8 +94,8 @@ function Homework({ children }: { children: React.ReactNode }){
     const res = await postSolveProblem(formData)
     console.log(res)
     if(res?.status===200){
-      getSolved()
     }
+    getSolved()
   }
 
   // 문제집 채점
@@ -131,10 +131,21 @@ function Homework({ children }: { children: React.ReactNode }){
     });
   }
   const average = ()=>{
-    if (solved && Array.isArray(solved)) {
-      const scores = solved.map((problem: any) => problem.score);
-      const averageScore = scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length;
-      return averageScore.toFixed();
+    if (solved && Array.isArray(solved) && solved.length > 0) {
+      const validScores = solved
+        .filter(problem => problem && typeof problem.score === 'number' && !isNaN(problem.score))
+        .map(problem => problem.score);
+    
+      if (validScores.length > 0) {
+        const averageScore = Math.floor(validScores.reduce((sum, score) => sum + score, 0) / validScores.length);
+        return averageScore;
+      } else {
+        // 모든 문제의 score가 없을 경우에 대한 처리
+        return 0; // 또는 다른 기본값 설정
+      }
+    } else {
+      // 빈 배열에 대한 처리
+      return 0; // 또는 다른 기본값 설정
     }
   }
   const averageScore = average()

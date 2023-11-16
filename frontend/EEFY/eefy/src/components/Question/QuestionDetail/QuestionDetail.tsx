@@ -62,14 +62,10 @@ function QuestionDetail(props:any) {
   }
   return (
     <>
-      <Container
-        style={{
-          flex: 8,
-        }}
-      >
+      <Container>
         {data?.title && (
           <>
-            <Wrappe style={{ boxShadow: 'none', padding: '2% 5%' }}>
+            <Wrappe style={{ boxShadow: 'none', padding: '4% 5%' }}>
               <Header>
                 <div className='flex'>
                   <Title>{data.title}</Title>
@@ -86,10 +82,9 @@ function QuestionDetail(props:any) {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      width: '300px',
                     }}
                   >
-                    <UseName>{data.name}</UseName>
+                    <UseName><b>{data.name}</b></UseName>
                   </div>
                     {user.memberId === data.memberId && (
                       <>
