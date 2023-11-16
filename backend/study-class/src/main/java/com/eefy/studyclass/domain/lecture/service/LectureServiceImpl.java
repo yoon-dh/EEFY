@@ -2,6 +2,7 @@ package com.eefy.studyclass.domain.lecture.service;
 
 import com.eefy.studyclass.domain.alarm.dto.request.PushAlarmRequest;
 import com.eefy.studyclass.domain.alarm.service.AlarmService;
+import com.eefy.studyclass.domain.lecture.dto.request.LectureNoteDeleteRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureIdResponse;
 import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.NoteInfoResponse;
@@ -20,8 +21,6 @@ import com.eefy.studyclass.domain.lecture.persistence.entity.Lecture;
 import com.eefy.studyclass.domain.studyclass.persistence.entity.StudyClass;
 import com.eefy.studyclass.domain.lecture.persistence.mysql.LectureRepository;
 import com.eefy.studyclass.domain.studyclass.persistence.mysql.StudyClassRepository;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,5 +142,16 @@ public class LectureServiceImpl implements LectureService {
             }
         }
         return new NoteInfoResponse(drawInfoList);
+    }
+
+    @Override
+    public void deletePageNoteInfo(int memberId, LectureNoteDeleteRequest request) {
+        Lecture lecture = lectureValidator.existLecture(lectureRepository.findById(request.getLectureId()));
+
+        ArrayList<LectureNoteInfo> lectureNoteInfoList = lectureNoteInfoRepository.findByMemberIdAndLectureIdAndCanvasDataPageNum(memberId, lecture.getId(), request.getPageNum());
+
+        for(LectureNoteInfo lectureNoteInfo: lectureNoteInfoList) {
+            lectureNoteInfoRepository.delete(lectureNoteInfo);
+        }
     }
 }

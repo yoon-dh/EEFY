@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.lecture.controller;
 
+import com.eefy.studyclass.domain.lecture.dto.request.LectureNoteDeleteRequest;
 import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureIdResponse;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureNoteListResponse;
@@ -61,5 +62,13 @@ public class LectureController {
                                                                      @RequestParam Integer lectureId,
                                                                      @RequestParam Integer pageNum) {
         return ResponseEntity.ok(lectureService.getLectureNoteDetailPage(memberId, lectureId, pageNum));
+    }
+
+    @Operation(summary = "강의자료 상세 뷰어", description = "강의자료에서 필기한 데이터를 삭제하는 API")
+    @DeleteMapping
+    public ResponseEntity<Void> deleteNotePageInfo(@RequestHeader("Member-Id") Integer memberId,
+                                                   @RequestBody LectureNoteDeleteRequest request) {
+        lectureService.deletePageNoteInfo(memberId, request);
+        return ResponseEntity.ok().build();
     }
 }

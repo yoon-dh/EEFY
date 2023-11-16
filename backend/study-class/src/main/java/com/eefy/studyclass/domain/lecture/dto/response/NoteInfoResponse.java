@@ -1,7 +1,6 @@
 package com.eefy.studyclass.domain.lecture.dto.response;
 
 import com.eefy.studyclass.domain.lecture.persistence.entity.DrawInfo;
-import com.eefy.studyclass.domain.lecture.persistence.entity.Lecture;
 import lombok.Getter;
 
 import java.util.List;

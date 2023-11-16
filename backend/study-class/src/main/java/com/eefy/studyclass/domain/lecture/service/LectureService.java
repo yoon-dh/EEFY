@@ -1,5 +1,6 @@
 package com.eefy.studyclass.domain.lecture.service;
 
+import com.eefy.studyclass.domain.lecture.dto.request.LectureNoteDeleteRequest;
 import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureIdResponse;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureNoteListResponse;
@@ -17,4 +18,5 @@ public interface LectureService {
     LectureResponse getLecture(int lectureId);
     void noteLecture(Integer memberId, NoteInfoRequest noteInfoRequest);
     NoteInfoResponse getLectureNoteDetailPage(int memberId, int lectureId, int pageNum);
+    void deletePageNoteInfo(int memberId, LectureNoteDeleteRequest request);
 }
