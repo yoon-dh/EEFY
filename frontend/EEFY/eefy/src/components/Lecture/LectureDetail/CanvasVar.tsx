@@ -11,15 +11,16 @@ import { ColorResult } from 'react-color';
 import { HiArrowUturnLeft, HiArrowUturnRight } from 'react-icons/hi2';
 import { BiSolidLeftArrow, BiSolidRightArrow, BiSolidDoorOpen } from 'react-icons/bi';
 import { FaRegTrashCan } from 'react-icons/fa6';
-
+import {postLecture} from '@/api/Lecture/Lecture'
+import { useParams } from 'next/navigation';
 function CanvasVar() {
+  const params = useParams()
   const [data, setData] = useRecoilState(CanvasData);
   const [varData, setVarData] = useRecoilState(CanvasVarData);
   const [ocr, setOcr] = useRecoilState(OcrFileCheck);
   const [page, setPage] = useRecoilState(PdfPage);
 
   const exportCanvasPenMode = () => {
-    console.log(varData.penSize, varData.color, '펜');
     if (varData.penSize === 10) {
       const originalColor = varData.color;
       const components = originalColor.match(/(\d+(\.\d+)?)/g);
@@ -31,7 +32,6 @@ function CanvasVar() {
         // 알파 채널을 1로 설정하여 진한 색상 생성
         const newRgbaColor = `rgba(${r}, ${g}, ${b}, 1)`;
 
-        console.log(newRgbaColor); // 진한 색상 출력
         setVarData({ ...varData, mode: false, penSize: 4, color: newRgbaColor });
       }
     } else {
@@ -39,7 +39,6 @@ function CanvasVar() {
     }
   };
   const exportCanvasHighlighterMode = () => {
-    console.log(varData.penSize, varData.color, '형광펜');
     if (varData.penSize === 4) {
       const originalColor = varData.color;
       const components = originalColor.match(/(\d+(\.\d+)?)/g);
@@ -51,7 +50,6 @@ function CanvasVar() {
         // 알파 채널을 1로 설정하여 진한 색상 생성
         const newRgbaColor = `rgba(${r}, ${g}, ${b}, 0.4)`;
 
-        console.log(newRgbaColor); // 진한 색상 출력
         setVarData({ ...varData, mode: false, penSize: 10, color: newRgbaColor });
       } else {
         const alpha = 0.4;
@@ -69,7 +67,6 @@ function CanvasVar() {
     setVarData({ ...varData, mode: true });
   };
   const handleChangeComplete = (color: ColorResult) => {
-    console.log(varData.penSize, color.hex, '형광펜');
     if (varData.penSize === 10) {
       const originalColor = color.hex;
       const alpha = 0.4;
@@ -77,10 +74,8 @@ function CanvasVar() {
         originalColor.slice(5, 7),
         16
       )}, ${alpha})`;
-      console.log(rgbaColor, '형광펜');
       setVarData({ ...varData, color: rgbaColor, penSize: 10 });
     } else if (varData.penSize == 4) {
-      console.log(color.hex, '펜');
       const originalColor = color.hex;
       const alpha = 1;
       const rgbaColor = `rgba(${parseInt(originalColor.slice(1, 3), 16)}, ${parseInt(originalColor.slice(3, 5), 16)}, ${parseInt(
@@ -89,7 +84,6 @@ function CanvasVar() {
       )}, ${alpha})`;
       setVarData({ ...varData, color: color.hex, penSize: 4 });
     }
-    document.body.style.backgroundColor = color.hex;
   };
 
   const handleBeforePage = () => {
@@ -107,6 +101,19 @@ function CanvasVar() {
       }
     }
   };
+
+  const postSaveLecture = async ()=>{
+    console.log('글 저장', data)
+    const deleteData = data.filter((item:any) => item.drawInfo.length !== 0);
+    console.log(setData,'setData')
+    const newData = {
+      lectureId:Number(params.lectureId),
+      canvasData:deleteData
+    }
+    const res = await postLecture(newData)
+    console.log(res)
+    setData([]);
+  }
 
   return (
     <Container>
@@ -201,7 +208,7 @@ function CanvasVar() {
 
       <BackBtn
         onClick={() => {
-          setData([]);
+          postSaveLecture()
           setOcr({ ...ocr, isSuccess: false, imgUrl: '', pdfFile: '' });
           setPage({ ...page, pageNumber: 1, numPages: 0 });
         }}

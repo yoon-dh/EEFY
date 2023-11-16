@@ -10,6 +10,7 @@ function QuestionCreate() {
   const params = useParams()
   const router = useRouter()
   const [listItem, setListItem] = useRecoilState(NoticeList);
+  // const [waitStatus, setWaitStatus] = useRecoilState(QuestionWaitStatus)
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -48,31 +49,40 @@ function QuestionCreate() {
     <S.Container className='flex flex-col'>
       <S.Wrappe>
         <S.Box className='flex flex-col'>
+          {/* titleBox */}
           <S.TitleBox>
-            <S.Title>제목</S.Title>
+            <S.Title>title</S.Title>
+            <div style={{ flex: 1 }}></div>
             <S.TitleInput
               value={title}
               onChange={e => {
                 setTitle(e.target.value);
               }}
+              spellCheck={false}
             />
           </S.TitleBox>
-
+          {/* content */}
           <S.ContentBox>
-            <S.content>내용</S.content>
+            <S.content>content</S.content>
             <S.ContentInput
               value={content}
               onChange={e => {
                 setContent(e.target.value);
               }}
+              spellCheck={false}
             />
           </S.ContentBox>
+
+          {/* Btn section */}
+          <S.BtnBox>
+            <S.CancelBtn className=' text-error text-xl' 
+            onClick={handleCancel}>cancel</S.CancelBtn>
+            <div style={{ flex: 1 }}></div>
+            <S.CreateBtn className=' text-info text-xl' 
+            onClick={handlePost}>create</S.CreateBtn>
+          </S.BtnBox>
         </S.Box>
       </S.Wrappe>
-      <S.BtnBox>
-        <S.CancelBtn onClick={handleCancel}>취소</S.CancelBtn>
-        <S.CreateBtn onClick={handlePost}>생성</S.CreateBtn>
-      </S.BtnBox>
     </S.Container>
   );
 }

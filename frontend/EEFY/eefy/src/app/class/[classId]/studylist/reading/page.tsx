@@ -1,41 +1,89 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
+import Link from 'next/link';
+import Pagination from '@mui/material/Pagination';
 import { getHomework, getProblem } from '@/api/Homework/Problem';
 import { useParams, useRouter } from 'next/navigation';
+
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { HomeworkIds, Problems, SolvedProblem } from '@/recoil/Homework';
+import ContainerBtn from '@/components/Class/StudyList/ContainerBtn';
+import SpeakingStudyItem from '@/components/Class/StudyList/SpeakingStudyItem';
+import { ReadingStudyListSavePage, StudyListCurrentPage } from '@/recoil/StudyList/pagination';
 
-interface Item {
-  homeworkStudentId: number;
+interface libraryDatasType {
   classHomeworkId: number;
+  doneDate: null | Date;
+  homeworkStudentId: number;
+  memberId: number;
+  solvedCount: null | number;
   title: string;
+  totalCount: number;
 }
 
 function HomeworkTest() {
-  const urlData = useParams();
+  const params = useParams();
   const router = useRouter();
-  const classId = urlData.classId;
-  const [homeworkData, setHomeworkData] = useState([]);
+  const classId = params.classId;
   const [HomeworIdData, setHomeworkIdData] = useRecoilState(HomeworkIds);
   const [problem, setProblem] = useRecoilState(Problems);
   const [solvedProblem, setSolvedProblem] = useRecoilState(SolvedProblem);
+  const [libraryDatas, setLibraryDatas] = useState<libraryDatasType[]>([]);
+  const [totalPage, setTotalPage] = useState(1);
 
+  const [savePage, setSavePage] = useRecoilState(ReadingStudyListSavePage); // 저장된 페이지
+  const [currentPage, setCurrentPage] = useRecoilState(StudyListCurrentPage); // 현재 페이지
+
+  const [dataExist, setDataExist] = useState(true);
+
+  const handlePageChange = (event: ChangeEvent<unknown>, newPage: number) => {
+    setCurrentPage(newPage);
+    setSavePage(newPage);
+  };
+
+  const paginationStyle = {
+    '& .MuiPagination-ul .MuiPaginationItem-root.Mui-selected': {
+      backgroundColor: '#F4F5FA', // 선택된 페이지 배경색을 연보라색으로 변경
+    },
+    '& .MuiPagination-ul .MuiPaginationItem-root.Mui-selected:hover': {
+      backgroundColor: '#F4F5FA', // 선택된 페이지 호버 시 배경색도 연보라색으로 변경
+    },
+    '& .MuiPagination-ul .MuiPaginationItem-root.MuiPaginationItem-page:hover': {
+      backgroundColor: '#F4F5FA', // 페이지 호버 시 배경색도 연보라색으로 변경
+    },
+  };
+
+  const combinedStyles = {
+    ...paginationStyle, // paginationStyle 객체
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+  
   useEffect(() => {
-    console.log(urlData);
-    CallHomework();
-  }, []);
+    if (currentPage !== savePage) {
+      setCurrentPage(savePage);
+    } else {
+      CallHomework();
+    }
+  }, [currentPage]);
+
   // 과제 불러오기
   const CallHomework = async () => {
     const data = {
       classId: classId,
-      page: 0,
-      size: 10,
+      page: currentPage - 1,
+      size: 5,
+      homeworkType: 'READING',
     };
     const res = await getHomework(data);
     console.log(res);
     if (res?.status === 200) {
-      setHomeworkData(res.data.homeworks);
+      const newTotalPage = res?.data.pageInfo.totalPageSize;
+      setDataExist(!!res.data.homeworks.length);
+      setLibraryDatas(res.data.homeworks);
+      setTotalPage(newTotalPage);
     }
   };
 
@@ -51,19 +99,35 @@ function HomeworkTest() {
       setHomeworkIdData(Ids);
       setProblem(res?.data.problems);
       setSolvedProblem(res?.data.solvedProblem);
-      router.push('/class/studylist/reading/1/problem/1');
+      router.push(`/class/${classId}/studylist/reading/1/problem/1`);
     }
   };
 
   return (
-    <Container>
-      문제 뿌리기
-      {homeworkData.map((item: Item, index) => (
-        <Box key={index} onClick={() => hanbleClick(item.homeworkStudentId, item.classHomeworkId)}>
-          {item.title}
-        </Box>
-      ))}
-    </Container>
+    // <Container>
+    //   문제 뿌리기
+    //   {homeworkData.map((item: Item, index) => (
+    //     <Box key={index} onClick={() => hanbleClick(item.homeworkStudentId, item.classHomeworkId)}>
+    //       {item.title}
+    //     </Box>
+    //   ))}
+    // </Container>
+    <div className='w-full h-full flex flex-col'>
+      <div style={{ flex: 1 }}>
+        <ContainerBtn classId={Number(classId)} activeTab={'READING'} />
+      </div>
+      <div className='w-full h-full relative' style={{ flex: 8, paddingTop: '2%', paddingBottom: '2%' }}>
+        {libraryDatas.map((item:any, idx) => (
+          <div key={idx} onClick={()=>hanbleClick(item.homeworkStudentId, item.classHomeworkId)}>
+            <SpeakingStudyItem libraryData={item} />
+          </div>
+        ))}
+        {libraryDatas.length===0 && <div>과제가 등록되지 않았습니다.</div>}
+      </div>
+      <div className='flex justify-center items-center' style={{ flex: 1 }}>
+        <Pagination count={totalPage} showFirstButton showLastButton page={currentPage} onChange={handlePageChange} sx={combinedStyles} />
+      </div>
+    </div>
   );
 }
 export default HomeworkTest;

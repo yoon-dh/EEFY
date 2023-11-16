@@ -14,7 +14,7 @@ function Notice(){
   const pageUrl = useRecoilValue(NoticePage)
 
   useEffect(()=>{
-    console.log(params)
+    console.log(pageUrl)
     getDetail()
   },[pageUrl])
   

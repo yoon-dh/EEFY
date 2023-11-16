@@ -51,21 +51,30 @@ word-wrap: break-word;
 export const Content = styled.div`
 `;
 export const UpdataBtn = styled.div`
-font-size: 12px;
-padding: 5px 20px;
-border-radius: 8px;
-width: 65px;
-background-color: #5AACF8;
-color: white;
-margin: 0px 20px 0px 0px;
-cursor: pointer;
+padding: 8px 12px;
+  border: 0;
+  text-decoration: none;
+  border-radius: 12px;
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  /* border: 1px solid rgba(255, 255, 255, 0.1); */
+  /* backdrop-filter: blur(30px); */
+  /* color: rgba(0, 0, 0, 0.8); */
+  font-size: 14px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
 `;
 export const DeleteBtn = styled.div`
-font-size: 12px;
-width: 65px;
-padding: 5px 20px;
-border-radius: 8px;
-background-color: #F85A5A;
-color: white;
-cursor: pointer;
+  padding: 8px 0px 8px 12px;
+  border: 0;
+  text-decoration: none;
+  border-radius: 12px;
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  /* border: 1px solid rgba(255, 255, 255, 0.1); */
+  /* backdrop-filter: blur(30px); */
+  /* color: rgba(0, 0, 0, 0.8); */
+  font-size: 14px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
 `;

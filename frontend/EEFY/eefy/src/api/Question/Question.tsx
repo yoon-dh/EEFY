@@ -93,3 +93,12 @@ export const getCommentCreate = async (data:any) => {
     console.log(err);
   }
 };
+// 문제 해결 
+export const putQuestion = async(questionId:String)=>{
+  try {
+    const res = await privateApi.put(`/question/${questionId}`);
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+}

@@ -73,7 +73,7 @@ width: 100%;
 flex: 0.5;
 display: flex;
 `
-export const ViewerBtn = styled.input`
+export const ViewerBtn = styled.div`
 width: 30%;
 height: 40px;
 padding: 10px 10px;
@@ -87,7 +87,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 `
-export const DownloadBtn = styled.input`
+export const DownloadBtn = styled.div`
 width: 30%;
 height: 40px;
 padding: 10px 10px;

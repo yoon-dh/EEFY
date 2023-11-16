@@ -21,14 +21,13 @@ function NoticeListBoard() {
   const [listItem, setListItem] = useRecoilState(NoticeList);
   const [lecturePageUrl, setLecturePageUrl] = useRecoilState(LecturePage);
   const [questionPageUrl, setQuestionPageUrl] = useRecoilState(QuestionPage);
+  const [noticePageUrl, setNoticePageeUrl] = useRecoilState(NoticePage);
   const lastWord = useRecoilValue(Name);
   const waitStatus = useRecoilValue(QuestionWaitStatus)
 
   const userDataObj = useRecoilValue(userData);
 
   useEffect(() => {
-    console.log(lastWord);
-    console.log(params, 'params');
     if (lastWord === 'notice') {
       getNotice();
     } else if (lastWord === 'lecture') {
@@ -38,13 +37,15 @@ function NoticeListBoard() {
     }
   }, []);
 
+  // useEffect(()=>{
+  //   getQuestion()
+  // },[])
   // 공지사항 리스트
   const getNotice = async () => {
     const classId = {
       classId: Number(params.classId),
     };
     const res = await getNoticeList(classId);
-    console.log(res);
     if (res?.status === 200) {
       setListItem(res?.data);
       if (params.noticeId === undefined) {
@@ -61,7 +62,6 @@ function NoticeListBoard() {
   const getLecture = async () => {
     if (lecturePageUrl === 'detail') {
       const res = await getLectureList(Number(params.classId));
-      console.log(res);
       if (res?.status === 200) {
         setListItem(res?.data)
         // if(params.lectureId===undefined){
@@ -79,23 +79,23 @@ function NoticeListBoard() {
   const getQuestion = async () => {
     if (questionPageUrl === 'detail') {
       const res = await getQuestionList(Number(params.classId));
-      console.log(res);
       if (res?.status === 200) {
         setListItem(res?.data)
-        // if(params.lectureId===undefined){
-          if (res?.data.length > 0){
-            router.push(`/class/${params.classId}/question/${res?.data[0].id}`)
-          }else {
-            router.push(`/class/${params.classId}/question`)
-          }
-        // }
+        const neWData = res?.data.filter((item:any) => item.waitStatus === waitStatus)
+        if (res?.data.length > 0){
+          router.push(`/class/${params.classId}/question/${neWData[0].id}`)
+        }else {
+          router.push(`/class/${params.classId}/question`)
+        }
       }
     }
   };
 
   // 상세페이지로 이동
   const handleClick = (id: any) => {
-    console.log(id);
+    setNoticePageeUrl('detail')
+    setQuestionPageUrl('detail')
+    console.log()
     if (lastWord === 'notice') {
       router.push(`/class/${params.classId}/notice/${id}`);
     } else if (lastWord === 'lecture') {
@@ -163,7 +163,7 @@ function NoticeListBoard() {
         )}
         {lastWord === 'question' && (
           <>
-            {userDataObj?.role === 'STUDENT' ? (
+            {userDataObj?.role === 'STUDENT' && waitStatus === false ? (
               <Card
                 className='bg-default'
                 style={{
