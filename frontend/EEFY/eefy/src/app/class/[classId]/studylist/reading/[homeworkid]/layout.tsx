@@ -155,15 +155,19 @@ function Homework({ children }: { children: React.ReactNode }) {
     <Container className='w-full h-full flex'>
       <S.MainContainer className='flex flex-col' style={{ flex: 7, width: '100%' }}>
         <Header>
-          <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '10%' }}>
-            <Title className='text-xl'>
-              {ids.title} / {averageScore} 점
-            </Title>
-            {page === 'explanation' && (
-              <>
-                <SolvedBtn onClick={handleSolved}>정답 보기</SolvedBtn>
-              </>
-            )}
+          <div style={{ width: '80%', height: '100%', display: 'flex' }}>
+            <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <Title className='text-xl'>
+                <b>{ids.title}</b> : <span className='text-warning'>{averageScore} 점</span>
+              </Title>
+              {page === 'explanation' && (
+                <>
+                  <SolvedBtn className='text-info' onClick={handleSolved}>
+                    해설 확인
+                  </SolvedBtn>
+                </>
+              )}
+            </div>
           </div>
         </Header>
         <div
@@ -185,10 +189,14 @@ function Homework({ children }: { children: React.ReactNode }) {
         </Checkbox>
         <BtnBox>
           <ExitBtn>
-            <div onClick={handleExit}>나가기</div>
+            <div className='text-error' onClick={handleExit}>
+              <b>exit</b>
+            </div>
           </ExitBtn>
           <SaveBtn>
-            <div onClick={handleSave}>마치기</div>
+            <div className='text-info' onClick={handleSave}>
+              <b>submit</b>
+            </div>
           </SaveBtn>
         </BtnBox>
       </Wrappe>
@@ -198,7 +206,7 @@ function Homework({ children }: { children: React.ReactNode }) {
 export default Homework;
 
 const Container = styled.div`
-  border: 1px solid black;
+  /* border: 1px solid black; */
 `;
 const Header = styled.div`
   /* border: 1px solid black; */
@@ -206,6 +214,8 @@ const Header = styled.div`
   height: 10%;
   display: flex;
   backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
 `;
 const Title = styled.div``;
 const SolvedBtn = styled.div`
@@ -214,28 +224,36 @@ const SolvedBtn = styled.div`
 const Wrappe = styled.div`
   flex: 2;
   width: 20%;
-  border: 1px solid black;
-  margin: 0px 0px 0px 6%;
+  /* background-color: red; */
+  /* border: 1px solid black; */
+  margin: 0px 0px 0px 4%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
 `;
 const Checkbox = styled.div`
   height: 80%;
-  margin: 20px;
-  border: 1px solid black;
+  margin: 15px;
+  /* border: 1px solid black; */
   overflow: auto;
 `;
 const ExitBtn = styled.div`
-  border: 1px solid black;
+  /* border: 1px solid black; */
   flex: 4;
   height: 40px;
-  background-color: gray;
-  color: white;
+  /* background-color: gray; */
+  /* color: white; */
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 `;
 const BtnBox = styled.div`
-  border: 1px solid black;
+  /* border: 1px solid black; */
   height: 10%;
   display: flex;
   justify-content: center;
@@ -244,12 +262,14 @@ const BtnBox = styled.div`
   padding: 10px;
 `;
 const SaveBtn = styled.div`
-  border: 1px solid black;
+  /* border: 1px solid black; */
   flex: 4;
   height: 40px;
-  background-color: gray;
-  color: white;
+  /* background-color: gray; */
+  /* color: white; */
   display: flex;
   justify-content: center;
   align-items: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 `;

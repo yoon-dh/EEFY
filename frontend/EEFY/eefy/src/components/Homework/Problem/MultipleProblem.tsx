@@ -57,7 +57,7 @@ function MultipleProblem() {
             style={{ color: solved[pageNum - 1]?.answer === index + 1 ? '#057AFF' : '' }}
           >
             <S.Choice>{index + 1}</S.Choice>
-            {item.content}
+            {solved[pageNum - 1]?.answer === index + 1 ? <b>{item.content}</b> : <p>{item.content}</p>}
           </S.ChoiceBox>
         ))}
       </S.Box>
