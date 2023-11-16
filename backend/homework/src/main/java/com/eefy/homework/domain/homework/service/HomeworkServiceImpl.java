@@ -226,7 +226,7 @@ public class HomeworkServiceImpl implements HomeworkService {
             homeworkQuestion, homeworkStudent, solveProblemRequest.getSubmitAnswer(), uploadPath);
 
         if (hasVoice(voiceFile)) {
-            updateVoiceProblemScore(homeworkStudentQuestion, homeworkQuestion.getAnswer());
+            updateVoiceProblemScore(homeworkStudentQuestion, homeworkQuestion.getContent());
         } else {
             updateChoiceAndWriteProblemScore(homeworkQuestion, homeworkStudentQuestion);
         }
