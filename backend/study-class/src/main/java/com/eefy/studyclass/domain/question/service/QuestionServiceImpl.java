@@ -57,7 +57,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionDetailResponse getQuestionDetail(int memberId, int questionId) {
         QnaQuestion qnaQuestion = qnaValidator.checkExistQuestion(qnaQuestionRepository.findById(questionId));
 
-        Member member = memberService.getMemberInfo(memberId, memberId);
+        Member member = memberService.getMemberInfo(memberId, qnaQuestion.getMemberId());
         qnaValidator.checkAuthorizationQuestion(qnaQuestion, member);
 
         return new QuestionDetailResponse(qnaQuestion, member);
@@ -197,7 +197,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private List<QuestionListResponse> makeQuestionListResponse(int classId) {
-        List<QnaQuestion> questions = qnaQuestionRepository.findByStudyClassId(classId);
+        List<QnaQuestion> questions = qnaQuestionRepository.findByStudyClassIdOrderByCreatedAtDesc(classId);
         return questions.stream().map(QuestionListResponse::new).collect(Collectors.toList());
     }
 
