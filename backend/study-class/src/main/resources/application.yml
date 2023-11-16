@@ -6,11 +6,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-  data:
-    mongodb:
-      host: 43.200.245.0
-      port: 27017
-      database: eefy-note
 
   zipkin:
     base-url: ${ZIPKIN_URL}
@@ -35,6 +30,12 @@ spring:
         format_sql: true
         show_sql: true
     open-in-view: false
+
+  data:
+    mongodb:
+      host: 43.200.245.0
+      port: 27017
+      database: eefy-note
 
 eureka:
   client:
