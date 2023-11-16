@@ -38,7 +38,7 @@ function CreateSpeakingComponent() {
           ) : (
             <div className='w-full h-full flex flex-col justify-center items-center text-xl gap-5'>
               <div>파일을 업로드하면 자동으로 스크립트가 생성됩니다.</div>
-              <div>파일을 저장하면 더 이상 수정이 불가능합니다.</div>
+              {/* <div>파일을 저장하면 더 이상 수정이 불가능합니다.</div> */}
             </div>
           )}
         </S.MainContainer>
