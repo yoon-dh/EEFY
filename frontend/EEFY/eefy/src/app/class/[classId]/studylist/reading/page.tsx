@@ -99,19 +99,11 @@ function HomeworkTest() {
       setHomeworkIdData(Ids);
       setProblem(res?.data.problems);
       setSolvedProblem(res?.data.solvedProblem);
-      router.push(`/class/${classId}/studylist/reading/1/problem/1`);
+      router.push(`/class/${classId}/studylist/reading/${HomeworkId}/problem/1`);
     }
   };
 
   return (
-    // <Container>
-    //   문제 뿌리기
-    //   {homeworkData.map((item: Item, index) => (
-    //     <Box key={index} onClick={() => hanbleClick(item.homeworkStudentId, item.classHomeworkId)}>
-    //       {item.title}
-    //     </Box>
-    //   ))}
-    // </Container>
     <div className='w-full h-full flex flex-col'>
       <div style={{ flex: 1 }}>
         <ContainerBtn classId={Number(classId)} activeTab={'READING'} />
@@ -131,19 +123,4 @@ function HomeworkTest() {
   );
 }
 export default HomeworkTest;
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-  border: 1px solid black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const Box = styled.div`
-  width: 10%;
-  height: 10%;
-  border: 1px solid black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+

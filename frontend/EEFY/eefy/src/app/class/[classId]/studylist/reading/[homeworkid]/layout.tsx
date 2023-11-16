@@ -98,7 +98,7 @@ function Homework({ children }: { children: React.ReactNode }){
     }
   }
 
-  // 해설 요청
+  // 문제집 채점
   const getSolved = async()=>{
     const res = await getProblem(ids.classHomeworkId)
     console.log(res)
@@ -106,7 +106,7 @@ function Homework({ children }: { children: React.ReactNode }){
       setSolved(res.data.solvedProblem)
       setProblem(res.data.problems)
       setPage("explanation")
-      router.push("/class/studylist/reading/1/explanation/1")
+      router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/explanation/1`)
     }
   }
 

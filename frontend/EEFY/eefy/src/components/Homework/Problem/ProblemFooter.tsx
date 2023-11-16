@@ -43,9 +43,9 @@ function ProblemFooter() {
       const newCount = count - 1;
       setCount(newCount);
       if(page==='problem'){
-        router.push(`/class/studylist/reading/1/problem/${newCount}`);
+        router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/problem/${newCount}`);
       } else if(page==='explanation'){
-        router.push(`/class/studylist/reading/1/explanation/${newCount}`);
+        router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/explanation/${newCount}`);
       }
     }
   };
@@ -57,9 +57,9 @@ function ProblemFooter() {
       setCount(newCount);
       if(page==='problem'){
         postSolve()
-        router.push(`/class/studylist/reading/1/problem/${newCount}`);
+        router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/problem/${newCount}`);
       } else if(page==='explanation'){
-        router.push(`/class/studylist/reading/1/explanation/${newCount}`);
+        router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/explanation/${newCount}`);
       }
     }else{
       if(page==='problem'){
