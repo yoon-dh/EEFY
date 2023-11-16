@@ -1,0 +1,88 @@
+server:
+  port: 64417
+
+spring:
+  application:
+    name: member-service
+
+  zipkin:
+    base-url: ${ZIPKIN_URL}
+    sleuth:
+      sampler:
+        probability: 1.0
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_MEMBER_URL}
+    username: ${MYSQL_NAME}
+    password: ${MYSQL_PASSWORD}
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    password: ${REDIS_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    open-in-view: false
+
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: ${NAVER_USERNAME}
+    password: ${NAVER_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            trust: smtp.naver.com
+            enable: true
+
+jwt:
+  secret: ${SECRET_KEY}
+  token:
+    access-expiration: 43200000
+    refresh-expiration: 604800000
+
+firebase:
+  sdk:
+    path: ${FIREBASE_KEY_PATH}
+
+spring.servlet.multipart.max-file-size: 500MB
+spring.servlet.multipart.max-request-size: 500MB
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: eefy-bucket
+      profileDir: profile-images
+      lectureDir: study-class-lecture
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL}
+  instance:
+    hostname: ${HOST_NAME}
+
+springdoc:
+  swagger-ui:
+    path: /api/member/swagger-ui
+  api-docs:
+    path: /api/member/swagger-ui.html
