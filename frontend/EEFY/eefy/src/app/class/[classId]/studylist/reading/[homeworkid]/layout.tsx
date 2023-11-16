@@ -94,8 +94,8 @@ function Homework({ children }: { children: React.ReactNode }){
     const res = await postSolveProblem(formData)
     console.log(res)
     if(res?.status===200){
-      getSolved()
     }
+    getSolved()
   }
 
   // 문제집 채점
@@ -130,14 +130,32 @@ function Homework({ children }: { children: React.ReactNode }){
       // }
     });
   }
-
+  const average = ()=>{
+    if (solved && Array.isArray(solved) && solved.length > 0) {
+      const validScores = solved
+        .filter(problem => problem && typeof problem.score === 'number' && !isNaN(problem.score))
+        .map(problem => problem.score);
+    
+      if (validScores.length > 0) {
+        const averageScore = Math.floor(validScores.reduce((sum, score) => sum + score, 0) / validScores.length);
+        return averageScore;
+      } else {
+        // 모든 문제의 score가 없을 경우에 대한 처리
+        return 0; // 또는 다른 기본값 설정
+      }
+    } else {
+      // 빈 배열에 대한 처리
+      return 0; // 또는 다른 기본값 설정
+    }
+  }
+  const averageScore = average()
   return(
     <Container className="w-full h-full flex">
 
       <div className="flex flex-col" style={{flex:7, border:'1px solid black', width:'100%'}}>
         <Header>
           <Title>
-            문제집 이름
+            문제집 이름 : {ids.title} / {averageScore} 점
           </Title>
           {page==='explanation' && (
             <>

@@ -1,20 +1,19 @@
 import styled from "styled-components";
 
 export const Container = styled.form`
-height: 520px;
 width: 100%;
-@media(max-width: 1334px){
-  height: 455px;
-}
+height: 100%;
   &::-webkit-scrollbar {
     display: none;
   }
 `
 export const Wrappe = styled.form`
 display: flex;
+height: 100%;
+width: 100%;
 `
 export const CreateInput = styled.input`
-  width: 90%;
+  width: 80%;
   height: 50px;
   flex: 8;
   padding: 0 0 0 10px; 
@@ -38,9 +37,13 @@ font-size: 25px;
 display: flex;
 justify-content: center;
 align-items: center;
+height: 50px;
 border-top-right-radius: 12px;
 border-bottom-right-radius: 12px;
 box-shadow: 0px 4px 7px rgba(0, 0, 0, 0.1);
+@media(max-width:1334px){
+    height: 40px;
+  }
 `
 export const Box = styled.div`
 display: flex;
