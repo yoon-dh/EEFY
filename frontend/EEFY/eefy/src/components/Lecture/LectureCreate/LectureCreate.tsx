@@ -70,24 +70,27 @@ function LectureCreate(){
     <S.Container className='flex flex-col'>
       <S.Wrappe>
         <S.Box className='flex flex-col'>
-
+           {/* titleBox */}
           <S.TitleBox>
-            <S.Title>제목</S.Title>
+            <S.Title>title</S.Title>
+            <div style={{ flex: 1 }}></div>
             <S.TitleInput value={title} onChange={(e)=>{
               setTitle(e.target.value)
             }}/>
           </S.TitleBox>
-
+          {/* content */}
           <S.ContentBox>
             <S.content>
-              내용
+              content
             </S.content>
             <S.ContentInput value={content} onChange={(e)=>{
               setContent(e.target.value)
             }}/>
           </S.ContentBox>
+          
+           {/* Btn File */}
           <S.FileBox>
-            <S.File>
+            {/* <S.File>
               업로드
               <S.FileInput type="file" onChange={handleFileSelect}/>
             </S.File>
@@ -95,18 +98,30 @@ function LectureCreate(){
               <>
             <S.FileName>{file.name}</S.FileName> 
               </>
-            )}
+            )} */}
+              <input
+                id="imgInput"
+                type="file"
+                accept=".pdf, image/*"
+                onChange={handleFileSelect}
+                className='file-input file-input-bordered w-full max-w-md'
+              />
           </S.FileBox>
+
+          {/* Btn section */}
+          <S.BtnBox>
+            <S.CancelBtn className=' text-error text-xl' onClick={()=>{
+              router.back();
+            }}>
+              cancel
+            </S.CancelBtn>
+            <div style={{ flex: 1 }}></div>
+            <S.CreateBtn  className=' text-info text-xl' onClick={handleSubmit}>
+              create
+            </S.CreateBtn>
+          </S.BtnBox>
         </S.Box>
       </S.Wrappe>
-      <S.BtnBox>
-        <S.CancelBtn onClick={()=>setLecturepage('detail')}>
-          취소
-        </S.CancelBtn>
-        <S.CreateBtn onClick={handleSubmit}>
-          생성
-        </S.CreateBtn>
-      </S.BtnBox>
     </S.Container>
   )
 }

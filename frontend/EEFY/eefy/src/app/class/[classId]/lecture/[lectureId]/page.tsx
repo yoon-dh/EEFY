@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import { getLectureDetail } from '@/api/Lecture/Lecture';
 import { useParams } from "next/navigation"
 import LectureDetail from '@/components/Lecture/LectureDetail/LectureDetail';
-import { useRecoilValue } from 'recoil';
-import { OcrFileCheck } from '@/recoil/Homework';
-import CanvasModal from '@/components/Lecture/LectureDetail/CanvasModal';
+// import { useRecoilValue } from 'recoil';
+// import { OcrFileCheck } from '@/recoil/Homework';
+// import CanvasModal from '@/components/Lecture/LectureDetail/CanvasModal';
 
 function Lecture(){
-  const canvas = useRecoilValue(OcrFileCheck)
+  // const canvas = useRecoilValue(OcrFileCheck)
   const params = useParams()
   const [data, setData] = useState({})
 
@@ -28,13 +28,8 @@ function Lecture(){
 
   return(
     <div className='h-full w-full'>
-      {!canvas.isSuccess ? (
-        <>
       <LectureDetail data={data}/>
-              </>
-      ) : (
-        <CanvasModal/>
-      )}
+        {/* <CanvasModal/> */}
     </div>
   )
 }

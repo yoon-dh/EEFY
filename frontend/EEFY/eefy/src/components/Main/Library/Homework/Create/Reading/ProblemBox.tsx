@@ -147,7 +147,7 @@ function ProblemBox() {
                     padding: '5px',
                     fontSize: '14px',
                   }}
-                  value={item.content.slice(1)}
+                  value={item.content}
                   name='Numtitle'
                   onChange={e => handleChoiceContent(String(e.target.value), Number(item.number) - 1)}
                 />

@@ -9,7 +9,8 @@ import { OcrFileCheck } from '@/recoil/Homework';
 import { CanvasData, CanvasVarData, PdfPage } from '@/recoil/Canvas';
 import './Canvas.css';
 import { ReactSketchCanvas, ReactSketchCanvasRef } from 'react-sketch-canvas';
-
+import {getLecture} from '@/api/Lecture/Lecture'
+import { useParams } from 'next/navigation';
 import CanvasVar from './CanvasVar';
 const styles = {
   borderRadius: '0.25rem',
@@ -17,6 +18,7 @@ const styles = {
 };
 
 function CanvasModal() {
+  const params = useParams()
   const canvasRef = createRef<ReactSketchCanvasRef>();
 
   const [data, setData] = useRecoilState(CanvasData);
@@ -49,6 +51,11 @@ function CanvasModal() {
       const sketchData = canvasRef.current.exportPaths();
       sketchData.then(result => {
         console.log('handleUndo 결과:', result);
+          const newData = data.filter((item:any) => item.pageNum !== page.pageNumber);
+          setData([...newData,{
+            'pageNum':page.pageNumber,
+            'drawInfo':result
+          }]);
       });
     }
   };
@@ -96,16 +103,17 @@ function CanvasModal() {
         clearCanvas()
       }
       if (canvasRef.current) {
-        console.log(page.pageNumber,'before')
-        if(data[page.pageNumber]){
+        const matchingData = data.filter((item:any) => item.pageNum === page.pageNumber);
+        console.log(matchingData[0].drawInfo, matchingData[0].pageNum)
+        if(matchingData[0]){
+          canvasRef.current?.loadPaths(matchingData[0].drawInfo);
+        }        // if(data[page.pageNumber]){
           // setTimeout(function(){
-            const jsonData = JSON.parse(data[page.pageNumber]);
-            console.log(jsonData)
-            canvasRef.current?.loadPaths(jsonData);
+            // const jsonData = JSON.parse(data[page.pageNumber]);
             // getPdfUrl()
           // },500)
         }
-      }
+      // }
     } else if (page.btnType === 'next'){
       handleSketchData(page.pageNumber-1)
       const clearCanvas = canvasRef.current?.clearCanvas;
@@ -113,43 +121,41 @@ function CanvasModal() {
         clearCanvas()
       }
       if (canvasRef.current) {
-        console.log(data[page.pageNumber], page.pageNumber)
-        console.log(page.pageNumber,'next')
-        if(data[page.pageNumber]){
+        // if(data[page.pageNumber]){
           // setTimeout(function(){
-            const jsonData = JSON.parse(data[page.pageNumber]);
-            console.log(jsonData)
-            canvasRef.current?.loadPaths(jsonData);
-            getPdfUrl()
+            // const jsonData = JSON.parse(data[page.pageNumber]);
+          const matchingData = data.filter((item:any) => item.pageNum === page.pageNumber);
+          console.log(matchingData,'matchingData')
+          if(matchingData[0]){
+            canvasRef.current?.loadPaths(matchingData[0].drawInfo);
+          }
+            // getPdfUrl()
           // },500)
-        }
+      //   }
       }
     }
   },[page.pageNumber])
 
   const handleSketchData = async (pageNumber:number) => {
     if (canvasRef.current) {
-      console.log(pageNumber,'데이터 저장하기')
       const sketchData = await canvasRef.current.exportPaths();
-      console.log(sketchData.length, 'sketchData')
-      if(sketchData.length > 0){
-        const sketchDataJSON = JSON.stringify(sketchData);
-          const newdata = {
-              'pageNum':pageNumber,
-              'drawInfo':sketchDataJSON
-            }
-          
-          console.log(newdata,'newdata')
-          setData([...data,{
-            'pageNum':pageNumber,
-            'drawInfo':sketchDataJSON
-          }]);
-      } else if(sketchData.length === 0){
+      // if(sketchData.length > 0){
+        // const sketchDataJSON = JSON.stringify(sketchData);
+      console.log(pageNumber,'pageNumber')
+      console.log(sketchData,'sketchData')
+      // if(sketchData){
+      //   const newData = data.filter(item => item.pageNum !== pageNumber);
+      //   setData([...newData,{
+      //     'pageNum':pageNumber,
+      //     'drawInfo':sketchData
+      //   }]);
+      // }
+      // } else if(sketchData.length === 0){
         // const newdata = {
         //   ...data, [pageNumber]:''
         // }
         // setData(newdata);
-      }
+      // }
       // const newdata = {
       //   ...data,
       //   [pageNumber]:{
@@ -161,8 +167,6 @@ function CanvasModal() {
   };
 
   const [pageImage, setPageImage] = useState<string>('');
-  // const [pdfPagesNumber, setPdfPagesNumber] = useState<Number>(1);
-  // const [pdfNumPages, setPdfNumPages] = useState<Number>(0);
 
   const getPdfUrl = () => {
     if (ocr.pdfFile) {
@@ -185,6 +189,7 @@ function CanvasModal() {
     };
     await pages.render(renderContext).promise;
     const imageData = canvas.toDataURL('image/jpeg');
+    
     // const img = new Image();
     //   img.src = imageData;
     //   img.onload = function () {
@@ -196,10 +201,35 @@ function CanvasModal() {
     setPageImage(imageData);
   };
 
+  useEffect(()=>{
+    if(pageImage){
+      callLecture()
+    }
+  },[pageImage])
+
+  // 필기 불러오기 
+  const callLecture = async()=>{
+    // if(page.pageNumber === 1){
+      const newData = {
+        lectureId:params.lectureId,
+        pageNum:page.pageNumber
+      }
+      const res = await getLecture(newData)
+      console.log(res?.data.drawInfo,'(res?.data.drawInfo')
+      // if (canvasRef.current) {
+        console.log('화면에 띄우기 실행')
+        canvasRef.current?.loadPaths(res?.data.drawInfo);
+      // }
+      setData([...data,{
+        'pageNum':page.pageNumber,
+        'drawInfo':res?.data.drawInfo
+      }]);
+    // }
+  }
+
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     console.log(numPages)
     setPage({...page,numPages:numPages})
-    // setPdfNumPages(numPages)
   }
 
   return (
@@ -208,7 +238,9 @@ function CanvasModal() {
         <Wrappe className='boxShadow'>
           <Box>
             <ImgBox>
-              <div style={{ display: 'none' }}>
+              <div 
+              style={{ display: 'none' }}
+              >
                 <Document file={ocr.pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
                   <Page width={0} height={0} pageNumber={page.pageNumber} />
                 </Document>

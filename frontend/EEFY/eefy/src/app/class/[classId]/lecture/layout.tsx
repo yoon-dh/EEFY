@@ -11,8 +11,8 @@ export default function NoticeLayout({ children }: { children: React.ReactNode }
   const canvas = useRecoilValue(OcrFileCheck)
   return(
     <div className='w-full h-full'>
-      {/* {!canvas.isSuccess ? (
-        <> */}
+      {!canvas.isSuccess ? (
+        <>
         <div>
           <ContainerBtn/>
         </div>
@@ -33,10 +33,10 @@ export default function NoticeLayout({ children }: { children: React.ReactNode }
             </NoteRigth>
           </div>
         </div>
-        {/* </>
+        </>
       ) : (
         <CanvasModal/>
-      )} */}
+      )}
     </div>
   )
 }
