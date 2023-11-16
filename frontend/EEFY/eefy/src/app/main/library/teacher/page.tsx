@@ -22,6 +22,7 @@ interface dataType {
   modifiedAt: Date;
   title: string;
   type: string;
+  problemCount: number;
 }
 
 function LibraryAllList() {

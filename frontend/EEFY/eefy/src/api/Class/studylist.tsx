@@ -4,7 +4,9 @@ import { privateApi } from '..';
 // 학생 - 클래스를 기준으로 과제 불러오기, 클래스에 null이면 전체 과제 조회
 export const getHomeworkView = async (data: any) => {
   try {
+    console.log('학생 과제 조회 진입');
     const res = await privateApi.get('/homework/view', { params: data });
+    console.log('학생 과제 조회 성공', res);
     return res.data;
   } catch (err) {
     console.log(err);
