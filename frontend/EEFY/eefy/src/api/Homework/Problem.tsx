@@ -68,10 +68,12 @@ export const putHomeworkMake = async (homeworkId:number) => {
   }
 };
 // 클래스에 과제 불러오기
-export const getHomework = async (classId:any) => {
+export const getHomework = async (data:any) => {
   try {
-    console.log('과제 불러오기 생성 진입', classId);
-    const response = await privateApi.get('/homework/view',classId);
+    console.log('과제 불러오기 생성 진입', data);
+    const response = await privateApi.get('/homework/view',{
+      params:data
+    });
     console.log('과제 불러오기 진입 성공', response);
     return response;
   } catch (error) {
