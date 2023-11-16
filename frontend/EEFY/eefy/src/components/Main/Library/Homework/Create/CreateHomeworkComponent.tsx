@@ -14,10 +14,18 @@ import { postMakeHomework, putMakeHomework } from '@/api/Library/CreateHomeworkA
 import { TfiArrowLeft, TfiArrowRight } from 'react-icons/tfi';
 import * as S from '@/styles/MainStyle.style';
 import { useEffect } from 'react';
+import {HomeworkProblem} from '@/recoil/Homework'
+
+interface HomeworkProblemType {
+  title: string;
+  content: string;
+  choiceRequests: any;
+}
 
 function CreateHomeworkComponent() {
   const router = useRouter();
 
+  const [homeworkProblem, setHomeworkProblem] = useRecoilState<HomeworkProblemType[]>(HomeworkProblem);
   const [createHomeworkStep, setCreateHomeworkStep] = useRecoilState(CreateHomeworkStepAtom);
   const [homeworkInfoDataAtom, setHomeworkInfoDataAtom] = useRecoilState(HomeworkInfoDataAtom);
   const homeworkCategory = useRecoilValue(HomeworkCategoryAtom);
@@ -55,6 +63,7 @@ function CreateHomeworkComponent() {
   const CancleHandler = () => {
     alert('문제 생성을 취소합니다.');
 
+    setHomeworkProblem([])
     setHomeworkInfoDataAtom({ title: '', description: '' });
     setHomeworkId(undefined);
     setCreateHomeworkStep(0);
@@ -68,6 +77,7 @@ function CreateHomeworkComponent() {
       alert('문제가 성공적으로 생성되었습니다.');
     }
 
+    setHomeworkProblem([])
     setHomeworkInfoDataAtom({ title: '', description: '' });
     setHomeworkId(undefined);
     setCreateHomeworkStep(0);

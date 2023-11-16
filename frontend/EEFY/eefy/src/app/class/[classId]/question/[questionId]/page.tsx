@@ -44,11 +44,11 @@ function Notice(){
     <div className='h-full w-full'>
       {pageUrl === 'detail' ? (
         <>
-        <div className='flex'>
-          <div style={{flex:7}} className='h-full w-full'>
+        <div className='flex w-full h-full'>
+          <div style={{flex:6}}>
             <QuestionDetail data={data}/>
           </div>
-          <div style={{flex:3}} className='h-full w-full'>
+          <div style={{flex:4, backdropFilter:'blur(10px)', padding:'1%'}}>
             <CommentList commentList={commentList}/>
           </div>
         </div>
