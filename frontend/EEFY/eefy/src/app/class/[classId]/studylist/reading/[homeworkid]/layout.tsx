@@ -130,14 +130,21 @@ function Homework({ children }: { children: React.ReactNode }){
       // }
     });
   }
-
+  const average = ()=>{
+    if (solved && Array.isArray(solved)) {
+      const scores = solved.map((problem: any) => problem.score);
+      const averageScore = scores.reduce((sum: number, score: number) => sum + score, 0) / scores.length;
+      return averageScore.toFixed();
+    }
+  }
+  const averageScore = average()
   return(
     <Container className="w-full h-full flex">
 
       <div className="flex flex-col" style={{flex:7, border:'1px solid black', width:'100%'}}>
         <Header>
           <Title>
-            문제집 이름
+            문제집 이름 : {ids.title} / {averageScore} 점
           </Title>
           {page==='explanation' && (
             <>

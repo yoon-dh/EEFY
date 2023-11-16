@@ -87,11 +87,12 @@ function HomeworkTest() {
     }
   };
 
-  const hanbleClick = async (StudentId: number, HomeworkId: number) => {
+  const hanbleClick = async (StudentId: number, HomeworkId: number, title:String) => {
     console.log(StudentId, HomeworkId);
     const Ids = {
       homeworkStudentId: StudentId,
       classHomeworkId: HomeworkId,
+      title: title,
     };
     const res = await getProblem(HomeworkId);
     console.log(res);
@@ -110,7 +111,7 @@ function HomeworkTest() {
       </div>
       <div className='w-full h-full relative' style={{ flex: 8, paddingTop: '2%', paddingBottom: '2%' }}>
         {libraryDatas.map((item:any, idx) => (
-          <div key={idx} onClick={()=>hanbleClick(item.homeworkStudentId, item.classHomeworkId)}>
+          <div key={idx} onClick={()=>hanbleClick(item.homeworkStudentId, item.classHomeworkId, item.title)}>
             <SpeakingStudyItem libraryData={item} />
           </div>
         ))}
