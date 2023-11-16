@@ -147,7 +147,7 @@ public class HomeworkCustomRepository {
                 homeworkTypeEq(type))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
-            .orderBy(homeworkStudent.doneDate.asc())
+            .orderBy(homeworkStudent.createdAt.desc())
             .fetch();
 
         Long total = jpaQueryFactory.select(homeworkStudent.count())
