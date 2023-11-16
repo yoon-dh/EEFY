@@ -1,0 +1,67 @@
+server:
+  port: 64418
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  zipkin:
+    base-url: ${ZIPKIN_URL}
+    enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0
+  application:
+    name: study-class-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_STUDY_CLASS_URL}
+    username: ${MYSQL_NAME}
+    password: ${MYSQL_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    open-in-view: false
+
+  data:
+    mongodb:
+      host: 43.200.245.0
+      port: 27017
+      database: eefy-note
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL}
+  instance:
+    hostname: ${HOST_NAME}
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: eefy-bucket
+      profileDir: profile-images
+      lectureDir: study-class-lecture
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+springdoc:
+  swagger-ui:
+    path: /api/study-class/swagger-ui
+  api-docs:
+    path: /api/study-class/swagger-ui.html
