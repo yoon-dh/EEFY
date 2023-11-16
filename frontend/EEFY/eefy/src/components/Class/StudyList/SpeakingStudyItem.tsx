@@ -2,7 +2,10 @@
 // import SemiCircleGauge from './SemiCircleGuage';
 'use client';
 
+import { CurrentHomeworkInfo } from '@/recoil/StudyList/StudyList';
 import * as S from '@/styles/MainStyle.style';
+import { useRouter } from 'next/navigation';
+import { useSetRecoilState } from 'recoil';
 
 interface SpeakingStudyItemProps {
   classHomeworkId: number;
@@ -14,11 +17,17 @@ interface SpeakingStudyItemProps {
   totalCount: number;
 }
 
-function SpeakingStudyItem({ libraryData }: { libraryData: SpeakingStudyItemProps }) {
+function SpeakingStudyItem({ libraryData, classId, homeworkType }: { libraryData: any; classId: any; homeworkType: string }) {
   const newProgress = Math.round(((libraryData.solvedCount ? libraryData.solvedCount : 0) / libraryData.totalCount) * 100);
+  const router = useRouter();
+  const setCurrentHomeworkInfo = useSetRecoilState(CurrentHomeworkInfo);
+  const onClickHandler = () => {
+    setCurrentHomeworkInfo(libraryData);
+    router.push(`/class/${classId}/studylist/${homeworkType}/${libraryData.classHomeworkId}/problem`);
+  };
 
   return (
-    <S.MainContainer className='w-full' style={{ height: '18%', marginBottom: '1%' }}>
+    <S.MainContainer className='w-full' style={{ height: '18%', marginBottom: '1%' }} onClick={onClickHandler}>
       <div className='flex justify-between items-center' style={{ paddingTop: '0.7%', paddingBottom: '0.3%', paddingLeft: '3%', paddingRight: '3%' }}>
         <div className='flex flex-col'>
           <p className='text-xl font-bold' style={{ letterSpacing: '2px' }}>

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { HomeworkIdAtom } from '@/recoil/Library/CreateHomework/CreateHomework';
+import { HomeworkIdAtom, HomeworkInfoDataAtom } from '@/recoil/Library/CreateHomework/CreateHomework';
 import { STTLoadingAtom, SpeakingFileInfoAtom, SpeakingAllFilesInfoAtom } from '@/recoil/Library/CreateHomework/CreateSpeaking';
 
 import { postHomeworkMakeQuestion } from '@/api/Library/CreateHomeworkApi';
@@ -13,6 +13,7 @@ import * as S from '../CreateHomework.style';
 function CreateScript() {
   const sttLoading = useRecoilValue(STTLoadingAtom);
   const homeworkId = useRecoilValue(HomeworkIdAtom);
+  const homeworkInfoData = useRecoilValue(HomeworkInfoDataAtom);
   const [speakingFileInfo, setSpeakingFileInfo] = useRecoilState(SpeakingFileInfoAtom);
   const setSpeakingAllFilseInfo = useSetRecoilState(SpeakingAllFilesInfoAtom);
 
@@ -26,10 +27,11 @@ function CreateScript() {
 
   const SaveHandler = async () => {
     if (speakingFileInfo.file !== undefined) {
+      console.log(speakingFileInfo.file);
       const formData = new FormData();
       const makeHomeworkQuestionRequest = {
         homeworkId: homeworkId,
-        title: 'title',
+        title: homeworkInfoData.title,
         field: 'VOICE',
         content: speakingFileInfo.script,
         answer: null,
@@ -63,7 +65,8 @@ function CreateScript() {
               <div style={{ position: 'absolute', bottom: 0, left: 0 }}>
                 <audio controls className=' w-80 h-[50px]'>
                   {speakingFileInfo.file !== undefined ? (
-                    <source src={URL.createObjectURL(speakingFileInfo.file)} type='audio/mp4' />
+                    // <source src={speakingFileInfo.file} type='audio/*' />
+                    <source src={window.URL.createObjectURL(speakingFileInfo.file)} type='audio/mp4' />
                   ) : (
                     <div>오디오 파일이 비었습니다.</div>
                   )}
