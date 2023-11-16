@@ -232,7 +232,8 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
 
         homeworkStudentQuestionRepository.save(homeworkStudentQuestion);
-        return new SolveProblemResponse(homeworkStudentQuestion.getId(), sttText);
+        return new SolveProblemResponse(homeworkStudentQuestion.getId(), sttText,
+            homeworkStudentQuestion.getScore());
     }
 
     @Override

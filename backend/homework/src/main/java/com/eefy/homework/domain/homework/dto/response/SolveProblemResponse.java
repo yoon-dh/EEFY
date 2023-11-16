@@ -9,4 +9,5 @@ public class SolveProblemResponse {
 
     private Integer homeworkStudentQuestionId;
     private String  sttText;
+    private Integer score;
 }
