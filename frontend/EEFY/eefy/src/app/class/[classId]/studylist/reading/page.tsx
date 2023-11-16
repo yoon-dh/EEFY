@@ -113,7 +113,6 @@ function HomeworkTest() {
         {libraryDatas.map((item:any, idx) => (
           <div key={idx} onClick={()=>hanbleClick(item.homeworkStudentId, item.classHomeworkId, item.title)}>
              <SpeakingStudyItem key={idx} libraryData={item} classId={classId} homeworkType={'READING'} />
-            {/* <SpeakingStudyItem key={idx} libraryData={item} classId={CLASS_ID.classId} homeworkType={homeworkType} /> */}
           </div>
         ))}
         {libraryDatas.length===0 && <div>과제가 등록되지 않았습니다.</div>}
