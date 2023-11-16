@@ -1,0 +1,13 @@
+#reactSketchCanvas{
+  object-fit: contain !important;
+  /* width: 70% !important;
+  height: 1300px !important;
+  @media(max-width:1334px){
+    width: 90% !important;
+    height: 1100px !important;
+  } */
+}
+canvas{
+  width: 100%;
+  object-fit: contain;
+}

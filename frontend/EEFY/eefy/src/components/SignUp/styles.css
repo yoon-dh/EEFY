@@ -1,0 +1,15 @@
+.MuiInputBase-root.MuiInput-root::after {
+  content: none;
+}
+.css-v4u5dn-MuiInputBase-root-MuiInput-root{
+  content: none;
+}
+.img{
+  z-index: 5;
+width: 550px;
+transform: translate(-50%, -55%);
+transition: top 1.5s, left 1.5s, width 1s, opacity 2.5s, visibility 2.5s;
+@media(max-width:1340px){
+    width: 350px;
+}
+}
