@@ -9,4 +9,6 @@ public interface HomeworkStudentQuestionRepository extends
     JpaRepository<HomeworkStudentQuestion, Integer> {
 
     List<HomeworkStudentQuestion> findByHomeworkStudentOrderByHomeworkQuestion(HomeworkStudent homeworkStudent);
+
+    List<HomeworkStudentQuestion> findByHomeworkStudent(HomeworkStudent homeworkStudent);
 }

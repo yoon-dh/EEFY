@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HomeworkQuestionRepository extends JpaRepository<HomeworkQuestion, Integer> {
 
     List<HomeworkQuestion> findByHomeworkOrderById(Homework homework);
+
+    List<HomeworkQuestion> findByHomework(Homework homework);
 }

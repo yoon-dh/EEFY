@@ -215,6 +215,8 @@ public class HomeworkServiceImpl implements HomeworkService {
         HomeworkQuestion homeworkQuestion = validateHomeworkQuestion(
             solveProblemRequest.getHomeworkQuestionId());
 
+        updateDoneDate(homeworkStudent, homeworkQuestion);
+
         String uploadPath = null;
         String sttText = null;
         if (hasVoice(voiceFile)) {
@@ -232,8 +234,21 @@ public class HomeworkServiceImpl implements HomeworkService {
         }
 
         homeworkStudentQuestionRepository.save(homeworkStudentQuestion);
+
         return new SolveProblemResponse(homeworkStudentQuestion.getId(), sttText,
             homeworkStudentQuestion.getScore());
+    }
+
+    private void updateDoneDate(HomeworkStudent homeworkStudent, HomeworkQuestion homeworkQuestion) {
+        int solvedProblem = homeworkStudentQuestionRepository.findByHomeworkStudent(homeworkStudent).size();
+        int totalProblem = homeworkQuestionRepository.findByHomework(homeworkQuestion.getHomework()).size();
+
+        // todo: 나중에 수정 필요
+        if(solvedProblem -1 ==  totalProblem) {
+            homeworkStudent.updateDoneDate();
+        } else if (solvedProblem == totalProblem) {
+            throw new RuntimeException("문제를 다 풀었습니다.");
+        }
     }
 
     @Override
