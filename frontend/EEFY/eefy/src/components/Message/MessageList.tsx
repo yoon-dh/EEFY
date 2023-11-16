@@ -46,7 +46,7 @@ function MessageList() {
       right: 0,
       bottom: 0,
       backgroundColor: overlaybgColor,
-      zIndex: 10,
+      zIndex: 999,
     },
 
     content: {
@@ -56,7 +56,7 @@ function MessageList() {
       background: bgColor,
 
       overflow: 'auto',
-      zIndex: 10,
+      zIndex: 999,
       top: '40%',
       left: '67%',
       right: '2.5%',

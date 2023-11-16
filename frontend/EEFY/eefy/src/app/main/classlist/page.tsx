@@ -24,6 +24,7 @@ type Class = {
   id: number;
   title: string;
   studentCnt: number;
+  teacherNickname: string;
 };
 
 function ClassList() {
@@ -78,6 +79,7 @@ function ClassList() {
     // TODO: 일단 한페이지만, 나중에 페이지네이션?
     const fetchData = async () => {
       const result = await classCheck(0, 8);
+      console.log(result);
       setMyClassArr(result.studyClassList);
       setClassCnt(result.totalCnt);
     };
@@ -126,7 +128,7 @@ function ClassList() {
 
           {/* 클래스 리스트 */}
           {myClassArr?.map(item => (
-            <MainClassBox key={item.id} classId={item.id} title={item.title} cnt={item.studentCnt} />
+            <MainClassBox key={item.id} classId={item.id} title={item.title} cnt={item.studentCnt} teacherNickname={item.teacherNickname} />
           ))}
         </div>
         {/* 메시지 리스트 */}

@@ -1,19 +1,22 @@
 'use client';
 import Link from 'next/link';
 import * as S from './MainClassBox.style';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 // import { EnterClassNumber } from '@/recoil/ClassCreate';
 import { EnterClassTitle } from '@/recoil/ClassCreate';
+import { userData } from '@/recoil/Auth';
 
 interface MainClassBoxProps {
   classId: number;
   title: string;
   cnt: number;
+  teacherNickname: string;
 }
 
-function MainClassBox({ classId, title, cnt }: MainClassBoxProps) {
-  // const [enterClassNum, setEnterClassNum] = useRecoilState(EnterClassNumber);
+function MainClassBox({ classId, title, cnt, teacherNickname }: MainClassBoxProps) {
+  const userDataObj = useRecoilValue(userData);
   const [enterClassTitle, setEnterclassTitle] = useRecoilState(EnterClassTitle);
+  console.log(teacherNickname);
 
   return (
     <Link href={`/class/${classId}/dashboard`}>
@@ -85,7 +88,11 @@ function MainClassBox({ classId, title, cnt }: MainClassBoxProps) {
           </defs>
         </S.ClassBox>
         <S.chalkTag style={{ position: 'absolute', bottom: '35%', left: '10%', fontSize: '18px' }}>{title}</S.chalkTag>
-        <S.chalkTag style={{ position: 'absolute', bottom: '20%', left: '10%', fontSize: '15px' }}>수강생 : {cnt}명</S.chalkTag>
+        {userDataObj.role === 'TEACHER' ? (
+          <S.chalkTag style={{ position: 'absolute', bottom: '20%', left: '10%', fontSize: '15px' }}>수강생 : {cnt}명</S.chalkTag>
+        ) : (
+          <S.chalkTag style={{ position: 'absolute', bottom: '20%', left: '10%', fontSize: '15px' }}>{teacherNickname} T</S.chalkTag>
+        )}
       </div>
     </Link>
   );

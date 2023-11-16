@@ -61,13 +61,13 @@ function AverageAndMyScore() {
     datasets: [
       {
         label: 'My Score',
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+        data: labels.map(() => faker.datatype.number({ min: 65, max: 90 })),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
       {
         label: 'Average',
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
+        data: labels.map(() => faker.datatype.number({ min: 65, max: 90 })),
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },
