@@ -10,6 +10,10 @@ import { useRecoilState } from 'recoil';
 import { Category, Homework, HomeworkProblem } from '@/recoil/Homework';
 import { postOcr } from '@/api/Homework/Problem';
 import { OcrData } from '@/recoil/Library/CreateHomework/CreateReading';
+import { BiSolidChevronRight } from "react-icons/bi";
+import { BiSolidChevronLeft } from "react-icons/bi";
+import { LuBookOpenCheck } from "react-icons/lu";
+
 function CropperModal() {
   const cropperRef = createRef<ReactCropperElement>();
   const [isPdf, setIsPdf] = useState<boolean>(false);
@@ -74,7 +78,8 @@ function CropperModal() {
         ],
       };
       setHomeworkProblem([...homeworkProblem, data]);
-      setOcrDatas({...ocrDatas,isSuccess:true})
+      // setOcrDatas({pdfFile:null, imgUrl:"", isSuccess:true})
+      setOcrDatas({...ocrDatas, isSuccess:true})
       setCategory('multiple');
     }
   };
@@ -182,58 +187,77 @@ function CropperModal() {
       </Wrappe>
 
       <BtnBox>
+        {!ocrDatas.imgUrl && (
+          <>
+            <div style={{flex:1}}></div>
+          </>
+        )}
         {isPdf && (
           <>
             <PdfBtn>
-              <div>
                 <button
-                  style={{ margin: '0px 10px 0px 10px' }}
+                  style={{ margin: '0px 20px 0px 10px' }}
                   disabled={pageNumber <= 1}
                   onClick={() => {
                     setPageNumber(pageNumber - 1);
                     setPageImage('');
                   }}
                 >
-                  이전
+                  <BiSolidChevronLeft style={{fontSize:'23px'}}/>
                 </button>
-                <span>
+                <span style={{fontSize:'15px'}}>
                   {pageNumber} / {numPages}
                 </span>
                 <button
-                  style={{ margin: '0px 10px 0px 10px' }}
+                  style={{ margin: '0px 10px 0px 20px' }}
                   disabled={pageNumber >= numPages}
                   onClick={() => {
                     setPageNumber(pageNumber + 1);
                     setPageImage('');
                   }}
                 >
-                  다음
+                  <BiSolidChevronRight style={{fontSize:'23px'}}/>
                 </button>
-              </div>
             </PdfBtn>
           </>
         )}
-        {isPdf && (
-          <>
-            <button
-              style={{
-                padding: '5px 12px',
-              }}
-              onClick={getPdfUrl}
-            >
-              pdf 페이지선택
-            </button>
-          </>
-        )}
-        <button
-          style={{
-            padding: '5px 12px',
-            margin: '0px 0px 0px 20px',
-          }}
-          onClick={getCropData}
-        >
-          영역선택
-        </button>
+        <div style={{flex:1, display:'flex', justifyContent:'center'}}>
+          {(isPdf && !pageImage) && (
+            <>
+              <button
+                style={{
+                  padding: '5px 5px',
+                  border:'1px solid rgb(200, 200, 200, 1)',
+                  borderRadius:'8px',
+                  justifyContent:'flex-end',
+                }}
+                onClick={getPdfUrl}
+              >
+                <div style={{display:'flex',letterSpacing: '1px',
+                textTransform: 'uppercase', fontSize:'13px'}}>
+                  pagepick
+                </div>
+              </button>
+            </>
+          )}
+          {(pageImage || ocrDatas.imgUrl) && (
+            <>
+              <button
+                style={{
+                  padding: '5px 5px',
+                  border:'1px solid rgb(200, 200, 200, 1)',
+                  borderRadius:'8px',
+                }}
+                onClick={getCropData}
+              >
+                <div style={{display:'flex',letterSpacing: '1px',
+                textTransform: 'uppercase', fontSize:'13px'}}>
+                  capture
+                </div>
+              </button>
+            </>
+          )}
+        </div>
       </BtnBox>
     </Container>
   );

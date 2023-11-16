@@ -28,7 +28,6 @@ function LectureDetail(props:any) {
   const [targetFile, setTargetFile] = useState<FileList | null>(null);
   const [ocr, setOcr] = useRecoilState(OcrFileCheck)
 
-  const fileType = ["application/pdf"]; 
 
   // useEffect(()=>{
   //   if (targetFile) {
