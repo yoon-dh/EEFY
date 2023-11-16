@@ -3,17 +3,17 @@ import os
 import urllib3
 import json
 import base64
+import urllib.request
 
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation"  # 영어
 
-def evaluate_announce(voice_file):
+def evaluate_announce(voice_file, script):
+    response = urllib.request.urlopen(voice_file)
+    data = response.read()
     accessKey = os.getenv("ETRI_API_KEY")
     languageCode = "english"
-    # script = "PRONUNCIATION_SCRIPT"
 
-    file = open(voice_file, "rb")
-    audioContents = base64.b64encode(file.read()).decode("utf8")
-    file.close()
+    audioContents = base64.b64encode(data).decode("utf8")
 
     requestJson = {
         "argument": {
@@ -34,4 +34,5 @@ def evaluate_announce(voice_file):
     print("[responseCode] " + str(response.status))
     print("[responBody]")
     print(str(response.data, "utf-8"))
-    return str(response.data, "utf-8")
+    load = json.loads(response.data)
+    return load["return_object"]["score"][0:3]
