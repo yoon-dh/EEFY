@@ -131,8 +131,15 @@ public class LectureServiceImpl implements LectureService {
         List<DrawInfo> drawInfoList = new ArrayList<>();
 
         for (LectureNoteInfo lectureNoteInfo: lectureNoteInfoList) {
-            for(CanvasData canvasData: lectureNoteInfo.getCanvasData()) {
-                drawInfoList.addAll(canvasData.getDrawInfo());
+
+            for(int i = 0; i <lectureNoteInfo.getCanvasData().size(); i++) {
+                if(lectureNoteInfo.getCanvasData().get(i).getPageNum() != pageNum) continue;
+
+                List<DrawInfo> drawInfo = lectureNoteInfo.getCanvasData().get(i).getDrawInfo();
+
+                for(DrawInfo info: drawInfo) {
+                    drawInfoList.add(info);
+                }
             }
         }
         return new NoteInfoResponse(drawInfoList);
