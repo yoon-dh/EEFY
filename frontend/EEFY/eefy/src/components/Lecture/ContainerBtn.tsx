@@ -4,9 +4,7 @@ function ContainerBtn() {
   return (
     <div className='flex mt-1'>
       <div>
-        <div className="tabs" style={{
-          margin:'0px 0px 0px 10px',
-        }}>
+        <div className="tabs">
           <Tab className="tab tab-bordered tab-active">
             <NoticeTitle>
               학습자료
