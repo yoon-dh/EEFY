@@ -37,5 +37,5 @@ export const Tab = styled.div`
   }
 `;
 export const TabBox = styled.div`
-  margin: '0px 0px 0px 10px';
+  /* margin: '0px 0px 0px 10px'; */
 `;

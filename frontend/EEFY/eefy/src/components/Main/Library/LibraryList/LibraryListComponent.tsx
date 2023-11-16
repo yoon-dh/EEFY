@@ -8,18 +8,7 @@ import { WorkbookBox } from './LibraryList.style';
 
 interface LibraryListComponentProps {
   role: string;
-  libraryDatas:
-    | {
-        content: string;
-        createdAt: Date;
-        id: number;
-        isFinish: boolean;
-        memberId: number;
-        modifiedAt: Date;
-        title: string;
-        type: string;
-      }[]
-    | null;
+  libraryDatas: any;
 }
 
 interface DataType {
@@ -82,7 +71,7 @@ function LibraryListComponent({ role, libraryDatas }: LibraryListComponentProps)
           </Link>
         </div>
       )}
-      {libraryDatas?.map((item, idx) => (
+      {libraryDatas?.map((item: any, idx: number) => (
         <LibraryItem
           key={`libraryList_${idx}`}
           main={colerData[dataType[item.type]].main}

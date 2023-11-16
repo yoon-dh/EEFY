@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import FileUpload from '@/components/Main/Library/Homework/Create/Reading/FileUpload';
 import { useRecoilState } from 'recoil';
 import { OcrData } from '@/recoil/Library/CreateHomework/CreateReading';
@@ -5,9 +6,10 @@ import * as S from '@/styles/MainStyle.style';
 import ProblemBox from '@/components/Main/Library/Homework/Create/Reading/ProblemBox';
 import CropperModal from '@/components/Main/Library/Homework/Create/Reading/CropperModal';
 import SaveQuestions from './SaveQuestions';
-
+import { PdfPage } from '@/recoil/Canvas';
 function CreateReadingComponent() {
   const [ocrDatas, setOcrDatas] = useRecoilState(OcrData);
+  const [pdfPage, setPdfPage] = useRecoilState(PdfPage);
   const mainStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
@@ -16,6 +18,19 @@ function CreateReadingComponent() {
     rowGap: '3%',
     columnGap: '3%',
   };
+
+  useEffect(() => {
+    setOcrDatas({
+      pdfFile: null,
+      imgUrl: '',
+      isSuccess: false,
+    });
+    setPdfPage({
+      numPages: 0,
+      pageNumber: 1,
+      btnType: '',
+    });
+  }, []);
 
   return (
     <div className='w-full h-full' style={{ padding: '2% 3%' }}>

@@ -10,19 +10,29 @@ import { CurrentPage, AllListSavePage } from '@/recoil/Library/LibraryAtom';
 import ContainerBtn from '@/components/Main/Library/LibraryList/ContainerBtn';
 import LibraryListComponent from '@/components/Main/Library/LibraryList/LibraryListComponent';
 
-import { getHomeworkList } from '@/api/Library/LibraryListApi';
+import { getHomeworkView } from '@/api/Class/studylist';
 
 import * as S from '@/styles/MainStyle.style';
 
 interface dataType {
-  content: string;
-  createdAt: Date;
-  id: number;
-  isFinish: boolean;
-  memberId: number;
-  modifiedAt: Date;
-  title: string;
-  type: string;
+  pageInfo: {
+    totalPageSize: number;
+    currentPage: number;
+    totalElements: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+  homeworks: [
+    {
+      homeworkStudentId: number;
+      memberId: number;
+      classHomeworkId: number;
+      doneDate: string | any;
+      title: string;
+      solvedCount: number;
+      totalCount: number;
+    }
+  ];
 }
 
 function LibraryAllList() {
@@ -61,10 +71,14 @@ function LibraryAllList() {
       const size = 8;
 
       const data = {
-        page: page - 1,
+        classId: null,
+        page: currentPage - 1,
         size: size,
+        // homeworkType: 'SPEAKING',
       };
-      const responseData = await getHomeworkList(data);
+
+      const responseData = await getHomeworkView(data);
+      console.log(responseData);
       const newTotalPage = responseData.pageInfo.totalPageSize;
       setLibraryDatas(responseData.homeworkDtos);
       setTotalPage(newTotalPage);
