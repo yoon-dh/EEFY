@@ -5,6 +5,7 @@ import com.eefy.studyclass.domain.alarm.service.AlarmService;
 import com.eefy.studyclass.domain.lecture.dto.response.LectureIdResponse;
 import com.eefy.studyclass.domain.lecture.dto.request.NoteInfoRequest;
 import com.eefy.studyclass.domain.lecture.dto.response.NoteInfoResponse;
+import com.eefy.studyclass.domain.lecture.persistence.entity.CanvasData;
 import com.eefy.studyclass.domain.lecture.persistence.entity.DrawInfo;
 import com.eefy.studyclass.domain.lecture.persistence.entity.LectureNoteInfo;
 import com.eefy.studyclass.domain.lecture.persistence.mongo.LectureNoteInfoRepository;
@@ -123,25 +124,16 @@ public class LectureServiceImpl implements LectureService {
 
         ArrayList<LectureNoteInfo> lectureNoteInfoList = lectureNoteInfoRepository.findByMemberIdAndLectureId(memberId, lecture.getId());
 
+        System.out.println(">>>>>>>>>>>>>>" + lectureNoteInfoList.size());
+
         if(lectureNoteInfoList.size() == 0) return new NoteInfoResponse(new ArrayList<>());
 
         List<DrawInfo> drawInfoList = new ArrayList<>();
 
         for (LectureNoteInfo lectureNoteInfo: lectureNoteInfoList) {
-
-            Criteria criteria = Criteria.where("lectureId").is(lectureId)
-                    .and("memberId").is(memberId)
-                    .and("canvasData.pageNum").is(pageNum);
-
-            Query query = new Query(criteria);
-            query.fields().exclude("_id").include("canvasData.drawInfo");
-
-            List<DrawInfo> collect = mongoTemplate.find(query, LectureNoteInfo.class).stream()
-                    .flatMap(lectureNote -> lectureNoteInfo.getCanvasData().stream())
-                    .flatMap(canvasData -> canvasData.getDrawInfo().stream())
-                    .collect(Collectors.toList());
-
-            drawInfoList.addAll(collect);
+            for(CanvasData canvasData: lectureNoteInfo.getCanvasData()) {
+                drawInfoList.addAll(canvasData.getDrawInfo());
+            }
         }
         return new NoteInfoResponse(drawInfoList);
     }
