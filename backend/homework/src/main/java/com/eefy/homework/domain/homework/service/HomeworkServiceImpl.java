@@ -416,7 +416,7 @@ public class HomeworkServiceImpl implements HomeworkService {
         String answer) {
         String score = aiServiceFeignClient.getAnnounceScore(
             new EvaluateAnnounceRequest(homeworkStudentQuestion.getFilePath(), answer));
-        homeworkStudentQuestion.updateScore(Integer.parseInt(score.substring(1, 4)) * 20);
+        homeworkStudentQuestion.updateScore((int) (Double.parseDouble(score.substring(1, 4)) * 20));
     }
 
 }
