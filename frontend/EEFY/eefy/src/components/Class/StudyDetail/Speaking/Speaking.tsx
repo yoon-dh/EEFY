@@ -1,3 +1,4 @@
+// 나중에 삭제 요망
 'use client';
 // import Image from 'next/image';
 
@@ -62,7 +63,7 @@ function Speaking() {
           {/* 문제풀이 - 강사 && 학생 */}
           <div className='relative bg-base-200 rounded-2xl' style={{ gridArea: 'b' }}>
             {/* SolvedComponent - 역할이 강사 || 문제를 푼 경우 , SolvingComponent - 역할이 학생 && 문제를 풀지 않은 경우 */}
-            {dummyRole === 'TEACHER' || isSolved ? <SolvedQuestion /> : <SolvingQuestion />}
+            {/* {dummyRole === 'TEACHER' || isSolved ? <SolvedQuestion solvedProblemData={solvedProblemData}  /> : <SolvingQuestion />} */}
             {dummyRole === 'STUDENT' && !isSolved && !isRecording && !isModalOpen && (
               <div className='absolute bottom-5 right-5 w-44 h-12 bg-secondary rounded-md flex justify-center items-center'>
                 <p className='text-secondary-content'>제출한 파일</p>
@@ -98,13 +99,6 @@ function Speaking() {
               </div>
             </div>
           </div>
-
-          {/* 헤드폰 에셋 */}
-          {/* {!isSolved && (
-            <div className='absolute bottom-0 left-0'>
-              <Image src={'/asset-headphonebook-450x450.png'} alt='headphone' width={170} height={170} />
-            </div>
-          )} */}
         </div>
       </div>
     </>

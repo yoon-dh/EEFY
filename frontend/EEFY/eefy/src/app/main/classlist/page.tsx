@@ -24,6 +24,7 @@ type Class = {
   id: number;
   title: string;
   studentCnt: number;
+  teacherNickname: string;
 };
 
 function ClassList() {
@@ -78,6 +79,7 @@ function ClassList() {
     // TODO: 일단 한페이지만, 나중에 페이지네이션?
     const fetchData = async () => {
       const result = await classCheck(0, 8);
+      console.log(result);
       setMyClassArr(result.studyClassList);
       setClassCnt(result.totalCnt);
     };
@@ -111,7 +113,7 @@ function ClassList() {
         <div style={{ flex: '8.5', display: 'flex', gap: '30px', flexWrap: 'wrap', padding: '3%' }}>
           {/* 강사면 보이고 아니면 안보이게 */}
           {userDataObj?.role === 'TEACHER' ? (
-            <S.ClassBox
+            <S.CreateClassBox
               onClick={() => setIsCreateModalOpen(true)}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '5px' }}
             >
@@ -121,12 +123,12 @@ function ClassList() {
               <div className='prim' style={{ fontSize: '20px' }}>
                 클래스 개설
               </div>
-            </S.ClassBox>
+            </S.CreateClassBox>
           ) : null}
 
           {/* 클래스 리스트 */}
           {myClassArr?.map(item => (
-            <MainClassBox key={item.id} classId={item.id} title={item.title} cnt={item.studentCnt} />
+            <MainClassBox key={item.id} classId={item.id} title={item.title} cnt={item.studentCnt} teacherNickname={item.teacherNickname} />
           ))}
         </div>
         {/* 메시지 리스트 */}

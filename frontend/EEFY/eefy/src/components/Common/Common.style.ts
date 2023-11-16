@@ -33,6 +33,7 @@ export const BackgroundContainer = styled.div<themeType>`
         `
       : css`
           background: rgba(29, 35, 42);
+          /* background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(7, 7, 52, 1) 35%, rgba(3, 14, 17, 1) 100%); */
         `}
   /* background-size: 400% 400%; */
   background-attachment: fixed;

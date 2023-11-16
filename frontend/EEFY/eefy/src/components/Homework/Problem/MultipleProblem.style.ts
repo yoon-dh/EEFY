@@ -1,43 +1,50 @@
-import styled from "styled-components"
+import styled from 'styled-components';
 
-export const Container = styled.div`
-`
-
+export const Container = styled.div``;
+// Title
 export const TitleBox = styled.div`
-border: 1px solid yellow;
-flex: 1;
-display: flex;
-`
-export const Title = styled.div``
+  height: 8%;
+  /* flex: 2; */
+  display: flex;
+  align-items: center;
+`;
+export const Title = styled.div``;
+
+// Content
 export const contentBox = styled.div`
-border: 1px solid #98D767;
-flex:5;
-`
-export const Content = styled.div`
-`
-export const ChoiceBox = styled.div`
-border: 1px solid black;
-display: flex;
-margin: 10px 0px 0px 0px;
-`
-export const Choice = styled.div`
-width: 30px;
-height: 30px;
-border-radius: 50%;
-margin: 0px 10px 0px 0px;
-border: 1px solid black;
-display: flex;
-justify-content: center;
-align-items: center;
-`
+  height: 57%;
+  /* flex: 4; */
+  display: flex;
+  align-items: center;
+`;
+export const Content = styled.div``;
+
+// Choice
 export const Box = styled.div`
-flex:5;
-border: 1px solid #7B88E0;
-`
+  /* flex: 4; */
+  height: 35%;
+`;
+export const ChoiceBox = styled.div`
+  display: flex;
+  margin: 5px 0px 0px 0px;
+  align-items: center;
+`;
+export const Choice = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0px 5px 0px 0px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+// else
 export const Answer = styled.input`
-margin: 0px 0px 0px auto;
-height: 50%;
-`
+  margin: 0px 0px 0px auto;
+  height: 50%;
+`;
 export const ProblemNumber = styled.div`
-margin: 0px 20px 0px 0px;
-`
+  margin: 0px 20px 0px 0px;
+`;

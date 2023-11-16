@@ -1,12 +1,18 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/navigation';
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { homeworkPage} from '@/recoil/Problem'
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { homeworkPage } from '@/recoil/Problem';
 import { MySolved } from '@/recoil/Homework';
 import { useParams } from 'next/navigation';
-import {postSolveProblem} from '@/api/Homework/Problem'
-import {HomeworkIds, Problems} from '@/recoil/Homework'
+import { postSolveProblem } from '@/api/Homework/Problem';
+import { HomeworkIds, Problems } from '@/recoil/Homework';
+
+import { Theme } from '@/recoil/Theme';
+
+import * as I from '../../Class/StudyDetail/Speaking/ImageComponents';
 
 const Box = styled.div`
   width: 50px;
@@ -23,76 +29,87 @@ const Box = styled.div`
 function ProblemFooter() {
   const router = useRouter();
   const [count, setCount] = useState(1);
-  const [problem, setProblem] = useRecoilState(Problems)
-  const [page, setPage] = useRecoilState(homeworkPage)
-  const mySolved = useRecoilValue(MySolved)
-  const ids = useRecoilValue(HomeworkIds)
+  const [problem, setProblem] = useRecoilState(Problems);
+  const [page, setPage] = useRecoilState(homeworkPage);
+  const mySolved = useRecoilValue(MySolved);
+  const ids = useRecoilValue(HomeworkIds);
   const pageInfo = useParams();
   const pageNum = pageInfo.problemid;
-  
+
+  const theme = useRecoilValue(Theme);
+
+  let buttonColor;
+  if (theme !== 'winter') {
+    buttonColor = '#fff';
+  } else {
+    buttonColor = '#708097';
+  }
+
   useEffect(() => {
     console.log(count);
     console.log(pageNum);
     console.log(page);
-    setCount(Number(pageNum))
+    setCount(Number(pageNum));
   }, [pageNum]);
 
   const handlePrevClick = () => {
-    console.log('이전',count, page)
-    if(count > 1){
+    console.log('이전', count, page);
+    if (count > 1) {
       const newCount = count - 1;
       setCount(newCount);
-      if(page==='problem'){
+      if (page === 'problem') {
         router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/problem/${newCount}`);
-      } else if(page==='explanation'){
+      } else if (page === 'explanation') {
         router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/explanation/${newCount}`);
       }
     }
   };
 
   const handleNextClick = () => {
-    console.log('다음',count, page)
-    if(problem.length > count){
+    console.log('다음', count, page);
+    if (problem.length > count) {
       const newCount = count + 1;
       setCount(newCount);
-      if(page==='problem'){
-        postSolve()
+      if (page === 'problem') {
+        postSolve();
         router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/problem/${newCount}`);
-      } else if(page==='explanation'){
+      } else if (page === 'explanation') {
         router.push(`/class/${pageInfo.classId}/studylist/reading/${ids.classHomeworkId}/explanation/${newCount}`);
       }
-    }else{
-      if(page==='problem'){
-        alert("다풀었습니다")
-      } else if(page==='explanation'){
-        alert("마지막 문제입니다")
+    } else {
+      if (page === 'problem') {
+        alert('다풀었습니다');
+      } else if (page === 'explanation') {
+        alert('마지막 문제입니다');
       }
     }
   };
 
   // 제출
-  const postSolve = async()=>{
+  const postSolve = async () => {
     const formData = new FormData();
     const solveProblemRequest = {
-      homeworkQuestionId:mySolved[Number(pageNum)-1].homeworkQuestionId,
-      homeworkStudentId:ids.homeworkStudentId,
-      submitAnswer:mySolved[Number(pageNum)-1].answer
-    }
+      homeworkQuestionId: mySolved[Number(pageNum) - 1].homeworkQuestionId,
+      homeworkStudentId: ids.homeworkStudentId,
+      submitAnswer: mySolved[Number(pageNum) - 1].answer,
+    };
     const jsonBlob = new Blob([JSON.stringify(solveProblemRequest)], {
-      type: "application/json",
+      type: 'application/json',
     });
-      formData.append("solveProblemRequest", jsonBlob);
-    const res = await postSolveProblem(formData)
-    console.log(res)
-  }
+    formData.append('solveProblemRequest', jsonBlob);
+    const res = await postSolveProblem(formData);
+    console.log(res);
+  };
   return (
-    <div style={{ flex: 1, border: '1px solid black', display: 'flex' }}>
-      <Box onClick={handlePrevClick}>
-        이전
-      </Box>
-      <Box onClick={handleNextClick}>
-        다음
-      </Box>
+    <div style={{ height: '10%', backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'center' }}>
+      <div style={{ width: '80%', height: '100%', display: 'flex', gap: '2%', alignItems: 'center', justifyContent: 'flex-end' }}>
+        <div onClick={handlePrevClick}>
+          <I.LeftBtn btnSize={36} btnColor={buttonColor} />
+        </div>
+        <div onClick={handleNextClick}>
+          <I.RightBtn btnSize={36} btnColor={buttonColor} />
+        </div>
+      </div>
     </div>
   );
 }

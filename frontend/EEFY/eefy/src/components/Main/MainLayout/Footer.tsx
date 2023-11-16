@@ -125,7 +125,9 @@ export default function Footer() {
         <div className='flex items-center gap-2' onClick={handleLogout}>
           <TbLogout className='text-3xl text-current' />
 
-          <p className='text-xl'>Log-out</p>
+          <p style={{ letterSpacing: '2px', textTransform: 'uppercase' }} className='text-lg'>
+            Logout
+          </p>
         </div>
 
         {/* 오른쪽 */}

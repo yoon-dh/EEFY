@@ -93,9 +93,9 @@ function SpeakingStudyList() {
       </div>
       <div className='w-full h-full relative' style={{ flex: 8, paddingTop: '2%', paddingBottom: '2%' }}>
         {libraryDatas.map((item, idx) => (
-          <Link key={idx} href={`/class/${CLASS_ID.classId}/studylist/${homeworkType}/${item.classHomeworkId}/problem/0`}>
-            <SpeakingStudyItem libraryData={item} />
-          </Link>
+          // <Link key={idx} href={`/class/${CLASS_ID.classId}/studylist/${homeworkType}/${item.classHomeworkId}/problem/0`}>
+          <SpeakingStudyItem key={idx} libraryData={item} classId={CLASS_ID.classId} homeworkType={homeworkType} />
+          // </Link>
         ))}
         {!dataExist && <div>과제가 등록되지 않았습니다.</div>}
       </div>

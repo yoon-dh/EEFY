@@ -1,8 +1,9 @@
+'use client';
 import AudioPlayer from './AudioPlayer';
 
 interface PropsType {
   script: string;
-  url: string;
+  url: any;
 }
 
 function ProblemComponent({ script, url }: PropsType) {

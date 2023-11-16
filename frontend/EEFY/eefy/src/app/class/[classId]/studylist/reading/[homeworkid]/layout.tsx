@@ -153,23 +153,25 @@ function Homework({ children }: { children: React.ReactNode }) {
   const averageScore = average();
   return (
     <Container className='w-full h-full flex'>
-      <S.MainContainer className='flex flex-col' style={{ flex: 7, border: '1px solid black', width: '100%' }}>
+      <S.MainContainer className='flex flex-col' style={{ flex: 7, width: '100%' }}>
         <Header>
-          <Title>
-            문제집 이름 : {ids.title} / {averageScore} 점
-          </Title>
-          {page === 'explanation' && (
-            <>
-              <SolvedBtn onClick={handleSolved}>정답 보기</SolvedBtn>
-            </>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '10%' }}>
+            <Title className='text-xl'>
+              {ids.title} / {averageScore} 점
+            </Title>
+            {page === 'explanation' && (
+              <>
+                <SolvedBtn onClick={handleSolved}>정답 보기</SolvedBtn>
+              </>
+            )}
+          </div>
         </Header>
         <div
           className='h-full'
           style={{
-            flex: 7,
             margin: '0px 0px 0px 10%',
             width: '80%',
+            height: '80%',
           }}
         >
           {children}
@@ -199,9 +201,11 @@ const Container = styled.div`
   border: 1px solid black;
 `;
 const Header = styled.div`
-  border: 1px solid black;
-  flex: 0.8;
+  /* border: 1px solid black; */
+  /* flex: 1.5; */
+  height: 10%;
   display: flex;
+  backdrop-filter: blur(10px);
 `;
 const Title = styled.div``;
 const SolvedBtn = styled.div`
