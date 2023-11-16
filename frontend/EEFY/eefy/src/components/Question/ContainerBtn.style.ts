@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const NoticeTitle = styled.div`
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
   @media (max-width: 1340px) {
     font-size: 20px;
