@@ -7,7 +7,6 @@ import { TeacherSignUpBoxTitle, CodeCheckBox, CodeCheckBtn, SignUpBtn, PasswordB
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { postEmail, postCheckEmail, postJoin } from '../../api/Auth/join';
-import Swal from 'sweetalert2';
 
 import { FCMtoken } from '@/recoil/PushNotification';
 import { useRecoilValue } from 'recoil';
@@ -58,14 +57,6 @@ export default function StudentSignUp() {
 
   // 회원가입
   const onSubmit = async () => {
-    if (!checkCode) {
-      Swal.fire({
-        icon: 'error',
-        text: '이메일 인증을 해주세요!',
-        showConfirmButton: false,
-        timer: 1000,
-      });
-    }
     const res = await postJoin(userData);
     console.log(res);
     if (res?.status === 200) {
