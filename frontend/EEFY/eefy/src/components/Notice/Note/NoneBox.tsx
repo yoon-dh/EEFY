@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import Backpack from 'public/Img/Backpack.png';
 import style from './NoneBox.module.css';
-
+import { useRecoilValue } from 'recoil';
+import { Name } from '@/recoil/Notice';
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -32,11 +33,26 @@ const ImgBox = styled.div`
   align-items: center;
 `;
 function NoneBox() {
+  const urlName = useRecoilValue(Name)
   return (
     <Container>
       <Box>
         <TitleBox>
-          <Title>등록된 학습 자료가 없습니다</Title>
+          {urlName === 'notice' && (
+            <>
+            <Title>등록된 공지사항이 없습니다</Title>
+            </>
+          )}
+          {urlName === 'question' && (
+            <>
+            <Title>등록된 질의응답이 없습니다</Title>
+            </>
+          )}
+          {urlName === 'lecture' && (
+            <>
+            <Title>등록된 학습 자료가 없습니다</Title>
+            </>
+          )}
         </TitleBox>
         <ImgBox>
           <Image src={Backpack} alt='' width={300} height={100} className={style.img} />

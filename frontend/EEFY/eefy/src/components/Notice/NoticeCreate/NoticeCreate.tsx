@@ -3,7 +3,6 @@ import { postNoticeCreate, getNoticeList } from '@/api/Notice/Notice';
 import { useRecoilState } from 'recoil';
 import { NoticeList } from '@/recoil/Notice';
 import * as S from './NoticeCreate.style';
-import swal from 'sweetalert';
 import { useRouter, useParams } from 'next/navigation';
 
 function NoticeCreate() {
@@ -20,17 +19,11 @@ function NoticeCreate() {
       title: title,
       content: content,
     };
-    if (title === '') {
-      swal('', '제목을 입력해주세요!', 'warning');
-    } else if (content === '') {
-      swal('', '내용을 입력해주세요!', 'warning');
-    } else {
-      const res = await postNoticeCreate(data);
-      if (res?.status === 200) {
-        getList()
-        router.push(`/class/${params.classId}/notice/${res?.data.id}`)
-      }    
-    }
+    const res = await postNoticeCreate(data);
+    if (res?.status === 200) {
+      getList()
+      router.push(`/class/${params.classId}/notice/${res?.data.id}`)
+    }    
   };
 
 const getList = async()=>{
