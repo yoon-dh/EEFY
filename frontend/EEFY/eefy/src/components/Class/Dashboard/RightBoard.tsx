@@ -44,17 +44,34 @@ function RightBoard({ contentType }: BoardProps) {
     }
   };
 
+  function dateFormat(createDate: Date): string {
+    const currentTime = new Date();
+    const elapsedMilliseconds = currentTime.getTime() - new Date(createDate).getTime();
+    const elapsedMinutes = Math.floor(elapsedMilliseconds / 1000 / 60);
+
+    if (elapsedMinutes < 1) {
+      return '방금 전';
+    } else if (elapsedMinutes < 60) {
+      return `${elapsedMinutes}분 전`;
+    } else if (elapsedMinutes < 1440) {
+      const elapsedHours = Math.floor(elapsedMinutes / 60);
+      return `${elapsedHours}시간 전`;
+    } else {
+      const elapsedDays = Math.floor(elapsedMinutes / 1440);
+      return `${elapsedDays}일 전`;
+    }
+  }
+
   useEffect(() => {
     const classId = CLASS_ID.classId;
     async function fetchData() {
       if (typeof classId === 'string' && contentType === 0) {
-        const noticeData = await getNoticeList(parseInt(classId));
-        const newNoticeData = noticeData?.data.length >= 4 ? noticeData?.data.slice(0, 4) : noticeData?.data;
-        setData(() => newNoticeData);
+        const noticeData = await getStudyClassNotice(Number(classId));
+        setData(noticeData);
       } else if (typeof classId === 'string' && contentType === 1) {
-        const lectureData = await getLectureList(parseInt(classId));
-        const newLectureData = lectureData?.data.length >= 4 ? lectureData?.data.slice(0, 4) : lectureData?.data;
-        setData(() => newLectureData);
+        const lectureData = await getLectureList(Number(classId));
+        const newLectureData = lectureData?.data;
+        setData(newLectureData);
       }
     }
     fetchData();
@@ -92,7 +109,7 @@ function RightBoard({ contentType }: BoardProps) {
                 </div>
                 <div style={{ flex: 10 }}>{item?.title}</div>
                 <div className='text-right' style={{ flex: 5 }}>
-                  {item?.createdAt}
+                  {dateFormat(item?.createdAt)}
                 </div>
               </div>
             ))}

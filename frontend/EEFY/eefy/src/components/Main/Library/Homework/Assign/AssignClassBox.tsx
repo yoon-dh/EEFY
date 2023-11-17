@@ -17,7 +17,7 @@ function AssignClassBox({ classId, title, cnt, $isActive }: AssignClassBoxProps)
   return (
     <S.ClassBox $isActive={$isActive}>
       {/* 타입에 따라서 이모지 바꿔주기 */}
-      <div
+      {/* <div
         style={{
           position: 'absolute',
           width: '30%',
@@ -27,7 +27,7 @@ function AssignClassBox({ classId, title, cnt, $isActive }: AssignClassBoxProps)
           borderRadius: '12px',
           background: 'rgba(35, 150, 239, 0.41)',
         }}
-      ></div>
+      ></div> */}
       <S.ClassBoxTitle className=' break-all' style={{ position: 'absolute', top: '50%', left: '10%', right: '10%', fontSize: '18px' }}>
         {title}
       </S.ClassBoxTitle>

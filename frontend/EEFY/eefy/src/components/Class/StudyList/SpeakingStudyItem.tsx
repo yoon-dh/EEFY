@@ -37,7 +37,7 @@ function SpeakingStudyItem({ libraryData, classId, homeworkType }: { libraryData
           <p className='text-xl font-bold' style={{ letterSpacing: '2px' }}>
             {libraryData.title}
           </p>
-          <p className='text-base text-blue-600/50'>완료일 : {libraryData.doneDate ? '2023-11-15' : '-'}</p>
+          <p className='text-base text-blue-600/50'>완료일 : {libraryData.doneDate ? '2023-11-17' : '-'}</p>
         </div>
         <div className='flex justify-center items-center gap-5'>
           <p> 진행도: </p>

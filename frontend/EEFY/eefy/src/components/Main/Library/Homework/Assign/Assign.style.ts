@@ -6,9 +6,10 @@ interface IsActive {
 
 export const ClassBox = styled.div<IsActive>`
   position: relative;
+  background-color: rgba(131, 129, 129, 0.2);
   width: 200px;
   height: 200px;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(131, 129, 129, 0.2);
   border-radius: 20px;
   ${({ $isActive }) =>
