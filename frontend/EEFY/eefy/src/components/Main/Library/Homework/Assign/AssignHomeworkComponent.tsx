@@ -54,6 +54,8 @@ function AssignHomeworkComponent() {
 
   const CompleteHandler = async () => {
     if (classCnt === 0) {
+      console.log('');
+      // alert('클래스를 선택해주세요');
     } else {
       await checkedClassList.forEach(async (currentElement, index) => {
         if (typeof HOMEWORK_ID.homeworkId === 'string') {

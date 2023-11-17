@@ -14,7 +14,7 @@ import { postMakeHomework, putMakeHomework } from '@/api/Library/CreateHomeworkA
 import { TfiArrowLeft, TfiArrowRight } from 'react-icons/tfi';
 import * as S from '@/styles/MainStyle.style';
 import { useEffect } from 'react';
-import {HomeworkProblem} from '@/recoil/Homework'
+import { HomeworkProblem } from '@/recoil/Homework';
 
 interface HomeworkProblemType {
   title: string;
@@ -53,14 +53,17 @@ function CreateHomeworkComponent() {
         setHomeworkId(requestData.homeworkId);
         setCreateHomeworkStep(1);
       } else {
+        // alert('문제 생성에 실패하였습니다.');
       }
     } else {
+      // alert('정보를 입력하세요');
     }
   };
 
   const CancleHandler = () => {
+    // alert('문제 생성을 취소합니다.');
 
-    setHomeworkProblem([])
+    setHomeworkProblem([]);
     setHomeworkInfoDataAtom({ title: '', description: '' });
     setHomeworkId(undefined);
     setCreateHomeworkStep(0);
@@ -71,9 +74,10 @@ function CreateHomeworkComponent() {
     if (homeworkId !== undefined) {
       const requestData = { homeworkId: homeworkId };
       const res = await putMakeHomework(requestData);
+      // alert('문제가 성공적으로 생성되었습니다.');
     }
 
-    setHomeworkProblem([])
+    setHomeworkProblem([]);
     setHomeworkInfoDataAtom({ title: '', description: '' });
     setHomeworkId(undefined);
     setCreateHomeworkStep(0);

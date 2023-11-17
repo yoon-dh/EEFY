@@ -43,8 +43,10 @@ function CreateScript() {
       formData.append('makeHomeworkQuestionRequest', jsonBlob);
       formData.append('voiceFile', speakingFileInfo.file);
       await postHomeworkMakeQuestion(formData);
-    } else {
     }
+    // else {
+    //   alert('음성 파일이 존재하지 않습니다.');
+    // }
 
     setSpeakingAllFilseInfo(prev => [...prev, speakingFileInfo]);
     setSpeakingFileInfo(prev => ({ ...prev, file: undefined, script: '' }));
