@@ -5,7 +5,8 @@ import Link from 'next/link';
 
 import { useRecoilValue } from 'recoil';
 import { Theme } from '@/recoil/Theme';
-
+import { useRecoilState } from 'recoil';
+import { Name } from '@/recoil/Notice';
 interface MessageItemProps {
   messageId: string;
   notificationTitle: string;
@@ -54,7 +55,7 @@ function MessageItem({
   };
 
   const theme = useRecoilValue(Theme);
-
+  const [urlName, setUrlName] = useRecoilState(Name)
   return (
     <Link
       href={link}
@@ -62,6 +63,13 @@ function MessageItem({
       onClick={() => {
         deleteAlarm(messageId);
         setIsMessageModalOpen(false);
+        if(link.includes("notice")){
+          setUrlName('notice')
+        }else if (link.includes("question")){
+          setUrlName('question')
+        }else if (link.includes("lecture")){
+          setUrlName('lecture')
+        }
       }}
     >
       <div style={{ flex: '1' }}>
