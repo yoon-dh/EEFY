@@ -78,9 +78,7 @@ function ProblemFooter() {
       }
     } else {
       if (page === 'problem') {
-        alert('다풀었습니다');
       } else if (page === 'explanation') {
-        alert('마지막 문제입니다');
       }
     }
   };
