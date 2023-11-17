@@ -4,7 +4,6 @@ import { useRecoilState } from "recoil";
 import {LecturePage} from '@/recoil/Lecture'
 import { NoticeList } from '@/recoil/Notice'
 import {postLectureCreate, getLectureList} from '@/api/Lecture/Lecture'
-import swal from "sweetalert";
 import { useRouter, useParams } from 'next/navigation';
 
 function LectureCreate(){
@@ -36,26 +35,17 @@ function LectureCreate(){
   const handleSubmit = async () => {
     console.log(contentInfo, 'contentInfo')
     console.log(file, 'file')
-
-    if(contentInfo.title===''){
-      swal("", "제목을 입력해주세요!", "warning");
-    } else if(contentInfo.content===''){
-      swal("", "내용을 입력해주세요!", "warning");
-    }else if (!file){
-      swal("", "파일을 넣어주세요!", "warning");
-    }else{
-      const formData = new FormData();
-      const jsonBlob = new Blob([JSON.stringify(contentInfo)], {
-        type: "application/json",
-      });
-      formData.append("file", file);
-      formData.append("request", jsonBlob);
-      
-      const res = await postLectureCreate(formData)
-      if (res?.status===200){
-          getList()
-          router.push(`/class/${params.classId}/lecture/${res?.data.id}`)
-      }
+    const formData = new FormData();
+    const jsonBlob = new Blob([JSON.stringify(contentInfo)], {
+      type: "application/json",
+    });
+    formData.append("file", file);
+    formData.append("request", jsonBlob);
+    
+    const res = await postLectureCreate(formData)
+    if (res?.status===200){
+        getList()
+        router.push(`/class/${params.classId}/lecture/${res?.data.id}`)
     }
   }
 
