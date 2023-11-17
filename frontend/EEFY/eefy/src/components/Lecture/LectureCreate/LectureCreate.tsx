@@ -39,7 +39,9 @@ function LectureCreate(){
     const jsonBlob = new Blob([JSON.stringify(contentInfo)], {
       type: "application/json",
     });
-    formData.append("file", file);
+    if (file !== null) {
+      formData.append("file", file);
+    }
     formData.append("request", jsonBlob);
     
     const res = await postLectureCreate(formData)
