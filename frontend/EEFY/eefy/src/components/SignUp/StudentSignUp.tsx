@@ -79,20 +79,9 @@ export default function StudentSignUp() {
     const res = await postCheckEmail(authMail);
     console.log(res);
     if (res?.status === 200) {
-      Swal.fire({
-        icon: 'success',
-        text: '인증이 되었습니다!',
-        showConfirmButton: false,
-        timer: 1000,
-      });
       setCheckCode(true);
     } else {
-      Swal.fire({
-        icon: 'error',
-        text: '인증코드가 잘못되었습니다!',
-        showConfirmButton: false,
-        timer: 1000,
-      });
+
     }
   };
 
