@@ -9,7 +9,6 @@ import { Problems, MySolved, HomeworkIds, SolvedProblem } from '@/recoil/Homewor
 import { useParams } from 'next/navigation';
 import { getProblem, postSolveProblem } from '@/api/Homework/Problem';
 import '@/styles/swal.css';
-import Swal from 'sweetalert2';
 
 import * as S from '../../../../../../styles/MainStyle.style';
 function Homework({ children }: { children: React.ReactNode }) {
@@ -25,61 +24,19 @@ function Homework({ children }: { children: React.ReactNode }) {
   const pageNumber: string = Array.isArray(pageNum) ? pageNum[0] : pageNum;
 
   const handleExit = () => {
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger',
-      },
-      buttonsStyling: false,
-    });
-    swalWithBootstrapButtons
-      .fire({
-        text: '나가시겠습니까?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: '나가기',
-        cancelButtonText: '취소',
-        reverseButtons: true,
-      })
-      .then(result => {
-        if (result.isConfirmed) {
-          router.push(`/class/${classId}/dashboard`);
-          setSolved({});
-          setMySolved({});
-          setProblem({});
-          setPage('problem');
-        }
-      });
+    router.push(`/class/${classId}/dashboard`);
+    setSolved({});
+    setMySolved({});
+    setProblem({});
+    setPage('problem');
   };
   const handleSave = () => {
     console.log('채점하기');
     console.log(mySolved);
     if (Object.values(mySolved).length != problem.length) {
       setPage('problem');
-      Swal.fire({
-        icon: 'warning',
-        title: '아직 못푼 문제가 있습니다',
-        showConfirmButton: false,
-        timer: 1500,
-      });
     } else {
-      Swal.fire({
-        title: 'Are you sure?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: '마치시겠습니까?',
-        customClass: {
-          container: 'custom-swal-container',
-          popup: 'custom-swal-popup',
-        },
-      }).then(result => {
-        document.body.classList.remove('swal2-shown');
-        if (result.isConfirmed) {
-          postSolve();
-        }
-      });
+      postSolve();
     }
   };
 
@@ -116,23 +73,23 @@ function Homework({ children }: { children: React.ReactNode }) {
 
   const handleSolved = () => {
     console.log(pageNum);
-    Swal.fire({
-      title: `정답은 "${problem[Number(pageNumber) - 1]?.homeworkQuestion.answer}"`,
-      // showClass: {
-      //   popup: `
-      //     animate__animated
-      //     animate__fadeInUp
-      //     animate__faster
-      //   `
-      // },
-      // hideClass: {
-      //   popup: `
-      //     animate__animated
-      //     animate__fadeOutDown
-      //     animate__faster
-      //   `
-      // }
-    });
+    // Swal.fire({
+    //   title: `정답은 "${problem[Number(pageNumber) - 1]?.homeworkQuestion.answer}"`,
+    //   // showClass: {
+    //   //   popup: `
+    //   //     animate__animated
+    //   //     animate__fadeInUp
+    //   //     animate__faster
+    //   //   `
+    //   // },
+    //   // hideClass: {
+    //   //   popup: `
+    //   //     animate__animated
+    //   //     animate__fadeOutDown
+    //   //     animate__faster
+    //   //   `
+    //   // }
+    // });
   };
   const average = () => {
     if (solved && Array.isArray(solved) && solved.length > 0) {
