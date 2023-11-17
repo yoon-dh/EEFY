@@ -22,7 +22,7 @@ type studyDataType = {
 
 function RightBoard({ contentType }: BoardProps) {
   const CLASS_ID = useParams();
-  const title = ['공지사항', '등록자료'];
+  const title = ['공지사항', '학습자료'];
 
   const [nameAtom, setNameAtom] = useRecoilState(Name);
 
