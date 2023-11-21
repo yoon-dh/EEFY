@@ -19,12 +19,12 @@ function StudyBoard() {
       progress: 95,
     },
     {
-      title: 'TEPS 대비 기출',
+      title: 'TOEIC 기출',
       content: '30 questions',
       progress: 100,
     },
     {
-      title: 'TEPS 완성 기출 100선 (상) ',
+      title: 'TOEIC기출 100제',
       content: '30 questions',
       progress: 55,
     },

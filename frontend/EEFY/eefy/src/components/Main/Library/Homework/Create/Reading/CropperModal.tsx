@@ -23,7 +23,17 @@ function CropperModal() {
   const [homeworkProblem, setHomeworkProblem] = useRecoilState(HomeworkProblem);
   const [ocrDatas, setOcrDatas] = useRecoilState<any>(OcrData);
 
+  const [pdfImgWidth,setpdfImgWidth] = useState(750)
+  // useEffect(() => {
+  //   if (typeof window !== undefined && window.innerWidth > 1334){
+  //     setpdfImgWidth(1100);
+  //   }
+  // }, []);
+
   useEffect(() => {
+    if (typeof window !== undefined && window.innerWidth > 1334){
+      setpdfImgWidth(1100);
+    }
     setIsPdf(false);
     if (ocrDatas.pdfFile) {
       setIsPdf(true);
@@ -49,36 +59,34 @@ function CropperModal() {
     const res = await postOcr(croppedImage);
     console.log(res);
     if (res?.status === 200) {
+
+      
       const data = {
-        title: res?.data[0].slice(4),
-        content: res?.data[1],
+        title: res?.data[1].slice(3),
+        content: res?.data[0].slice(3),
         field: 'CHOICE',
         answer: '',
         choiceRequests: [
           {
             number: '1',
-            content: res?.data[2].slice(1),
+            content: res?.data[2].slice(4),
           },
           {
             number: '2',
-            content: res?.data[3],
+            content: res?.data[3].slice(4),
           },
           {
             number: '3',
-            content: res?.data[4],
+            content: res?.data[4].slice(4),
           },
           {
             number: '4',
-            content: res?.data[5],
-          },
-          {
-            number: '5',
-            content: res?.data[6],
+            content: res?.data[5].slice(4),
           },
         ],
       };
       setHomeworkProblem([...homeworkProblem, data]);
-      // setOcrDatas({pdfFile:null, imgUrl:"", isSuccess:true})
+      setOcrDatas({pdfFile:null, imgUrl:"", isSuccess:true})
       setOcrDatas({...ocrDatas, isSuccess:true})
       setCategory('multiple');
     }
@@ -125,7 +133,7 @@ function CropperModal() {
               <>
                 <ImgBox>
                   <Document file={ocrDatas.pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page width={210 * 5} height={210 * 1.414 * 5} pageNumber={pageNumber} />
+                    <Page width={pdfImgWidth} pageNumber={pageNumber} />
                   </Document>
                 </ImgBox>
               </>

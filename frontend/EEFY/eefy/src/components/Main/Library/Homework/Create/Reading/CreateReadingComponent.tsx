@@ -5,9 +5,11 @@ import { OcrData } from '@/recoil/Library/CreateHomework/CreateReading';
 import * as S from '@/styles/MainStyle.style';
 import ProblemBox from '@/components/Main/Library/Homework/Create/Reading/ProblemBox';
 import CropperModal from '@/components/Main/Library/Homework/Create/Reading/CropperModal';
-import SaveQuestions from './SaveQuestions'
+import SaveQuestions from './SaveQuestions';
+import { PdfPage } from '@/recoil/Canvas';
 function CreateReadingComponent() {
   const [ocrDatas, setOcrDatas] = useRecoilState(OcrData);
+  const [pdfPage, setPdfPage] = useRecoilState(PdfPage);
   const mainStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
@@ -17,13 +19,18 @@ function CreateReadingComponent() {
     columnGap: '3%',
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setOcrDatas({
-      pdfFile:null,
-      imgUrl:"",
-      isSuccess:false
-    })
-  },[])
+      pdfFile: null,
+      imgUrl: '',
+      isSuccess: false,
+    });
+    setPdfPage({
+      numPages: 0,
+      pageNumber: 1,
+      btnType: '',
+    });
+  }, []);
 
   return (
     <div className='w-full h-full' style={{ padding: '2% 3%' }}>
@@ -38,19 +45,21 @@ function CreateReadingComponent() {
                   </>
                 ) : (
                   <>
-                  <ProblemBox/>
+                    <ProblemBox />
                   </>
                 )}
               </div>
             </>
           ) : (
             <div className='w-full h-full flex flex-col justify-center items-center text-xl gap-5'>
-              <div>파일을 업로드하면 자동으로 스크립트가 생성됩니다.</div>
-              <div>파일을 저장하면 더 이상 수정이 불가능합니다.</div>
+              <div>파일을 업로드한 후 영역을 선택해주세요.</div>
+              {/* <div>파일을 저장하면 더 이상 수정이 불가능합니다.</div> */}
             </div>
           )}
         </S.MainContainer>
-        <S.MainContainer style={{ gridArea: 'c', padding: '5% 3%' }}><SaveQuestions /></S.MainContainer>
+        <S.MainContainer style={{ gridArea: 'c', padding: '5% 3%' }}>
+          <SaveQuestions />
+        </S.MainContainer>
         <div className='flex items-end' style={{ gridArea: 'd' }}>
           <FileUpload />
         </div>

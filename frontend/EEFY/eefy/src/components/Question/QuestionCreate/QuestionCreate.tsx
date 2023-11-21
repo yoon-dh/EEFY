@@ -3,7 +3,6 @@ import { postQuestionCreate, getQuestionList } from '@/api/Question/Question';
 import { useRecoilState } from 'recoil';
 import { NoticeList } from '@/recoil/Notice';
 import * as S from './QuestionCreate.style';
-import swal from 'sweetalert';
 import { useRouter, useParams } from 'next/navigation';
 
 function QuestionCreate() {
@@ -25,16 +24,10 @@ function QuestionCreate() {
       title: title,
       content: content,
     };
-    if (title === '') {
-      swal('', '제목을 입력해주세요!', 'warning');
-    } else if (content === '') {
-      swal('', '내용을 입력해주세요!', 'warning');
-    } else {
-      const res = await postQuestionCreate(data);
-      if (res?.status === 200) {
-        getList()
-        router.push(`/class/${params.classId}/question/${res?.data.id}`)
-      }
+    const res = await postQuestionCreate(data);
+    if (res?.status === 200) {
+      getList()
+      router.push(`/class/${params.classId}/question/${res?.data.id}`)
     }
   };
 

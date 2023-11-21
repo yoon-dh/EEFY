@@ -11,7 +11,6 @@ import ForgotPassword from './ForgotPassword';
 import { useRecoilState } from 'recoil';
 import { ForgetPasswordBox, userData } from '@/recoil/Auth';
 import { postLogin } from '@/api/Auth/login';
-import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
 
 export default function Login() {
@@ -44,12 +43,6 @@ export default function Login() {
     const res : any = await postLogin(data);
     if (res?.status === 200) {
       router.push('/main/classlist');
-      Swal.fire({
-        icon: 'success',
-        text: `${res?.data.name}님 환영합니다!`,
-        showConfirmButton: false,
-        timer: 1000,
-      });
       const NewData = {
         memberId: res?.data.memberId,
         email: res?.data.email,
@@ -58,14 +51,6 @@ export default function Login() {
         role: res?.data.role,
       }
       setUser(NewData);
-    } else {
-      Swal.fire({
-        icon: 'error',
-        // text: `${res.}로그인에 실패했습니다!`,
-        text: `${res?.response.data.message}!`,
-        showConfirmButton: false,
-        timer: 1500,
-      });
     }
   };
 
