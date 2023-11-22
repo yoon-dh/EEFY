@@ -11,7 +11,7 @@
   2023.10.09 ~ 2022.11.17
   <br><br>
 
-[Notion](https://lavish-dugout-bfa.notion.site/B306-d6cb4c1e392248aa86fa8ef93e430cab?pvs=4) | [UCC](https://lavish-dugout-bfa.notion.site/UCC-23163f48caba458e87536e156fc42161?pvs=4)
+[Notion](https://lavish-dugout-bfa.notion.site/B306-d6cb4c1e392248aa86fa8ef93e430cab?pvs=4) 
 
 </div>
 
