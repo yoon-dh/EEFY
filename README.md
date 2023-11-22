@@ -11,7 +11,7 @@
   2023.10.09 ~ 2022.11.17
   <br><br>
 
-[Notion](https://lavish-dugout-bfa.notion.site/B306-d6cb4c1e392248aa86fa8ef93e430cab?pvs=4) 
+[Notion](https://lavish-dugout-bfa.notion.site/B306-d6cb4c1e392248aa86fa8ef93e430cab?pvs=4)
 
 </div>
 
@@ -132,7 +132,7 @@
 * 클래스를 개설하고, 수강생을 초대할 수 있습니다.
 * 수강생을 초대하면, 해당 수강생에게 Push 알림이 가게 됩니다.
 
-  
+
 
 ### 3. [강사] OCR을 통한 문제 생성
 
@@ -146,7 +146,7 @@
 * 문제집에서 강사가 문제로 변환할 영역을 선택하면, 해당 부분이 텍스트로 변환됩니다.
 * 변환된 텍스트는 강사가 추가로 수정을 할 수 있습니다.
 
- 
+
 
 ### 4. [강사] STT를 통한 문제 생성
 
@@ -159,9 +159,22 @@
 * 강사가 음성 파일을 업로드하면, 해당 음성 파일에 대한 스크립트가 출력됩니다.
 * 변환된 스크립트를 통해 학생들은 영어 말하기 연습을 진행할 수 있습니다.
 
- 
 
-### 5. [학생] 스피킹 학습에 대한 피드백
+
+### 5. [학생] 과제 풀이
+
+<div align="center">
+  <br />
+  <img src="img/problem_solving.gif" width="80%"/>
+  <br />
+</div>
+
+* 학생은 클래스에 할당된 과제를 풀이할 수 있습니다.
+* 강사가 입력한 답안을 기반으로 채점이 진행됩니다.
+
+
+
+### 6. [학생] 스피킹 학습에 대한 피드백
 
 <div align="center">
   <br />
@@ -170,11 +183,11 @@
 </div>
 
 * 강사가 올린 스피킹 문제집을 통해 말하기 연습을 할 수 있습니다.
-* 학생이 읽은 스크립트 음성 파일을 업로드한다면, 그에 대한 발음 평가를 확인할 수 있습니다.
+* 학생이 읽은 스크립트 음성 파일을 업로드한다면, 발음 평가를 확인할 수 있습니다.
 
 
 
-### 6. [학생] 학습 자료 필기
+### 7. [학생] 학습 자료 필기
 
 <div align="center">
   <br />
@@ -186,12 +199,50 @@
 
 
 
+# 📸모니터링
+
+### sleuth & zipkin
+
+<div align="center">
+  <br />
+  <img src="img/zipkin.gif" width="80%"/>
+  <br />
+</div>
+
+* sleuth과 zipkin을 활용하여 하나의 트랜젝션에 대한 오류를 추적할 수 있도록 구성하였습니다.
+* zipkin을 통해 어느 서비스에서 트래픽이 많이 발생하며 오류를 발생하는지 확인하였습니다.
+
+
+
+<br>
+
+### ELK
+
+<div align="center">
+  <br />
+  <img src="img/elastic.png" width="80%"/>
+  <br />
+</div>
+
+<div align="center">
+  <br />
+  <img src="img/elastic_error_log_list.png" width="80%"/>
+  <br />
+</div>
+
+<div align="center">
+  <br />
+  <img src="img/error_log.png" width="80%"/>
+  <br />
+</div>
+
+* ELK를 사용하여 마이크로 서비스 별로 오류가 발생했을 때, 로그를 추적할 수 있도록 했습니다.
+
 <br>
 
 # 📝 프로젝트 산출물
 
 * [와이어프레임(Figma)](https://www.figma.com/file/gAISwujJtSV9K5eaXdCLIe/%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?type=design&node-id=0%3A1&mode=design&t=IJlYmYnTor9FjOuI-1)
 * [API 명세서](https://lavish-dugout-bfa.notion.site/API-06ecd9cc609042c08172028e069db2b6?pvs=4)
-* [ERD](https://www.erdcloud.com/d/tY47TpQWxoT2btRS4)
 * [회의록](https://lavish-dugout-bfa.notion.site/d56e8e007cc64fbd8a31ad147e4e510b?pvs=4)
-
+* [에러코드 명세서](https://lavish-dugout-bfa.notion.site/e2fb2a6e12ff41f58a881ab31fd1c4a7?pvs=4)
