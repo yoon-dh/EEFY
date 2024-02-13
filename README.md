@@ -8,7 +8,7 @@
  <h3><b>EEFY</b></h3>
   영어 교육 기관과 학생, 모두 편한 영어 학습 플랫폼<br>
   삼성 청년 SW 아카데미<br><br>
-  2023.10.09 ~ 2022.11.17
+  2023.10.09 ~ 2023.11.17
   <br><br>
 
 [Notion](https://lavish-dugout-bfa.notion.site/B306-d6cb4c1e392248aa86fa8ef93e430cab?pvs=4)
